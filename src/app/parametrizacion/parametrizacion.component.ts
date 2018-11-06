@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./parametrizacion.component.css']
 })
 export class ParametrizacionComponent implements OnInit {
-
+  tituloPagina = "Parametrización";
   constructor() { }
 
   ngOnInit() {

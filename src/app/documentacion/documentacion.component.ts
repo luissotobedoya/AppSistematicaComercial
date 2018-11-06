@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./documentacion.component.css']
 })
 export class DocumentacionComponent implements OnInit {
-
+  tituloPagina = "Documentación";
   constructor() { }
 
   ngOnInit() {

@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AsignacionTareasComponent implements OnInit {
 
+  tituloPagina = "Asignación de tareas";
   constructor() { }
 
   ngOnInit() {

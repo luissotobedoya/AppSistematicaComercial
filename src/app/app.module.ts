@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {HttpModule} from '@angular/http';
+import { TabsModule } from 'ngx-bootstrap';
 
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
@@ -22,10 +23,12 @@ import { SPServicio } from './servicios/sp.servicio';
     DocumentacionComponent,
     AsignacionTareasComponent,
     SolicitudesTiendaComponent,
-    ParametrizacionComponent
+    ParametrizacionComponent,
+    
   ],
   imports: [
-    BrowserModule,    
+    BrowserModule,
+    TabsModule.forRoot(),    
     RouterModule.forRoot([
       {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
       {path:'mis-actividades', component:MisActividadesComponent},
@@ -36,7 +39,7 @@ import { SPServicio } from './servicios/sp.servicio';
       {path:'solicitudes-tienda', component:SolicitudesTiendaComponent},
       {path:'parametrizacion', component:ParametrizacionComponent}
     ]),
-    HttpModule
+    HttpModule,
   ],
   providers: [SPServicio],
   bootstrap: [AppComponent]

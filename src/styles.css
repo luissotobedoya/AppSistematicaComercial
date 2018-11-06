@@ -1,14 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~font-awesome/css/font-awesome.css";
 
-/*!
- * Start Bootstrap - Simple Sidebar HTML Template (http://startbootstrap.com)
- * Code licensed under the Apache License v2.0.
- * For details, see http://www.apache.org/licenses/LICENSE-2.0.
- */
-
-/* Toggle Styles */
-
 #wrapper {
     padding-left: 0;
     -webkit-transition: all 0.5s ease;
@@ -125,4 +117,20 @@
         position: relative;
         margin-right: 0;
     }
+}
+
+.zona-usuario-logueado{
+    float: right;
+}
+
+.roles{
+    margin-bottom: 1rem;
+    font-size: x-small;
+    margin-left: 10px;
+    margin-top: -14px;
+}
+
+.roles li{
+    box-sizing: border-box;
+    list-style-type: none;
 }

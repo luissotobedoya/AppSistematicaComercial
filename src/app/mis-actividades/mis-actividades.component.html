@@ -1,3 +1,9 @@
-<p>
-  mis-actividades works!
-</p>
+<div class="titulo-pagina">
+  <h3>{{tituloPagina}}</h3>
+</div>
+
+<div  class="zona-cuerpo">
+    <div class="botones-clasificacion">
+        <button *ngFor="let clasificacion of clasificaciones" id="btnClasificacion-{{clasificacion.id}}" type="button" class="btn btn-outline-info" (click)="ObtenerProcesosPorClasificacion($event)">{{clasificacion.nombre}}</button>
+    </div>
+ </div>

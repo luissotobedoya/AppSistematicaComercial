@@ -1,48 +1,68 @@
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
-import { default as pnp, ItemAddResult } from 'sp-pnp-js';
+import { default as pnp, ItemAddResult, CamlQuery } from 'sp-pnp-js';
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class SPServicio {
-    constructor() {}
+    constructor() { }
 
-    private obtenerConfiguracion(){
+    public obtenerConfiguracion() {
         const configuracionSharepoint = pnp.sp.configure({
-            headers:{
-                "Accept":"application/json; odata=verbose"
+            headers: {
+                "Accept": "application/json; odata=verbose"
             }
-        },environment.urlWeb);
-  
+        }, environment.urlWeb);
+
         return configuracionSharepoint;
     }
 
-    private ObtenerConfiguracionConPost(){
+    public ObtenerConfiguracionConPost() {
         const configuracionSharepoint = pnp.sp.configure({
-            headers:{
-                "Accept":"application/json; odata=verbose",
-                'Content-Type':'application/json;odata=verbose',
-                'Authorization':'Bearer 0x0C043186F7C80477A9EA1F2B79057523D6AE8F1BAAE49641C91DB95272495EB22D8E43D055DAAFB58B89A77F33EFF069B073EB8727BA565EF4FBC586E25D2E92,13 Oct 2018 22:40:27 -0000'
+            headers: {
+                "Accept": "application/json; odata=verbose",
+                'Content-Type': 'application/json;odata=verbose',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQxMzYzNjI5LCJuYmYiOjE1NDEzNjM2MjksImV4cCI6MTU0MTM5MjcyOSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiJiNzFkNTA3YS1lNTA3LTRjYTctOTQ1YS1kMDVmNGYyMzRiZDVAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiYTk0NWMzYWUtYTExMi00NGU1LThhZDUtZmVkNmZlOGZlZDI1Iiwic3ViIjoiYTk0NWMzYWUtYTExMi00NGU1LThhZDUtZmVkNmZlOGZlZDI1IiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.Fst6wU2eF85lFzANrXZWkhTPCcKQlbaiaho-RC5O3dyM30TXML_2Tw0kBubPZNc5enYce1utfEV-yG4h72OTJ-uBsXcZzbRpUlb5wrBfgmrWZtx5fG15LXoa2W3seiA6zIP1fwcqlb_S2JyG0v2pC84yx7D8oLf3pdBVfHuxf96o51lXfk2x1Na5YXZY3pqP9NgH7AoT0YFwiTDQnfBLZyotfiYJBnSHZqP4H9SKK99nnnrBFYE95ZtnjswYGjEDtqvm2TB_bXrOODBOQcySrrehYBrUNJlAbCm-0NC8ry5emG6GVL0eLkBO1UgwUEy_IHbwX75h_FnOIwPSWWoViQ'
             }
-        },environment.urlWeb);
-    
-        return configuracionSharepoint;
-      }
+        }, environment.urlWeb);
 
-      ObtenerInformacionSitio(){
+        return configuracionSharepoint;
+    }
+
+    ObtenerInformacionSitio() {
         let respuesta = from(this.obtenerConfiguracion().web.get());
         return respuesta;
     }
 
-    ObtenerUsuarioActual(){
+    ObtenerUsuarioActual() {
         let respuesta = from(this.obtenerConfiguracion().web.currentUser.get());
         return respuesta;
     }
 
-    ObtenerClasificaciones(){
+    ObtenerClasificaciones() {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.getAll());
         return respuesta;
     }
 
+    VerificarExistenciaUsuarioEnGrupo(groupName: string, usuarioId: number) {
+        let respuesta = from(this.obtenerConfiguracion().web.siteGroups.getByName(groupName).users.getById(usuarioId).get());
+        return respuesta;
+    }
 
+    ObtenerGruposUsuario(idUSuario : number){
+        let respuesta = from(this.obtenerConfiguracion().web.siteUsers.getById(idUSuario).groups.get());
+        return respuesta;
+    }
+
+    ObtenerElementosPorCaml(nombreLista: string, consulta : string){
+        //ejemplo de consulta caml "<View><Query>Aqui va el query</Query></View>";
+        const xml = consulta;
+        const q: CamlQuery = {
+            ViewXml: xml,
+        };
+        let respuesta = from(this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).getItemsByCAMLQuery(q));
+        return respuesta;
+    }
+
+    
 }
