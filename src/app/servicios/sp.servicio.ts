@@ -40,7 +40,17 @@ export class SPServicio {
     }
 
     ObtenerClasificaciones() {
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.getAll());
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.orderBy("OrdenClasificacion", true).getAll());
+        return respuesta;
+    }
+
+    ObtenerResponsablePorRol(rol: string){
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroResponsables).items.filter("Title eq '" + rol + "'").get());
+        return respuesta;
+    }
+
+    ObtenerProcesos(idResponsable: number, idClasificacion: number) {
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).items.select("Proceso/Title", "Proceso/ID").expand("Proceso").filter("ResponsableId eq "+idResponsable+" and ClasificacionId eq "+idClasificacion+" ").get());
         return respuesta;
     }
 
@@ -49,12 +59,12 @@ export class SPServicio {
         return respuesta;
     }
 
-    ObtenerGruposUsuario(idUSuario : number){
+    ObtenerGruposUsuario(idUSuario: number) {
         let respuesta = from(this.obtenerConfiguracion().web.siteUsers.getById(idUSuario).groups.get());
         return respuesta;
     }
 
-    ObtenerElementosPorCaml(nombreLista: string, consulta : string){
+    ObtenerElementosPorCaml(nombreLista: string, consulta: string) {
         //ejemplo de consulta caml "<View><Query>Aqui va el query</Query></View>";
         const xml = consulta;
         const q: CamlQuery = {
@@ -64,5 +74,5 @@ export class SPServicio {
         return respuesta;
     }
 
-    
+
 }

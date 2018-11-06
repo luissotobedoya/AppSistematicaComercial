@@ -39,10 +39,10 @@
                   <img src="../assets/images/user.png" alt="usuario">
                   <span class="usuario-logueado">{{nombreUsuario}}</span>
               </div>
-              <div class="zona-rol">
-                  <ul class="roles">
-                    <li *ngFor="let rol of roles">{{rol}}</li>
-                  </ul>
+              <div class="roles">
+                  <div *ngFor="let rol of roles" class="rol">
+                      <input class="rol-radio" type="radio" id="rol-{{rol}}" name="roles" value="{{rol}}" (change)="accionRol($event)">{{rol}}<br>
+                  </div>
               </div>
           </div>
           <div class="contenido-aplicacion">

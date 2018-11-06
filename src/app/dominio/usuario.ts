@@ -1,5 +1,3 @@
-import { NumberFormatStyle } from "@angular/common";
-
 export class Usuario {
 
     id: number;
@@ -7,7 +5,6 @@ export class Usuario {
     roles: string[];
 
     constructor(id: number, nombre: string, roles: string[]){
-
         this.id = id;
         this.nombre = nombre;
         this.roles = roles;
