@@ -5,7 +5,8 @@ import { Usuario } from '../dominio/usuario';
 import * as $ from 'jquery';
 import { Responsable } from '../dominio/responsable';
 import { Proceso } from '../dominio/proceso';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Actividad } from '../dominio/actividad';
+
 
 @Component({
   selector: 'app-mis-actividades',
@@ -13,33 +14,34 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   styleUrls: ['./mis-actividades.component.css'],
 })
 export class MisActividadesComponent implements OnInit {
-  
+
   tituloPagina = "Mis actividades";
-  clasificaciones: Clasificacion[] = [];
   usuarioActual: Usuario;
   responsable: Responsable;
+  clasificaciones: Clasificacion[] = [];
   procesos: Proceso[] = [];
-  
+  actividades: Actividad[] = [];
+  clasificacionId: number;
+  responsableId: number;
+  procesoId:number;
+  mostrarProcesos = false;
+  mostrarActividades = false;
   constructor(private servicio: SPServicio) {
-    
-   }
+
+  }
 
   ngOnInit() {
-
     this.RecuperarUsuario();
     this.RecuperarResponsable();
     this.ObtenerClasificacionesSistema();
-
   }
 
-  RecuperarUsuario(){
+  RecuperarUsuario() {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
-    console.log(this.usuarioActual);
   }
 
-  RecuperarResponsable(){
+  RecuperarResponsable() {
     this.responsable = JSON.parse(sessionStorage.getItem('responsable'));
-    console.log(this.responsable);
   }
 
   ObtenerClasificacionesSistema() {
@@ -53,38 +55,38 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
-  ValidarRolesPorUsuario(){
+  ValidarRolesPorUsuario() {
 
     let rolJefeZona = this.usuarioActual.roles.indexOf("Jefe de zonas");
     let rolAdministradorTienda = this.usuarioActual.roles.indexOf("Administrador de tienda");
     let rolAdministradorSC = this.usuarioActual.roles.indexOf("Administrador Sistemática comercial");
 
-    if(rolAdministradorTienda < 0 && rolJefeZona < 0 && rolAdministradorSC < 0){
+    if (rolAdministradorTienda < 0 && rolJefeZona < 0 && rolAdministradorSC < 0) {
       console.log("No posee roles");
     }
-    if(rolAdministradorTienda >= 0 && rolJefeZona < 0 && rolAdministradorSC < 0){
+    if (rolAdministradorTienda >= 0 && rolJefeZona < 0 && rolAdministradorSC < 0) {
       this.OcultarBotonClasificacionJefeZona();
     }
   }
 
-  OcultarBotonClasificacionJefeZona(){
+  OcultarBotonClasificacionJefeZona() {
     $(document).ready(function () {
       $('[name="Gestión de Zona"]').hide();
     });
   }
 
-  ObtenerProcesosPorClasificacion(evento){
-    let idClasificacion = evento.target.id.split("-")[1];
-    this.servicio.ObtenerProcesos(this.responsable[0].id, idClasificacion).subscribe(
+  ObtenerProcesosPorClasificacion(clasificacion) {
+    this.clasificacionId = clasificacion.id;
+    this.responsableId = this.responsable[0].id
+    this.procesos = [];
+    this.actividades = [];
+    this.servicio.ObtenerProcesos(this.responsableId, this.clasificacionId).subscribe(
       (Response) => {
-        console.log(Response);
+        this.mostrarProcesos = true;
         Response.forEach(proceso => {
-          this.procesos.push(proceso.Proceso.ID, proceso.Proceso.Title);
+          this.procesos.push(new Proceso(proceso.Proceso.ID, proceso.Proceso.Title));
         });
-        
-       this.procesos = this.ExtraerProcesosUnicos(this.procesos);
-       console.log(this.procesos);
-
+        this.procesos = this.ExtraerProcesosUnicos(this.procesos);
       },
       error => {
         console.log('Error obteniendo los procesos: ' + error);
@@ -93,12 +95,27 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ExtraerProcesosUnicos(procesos: Proceso[]): Proceso[] {
-      let distinctProcesos: Proceso[] = [];
-      procesos.forEach(element => {
-        if(!distinctProcesos.includes(element)){
-          distinctProcesos.push(element);
-        }
-      });
-      return distinctProcesos;
+    return procesos = procesos.filter((proceso, index, self) =>
+      index === self.findIndex((p) => (
+        p.id === proceso.id && p.nombre === proceso.nombre
+      ))
+    )
   }
+
+  obtenerActividades(proceso){
+    this.actividades = [];
+    this.procesoId = proceso.id;
+    this.servicio.ObtenerActividades(this.responsableId, this.clasificacionId, this.procesoId).subscribe(
+      (Response) => {
+        this.mostrarActividades = true,
+        this.actividades = Actividad.fromJsonList(Response);
+      },
+      error => {
+        console.log('Error obteniendo las actividades: ' + error);
+      }
+    );
+  }
+
+
+
 }

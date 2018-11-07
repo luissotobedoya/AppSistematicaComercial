@@ -3,8 +3,38 @@
 </div>
 
 <div class="zona-cuerpo">
-    <div class="botones-clasificacion">
-        <button *ngFor="let clasificacion of clasificaciones" name="{{clasificacion.nombre}}" id="btnClasificacion-{{clasificacion.id}}"
-            type="button" class="btn btn-outline-info" (click)="ObtenerProcesosPorClasificacion($event)">{{clasificacion.nombre}}</button>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="botones-clasificacion">
+                <button *ngFor="let clasificacion of clasificaciones" name="{{clasificacion.nombre}}" id="btnClasificacion-{{clasificacion.id}}"
+                    type="button" class="btn btn-outline-info" (click)="ObtenerProcesosPorClasificacion(clasificacion)">{{clasificacion.nombre}}</button>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="procesos" [hidden]="!mostrarProcesos">
+                <h3 class="titulo-procesos">Procesos</h3>
+                <div class="btn btn-secondary btn-lg btn-block" *ngFor="let proceso of procesos" (click)="obtenerActividades(proceso)">{{proceso.nombre}}</div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="actividades" [hidden]="!mostrarActividades">
+                <h3 class="titulo-procesos">Actividades</h3>
+                <div *ngFor="let actividad of actividades" class="actividad">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="label-actividad">{{actividad.actividad}}</span>
+                    <div *ngIf="actividad.tipoValidacion == 'Adjunto'">
+                        <input  type="file" class="adjunto-actividad" title="Adjuntar archivo">
+                    </div> 
+                </div>
+
+            </div>
+        </div>
+    </div>

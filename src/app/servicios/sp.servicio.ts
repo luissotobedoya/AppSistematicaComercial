@@ -54,6 +54,11 @@ export class SPServicio {
         return respuesta;
     }
 
+    ObtenerActividades(idResponsable: number, idClasificacion: number, idProceso: number){
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).items.select("Title", "Id", "TipoValidacion", "Observaciones", "Responsable/Id", "Responsable/Title", "Clasificacion/Id", "Clasificacion/Title", "Proceso/Id", "Proceso/Title", "Tarea/ID", "Tarea/Title").expand("Responsable","Clasificacion", "Proceso", "Tarea").filter("ResponsableId eq "+idResponsable+" and ClasificacionId eq "+idClasificacion+" and ProcesoId eq "+idProceso+"  ").get());
+        return respuesta;
+    }
+
     VerificarExistenciaUsuarioEnGrupo(groupName: string, usuarioId: number) {
         let respuesta = from(this.obtenerConfiguracion().web.siteGroups.getByName(groupName).users.getById(usuarioId).get());
         return respuesta;
