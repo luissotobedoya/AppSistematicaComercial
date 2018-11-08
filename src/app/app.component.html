@@ -41,7 +41,7 @@
               </div>
               <div class="roles">
                   <div *ngFor="let rol of roles" class="rol">
-                      <input class="rol-radio" type="radio" id="rol-{{rol}}" name="roles" value="{{rol}}" (change)="accionRol($event)">{{rol}}<br>
+                      <input [(ngModel)]="radioRol" class="rol-radio" type="radio" id="rol-{{rol}}" name="roles" value="{{rol}}" (change)="accionRol(rol)">{{rol}}<br>
                   </div>
               </div>
           </div>

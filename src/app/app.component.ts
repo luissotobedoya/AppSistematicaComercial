@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as $ from 'jquery';
-import { SPServicio } from '../app/servicios/sp.servicio';
 import { Usuario } from '../app/dominio/usuario';
+import { SPServicio } from '../app/servicios/sp.servicio';
+import { Actividad } from './dominio/actividad';
+import { Proceso } from './dominio/proceso';
 import { Responsable } from './dominio/responsable';
 
 @Component({
@@ -11,23 +14,28 @@ import { Responsable } from './dominio/responsable';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private servicio: SPServicio) { }
+  constructor(private servicio: SPServicio, private router: Router) { }
 
   title = 'Sistemática Comercial';
   nombreUsuario;
   roles: string[] = [];
   usuarioActual: Usuario;
+  procesos: Proceso[] = [];
+  actividades: Actividad[] = [];
   responsables: Responsable[] = [];
+  responsable: Responsable;
+
+  radioRol: any;
+  radioSelected: string;
+  radioSelectedString: string;
 
   public ngOnInit() {
-
     $(document).ready(function () {
       $("#menu-toggle").click(function (e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
       });
     });
-
     this.ObtenerUsuarioActual();
   }
 
@@ -44,6 +52,7 @@ export class AppComponent implements OnInit {
   }
 
   ObtenerRolesUsuario(usuario: Usuario) {
+
     this.servicio.ObtenerGruposUsuario(usuario.id).subscribe(
       (Response) => {
         if (Response != null) {
@@ -58,7 +67,29 @@ export class AppComponent implements OnInit {
               this.roles.push("Administrador Sistemática Comercial");
             }
           });
+
           this.usuarioActual.roles = this.roles;
+          if (this.usuarioActual.roles.length > 0) {
+            if (this.usuarioActual.roles.length == 1) {
+              let rol = this.usuarioActual.roles[0];
+              this.SeleccionarResponsable(rol);
+              this.accionRol(rol);
+            }
+            else {
+              this.responsable = JSON.parse(sessionStorage.getItem('responsable'));
+              if (this.responsable != null) {
+                let rol = this.responsable[0].titulo;
+                this.SeleccionarResponsable(rol);
+                if (rol == "Administrador de tienda") {
+                  this.OcultarBotonClasificacionJefeZona();
+                } else {
+                  this.MostrarBotonClasificacionJefeZona();
+                }
+              }
+            }
+          } else {
+            console.log("El usuario no posee roles disponibles en la aplicación");
+          }
         }
       }, err => {
         console.log('Error obteniendo grupos por usuario: ' + err);
@@ -66,44 +97,44 @@ export class AppComponent implements OnInit {
     )
   }
 
-  accionRol(objeto){
+  SeleccionarResponsable(rol: string) {
+    this.radioRol = this.roles.find(Item => Item === rol);
+    this.radioSelectedString = JSON.stringify(this.radioRol);
+  }
 
-    let rol = objeto.target.value;
-
-    if(rol == "Administrador de tienda"){
+  accionRol(objeto) {
+    let rol = objeto;
+    if (rol == "Administrador de tienda") {
       this.OcultarBotonClasificacionJefeZona();
-    }else{
+    } else {
       this.MostrarBotonClasificacionJefeZona();
     }
     this.ObtenerIdResponsable(rol);
   }
 
-  OcultarBotonClasificacionJefeZona(){
+  OcultarBotonClasificacionJefeZona() {
     $(document).ready(function () {
-      $('[name="Gestión de Zona"]').hide();
+      $('[ng-reflect-name="Gestión de Zona"]').hide();
     });
   }
 
-  MostrarBotonClasificacionJefeZona(){
+  MostrarBotonClasificacionJefeZona() {
     $(document).ready(function () {
-      $('[name="Gestión de Zona"]').show();
+      $('[ng-reflect-name="Gestión de Zona"]').show();
     });
   }
 
-  ObtenerIdResponsable(rol: string){
+  ObtenerIdResponsable(rol: string) {
     this.servicio.ObtenerResponsablePorRol(rol).subscribe(
       (Response) => {
         this.responsables = Responsable.fromJsonList(Response);
-        sessionStorage.setItem('usuario',JSON.stringify(this.usuarioActual));
-        sessionStorage.setItem('responsable',JSON.stringify(this.responsables));
+        sessionStorage.setItem('usuario', JSON.stringify(this.usuarioActual));
+        sessionStorage.setItem('responsable', JSON.stringify(this.responsables));
         this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
         this.responsables = JSON.parse(sessionStorage.getItem('responsable'));
       }, err => {
         console.log('Error obteniendo responsables: ' + err);
       }
     )
-
   }
-
-
 }
