@@ -7,7 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
 
-
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
 import { InformesComponent } from './informes/informes.component';

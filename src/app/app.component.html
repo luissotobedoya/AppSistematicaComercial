@@ -36,12 +36,12 @@
           <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Mostrar menú</a>
           <div class="zona-usuario-logueado">
               <div class="usuario">
-                  <img src="../assets/images/user.png" alt="usuario">
+                  <img src="{{imagenUsuario}}" class="imagen-usuario" alt="usuario">
                   <span class="usuario-logueado">{{nombreUsuario}}</span>
               </div>
               <div class="roles">
-                  <div *ngFor="let rol of roles" class="rol">
-                      <input [(ngModel)]="radioRol" class="rol-radio" type="radio" id="rol-{{rol}}" name="roles" value="{{rol}}" (change)="accionRol(rol)">{{rol}}<br>
+                  <div class="rol">
+                    {{responsableUsuario}}
                   </div>
               </div>
           </div>

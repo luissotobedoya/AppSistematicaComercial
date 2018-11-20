@@ -1,5 +1,16 @@
-<div class="titulo-pagina">
-    <h3>{{tituloPagina}}</h3>
+<div class="zona-cabecera">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="titulo-pagina">
+                <h3>{{tituloPagina}}</h3>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="mis-actividades-gestionadas">
+                <span>Gestionadas {{actividadesGestionadas}}/{{totalActividades}}</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="zona-cuerpo">
@@ -7,8 +18,9 @@
     <div class="row">
         <div class="col-md-12">
             <div class="botones-clasificacion">
-                <button *ngFor="let clasificacion of clasificaciones" [(ngModel)]="clasificacion" name="{{clasificacion.nombre}}"
-                    ngDefaultControl id="{{clasificacion.id}}" type="button" class="btn btn-outline-info" (click)="ObtenerProcesosPorClasificacion(clasificacion, template)">{{clasificacion.nombre}}</button>
+                <button *ngFor="let clasificacion of clasificacionesRespuestas" [class.selected]="clasificacion === clasificacionSeleccionada"
+                    [(ngModel)]="clasificacion" name="{{clasificacion}}" ngDefaultControl type="button" class="btn btn-outline-info"
+                    (click)="ObtenerProcesosPorClasificacion(clasificacion)">{{clasificacion}}</button>
             </div>
         </div>
     </div>
@@ -17,38 +29,31 @@
         <div class="col-md-6">
             <div class="procesos" [hidden]="!mostrarProcesos">
                 <h3 class="titulo-procesos">Procesos</h3>
-                <div *ngIf="!mostrarMensajeNoHayProcesos; else mostrarNoProcesos">
-                    <div class="btn btn-secondary btn-lg btn-block" *ngFor="let proceso of procesos" (click)="obtenerActividades(proceso)">{{proceso.nombre}}</div>
+                <div>
+                    <div class="btn btn-secondary btn-lg btn-block" *ngFor="let proceso of procesosRespuestasUnicos"
+                        (click)="obtenerActividades(proceso)">{{proceso}}</div>
                 </div>
-                <ng-template #mostrarNoProcesos>
-                    <alert type="info">
-                        <strong>No hay procesos!</strong>
-                        No existen procesos para esta clasificación según el rol
-                    </alert>
-                </ng-template>
             </div>
         </div>
 
         <div class="col-md-6">
             <div class="actividades" [hidden]="!mostrarActividades">
-                <h3 class="titulo-procesos">Actividades</h3>
-                <div *ngFor="let actividad of actividades" class="actividad">
+                <h3 class="titulo-actividades">Actividades</h3>
+                <div *ngFor="let actividad of actividadesRespuestas" class="actividad">
                     <label class="switch">
-                        <input type="checkbox">
+                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta" (change)="actualizarActividad($event, switcheActividad, actividad, template)">
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
                     <div *ngIf="actividad.tipoValidacion == 'Adjunto'">
-                        <input type="file" class="adjunto-actividad" title="Adjuntar archivo">
+                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad" title="Adjuntar archivo" (change)="subirAdjuntoActividad($event, actividad)">
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
     <!-- Modales -->
-
     <ng-template #template>
         <div class="modal-header">
             <h4 class="modal-title pull-left">{{tituloModal}}</h4>

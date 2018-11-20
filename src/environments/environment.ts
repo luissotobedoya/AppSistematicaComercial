@@ -6,6 +6,7 @@ export const environment = {
   maestroProcesos: 'MaestroProcesos',
   maestroTareas: 'MaestroTareas',
   maestroResponsables: 'MaestroResponsables',
+  maestroUsuarios: 'MaestroUsuarios',
   maestroActividadesGenerales: 'MaestroActividadesGenerales',
   grupoAdministradoresTienda: 'GrupoAdministradoresTiendas',
   grupoJefesZona: 'GrupoJefesZona'

@@ -2,11 +2,11 @@ export class Usuario {
 
     id: number;
     nombre: string;
-    roles: string[];
+    rol: string;
 
-    constructor(id: number, nombre: string, roles: string[]){
+    constructor(id: number, nombre: string, rol: string){
         this.id = id;
         this.nombre = nombre;
-        this.roles = roles;
+        this.rol = rol;
     }
 }
