@@ -1,0 +1,131 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit(template)">
+    <div class="row">
+        <div class="col-xs-12 col-md-6 form-group">
+            <label for="lblFechas">Fechas de Actividad</label>
+            <input type="text" formControlName="Fecha" placeholder="Rango de fechas" class="form-control" bsDaterangepicker [ngClass]="{ 'is-invalid': submitted && f.Fecha.errors }">
+        </div>
+        <div *ngIf="submitted && f.Fecha.errors" class="invalid-feedback">
+            <div *ngIf="f.Fecha.errors.required">Es requerido</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Dias en los que se realizará la actividad
+                </div>
+                <div class="card-body">
+                    <div class="col-xs-12 col-md-12 ">
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline1" name="DiasHabiles" value="1" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline1">Lunes</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline2" name="DiasHabiles" value="2" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline2">Martes</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline3" name="DiasHabiles" value="3" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline3">Miércoles</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline4" name="DiasHabiles" value="4" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline4">Jueves</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline5" name="DiasHabiles" value="5" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline5">Viernes</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline6" name="DiasHabiles" value="6" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline6">Sábado</label>
+                        </div>
+                        <div class="custom-control custom-checkbox custom-control-inline">
+                            <input type="checkbox" id="customCheckboxInline7" name="DiasHabiles" value="7" (change)="checkValueDias($event)" class="custom-control-input">
+                            <label class="custom-control-label" for="customCheckboxInline7">Domingo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-12  col-md-4 form-group">
+            <label for="ddclasificacion">Clasificación</label>
+            <select id="Clasificacion" class="form-control" formControlName="Clasificacion" [ngClass]="{ 'is-invalid': submitted && f.Clasificacion.errors }">
+        <option value=""></option>
+        <option *ngFor="let clasificacion of clasificaciones" [value]="clasificacion.nombre" [text]="clasificacion.nombre">
+          {{clasificacion.nombre}}
+        </option>
+      </select>
+            <div *ngIf="submitted && f.Clasificacion.errors" class="invalid-feedback">
+                <div *ngIf="f.Clasificacion.errors.required">Es requerido</div>
+            </div>
+        </div>
+        <div class="col-xs-12  col-md-4 form-group">
+            <label for="ddtipoActividad">Tipo Actividad</label>
+            <select id="tipoActividad" class="form-control" formControlName="TipoActividad" [ngClass]="{ 'is-invalid': submitted && f.TipoActividad.errors }">
+        <option value=""></option>
+        <option value="Adjunto">Adjunto</option>
+        <option value="Checkbox">Checkbox</option>
+        <option value="Checkbox y Aprobación">Checkbox y Aprobación</option>
+        <option value="Checkbox y Reporte">Checkbox y Reporte</option>
+        <option value="Reporte">Reporte</option>
+        <option value="Validación">Validación</option>
+      </select>
+            <div *ngIf="submitted && f.TipoActividad.errors" class="invalid-feedback">
+                <div *ngIf="f.TipoActividad.errors.required">Es requerido</div>
+            </div>
+        </div>
+        <div class="col-xs-12  col-md-4 form-group">
+            <label for="DDProcesos">Proceso</label>
+            <select id="Procesos" class="form-control" formControlName="Proceso" [ngClass]="{ 'is-invalid': submitted && f.Proceso.errors }">
+        <option value=""></option>
+        <option *ngFor="let Proceso of ObjProceso" [value]="Proceso.nombre" [text]="Proceso.nombre"></option>
+      </select>
+            <div *ngIf="submitted && f.Proceso.errors" class="invalid-feedback">
+                <div *ngIf="f.Proceso.errors.required">Es requerido</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-4 form-group">
+            <label for="lblNombreActividad">Nombre de la actividad</label>
+            <input type="text" class="form-control" formControlName="NombreActividad" [ngClass]="{ 'is-invalid': submitted && f.NombreActividad.errors }">
+            <div *ngIf="submitted && f.NombreActividad.errors" class="invalid-feedback">
+                <div *ngIf="f.NombreActividad.errors.required">Es requerido</div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12  col-md-12 form-group">
+            <div class="card">
+                <div class="card-header">
+                    Tiendas
+                </div>
+                <div class="card-body">
+                    <div class="custom-control custom-checkbox custom-control-inline"  *ngFor="let Tienda of ObjTiendas">
+                        <label><input name="grupoTiendas" type="checkbox" [value]="Tienda.id"  (change)='seleccionarTienda($event)'>{{Tienda.nombre}}</label></div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-primary">Guardar actividad</button>
+    </div>
+
+</form>
+
+<!-- Modales -->
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{tituloModal}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {{mensajeModal}}
+    </div>
+</ng-template>
