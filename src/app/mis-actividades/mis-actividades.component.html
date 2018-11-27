@@ -41,7 +41,7 @@
                 <h3 class="titulo-actividades">Actividades</h3>
                 <div *ngFor="let actividad of actividadesRespuestas" class="actividad">
                     <label class="switch">
-                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta" (change)="actualizarActividad($event, switcheActividad, actividad, template)">
+                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta" (change)="actualizarActividad($event, switcheActividad, actividad, template, templateConfirmation)">
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
@@ -65,3 +65,11 @@
             {{mensajeModal}}
         </div>
     </ng-template>
+
+    <ng-template #templateConfirmation>
+        <div class="modal-body text-center">
+          <p>{{mensajeConfirmacion}}</p>
+          <button type="button" class="btn btn-default" (click)="confirmar()" >Si</button>
+          <button type="button" class="btn btn-primary" (click)="declinar()" >No</button>
+        </div>
+      </ng-template>

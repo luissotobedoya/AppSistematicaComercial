@@ -26,13 +26,18 @@ export class MisActividadesComponent implements OnInit {
   mostrarProcesos = false;
   mostrarActividades = false;
   mensajeModal: string;
+  mensajeConfirmacion: string;
   tituloModal: string;
+  switcheActividadSeleccionada: any;
   public modalRef: BsModalRef;
-  mostrarMensajeNoHayProcesos = false;
+  listaRespuestas: string;
+  fileuploadActual;
 
   constructor(
     private servicio: SPServicio,
-    private servicioModal: BsModalService) { }
+    private servicioModal: BsModalService) {
+    this.listaRespuestas = this.ObtenerNombreListaActual();
+  }
 
   ngOnInit() {
     this.ObtenerUsuarioActual();
@@ -50,9 +55,8 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let listaRespuestas = this.ObtenerNombreListaActual();
     let consulta = '<View><Query><Where><And><Eq><FieldRef Name="Fecha"/><Value Type="DateTime" IncludeTimeValue="False"><Today/></Value></Eq><Eq><FieldRef Name="Usuario" LookupId="TRUE" /><Value Type="Lookup">' + this.usuarioActual.id + '</Value></Eq></And></Where></Query></View>';
-    this.servicio.ObtenerElementosPorCaml(listaRespuestas, consulta).subscribe(
+    this.servicio.ObtenerElementosPorCaml(this.listaRespuestas, consulta).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
         this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
@@ -113,13 +117,11 @@ export class MisActividadesComponent implements OnInit {
     }
   }
 
-  actualizarActividad(event, switcheActividad, actividad, template: TemplateRef<any>) {
-
+  actualizarActividad(event, switcheActividad, actividad, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>) {
     this.actividadRespuestaActualizar = actividad;
-
     switch (this.actividadRespuestaActualizar.tipoValidacion) {
       case "Adjunto":
-        this.actualizarActividadAdjuntos(event, switcheActividad, this.actividadRespuestaActualizar, template);
+        this.actualizarActividadAdjuntos(event, switcheActividad, this.actividadRespuestaActualizar, template, templateConfirmacion);
         break;
       case "Checkbox":
         this.actualizarActividadCheckbox(event, this.actividadRespuestaActualizar);
@@ -156,18 +158,21 @@ export class MisActividadesComponent implements OnInit {
   }
 
   actualizarActividadCheckbox(event: any, actividadRespuesta: Respuesta): any {
-    let listaRespuestas = this.ObtenerNombreListaActual();
     if (event.target.checked == false) {
       actividadRespuesta.respuesta = false;
-      this.actividadesGestionadas--;
+    } else {
+      if (event.target.checked == true) {
+        actividadRespuesta.respuesta = true;
+      }
     }
-    if (event.target.checked == true) {
-      actividadRespuesta.respuesta = true;
-      this.actividadesGestionadas++;
-    }
-    this.servicio.actuaiizarActividad(listaRespuestas, actividadRespuesta).then(
+    this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
       (respuesta) => {
-        console.log("Se actualiza la actividad: " + actividadRespuesta.id);
+        if (actividadRespuesta.respuesta == false) {
+          this.actividadesGestionadas--;
+        }
+        if (actividadRespuesta.respuesta == true) {
+          this.actividadesGestionadas++;
+        }
       }, error => {
         console.log(error);
         alert('Ha ocurrido un error al actualizar la actividad');
@@ -175,38 +180,36 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
-  actualizarActividadAdjuntos(event: any, switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>): any {
-    let listaRespuestas = this.ObtenerNombreListaActual();
-    if(!actividadRespuesta.adjunto){
-      if (event.target.checked == false) {
-        this.mostrarConfirmacionBorrarAdjuntos(template);
-      }
+  actualizarActividadAdjuntos(event: any, switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
+
+    if (event.target.checked == false) {
+      this.mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, templateConfirmacion);
+    } else {
       if (event.target.checked == true) {
-        this.mostrarAlertaValidacionAdjunto(switcheActividad, template);
-      }
-    }
-    else{
-      if (event.target.checked == false) {
-        actividadRespuesta.respuesta = false;
-        this.actividadesGestionadas--;
-      }
-      if (event.target.checked == true) {
-        actividadRespuesta.respuesta = true;
-        this.actividadesGestionadas++;
-      }
-      this.servicio.actuaiizarActividad(listaRespuestas, actividadRespuesta).then(
-        (respuesta) => {
-          this.AgregarAdjuntoActividad(actividadRespuesta);
-        }, error => {
-          console.log(error);
-          alert('Ha ocurrido un error al actualizar la actividad');
+        if (!actividadRespuesta.adjunto) {
+          this.mostrarAlertaValidacionAdjunto(switcheActividad, template);
         }
-      );
+        else {
+          actividadRespuesta.respuesta = true;
+          this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
+            (respuesta) => {
+              this.AgregarAdjuntoActividad(actividadRespuesta);
+            }, error => {
+              console.log(error);
+              alert('Ha ocurrido un error al actualizar la actividad');
+            }
+          );
+        }
+      }
     }
   }
 
-  mostrarConfirmacionBorrarAdjuntos(template: TemplateRef<any>): any {
-
+  mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>): any {
+    switcheActividad.checked = true;
+    this.actividadRespuestaActualizar = actividadRespuesta;
+    this.switcheActividadSeleccionada = switcheActividad;
+    this.mensajeConfirmacion = "¿Está seguro de reiniciar la actividad, tenga en cuenta que esto borrará el soporte?";
+    this.modalRef = this.servicioModal.show(template, { class: 'modal-lg' });
   }
 
   mostrarAlertaValidacionAdjunto(switcheActividad, template: TemplateRef<any>): any {
@@ -217,12 +220,10 @@ export class MisActividadesComponent implements OnInit {
   }
 
   AgregarAdjuntoActividad(actividadRespuestaActualizar: Respuesta): any {
-    console.log(actividadRespuestaActualizar);
-    let listaRespuestas = this.ObtenerNombreListaActual();
     let nombreArchivo = "SC-" + this.generarllaveSoporte() + "-" + actividadRespuestaActualizar.adjunto.name;
-    this.servicio.agregarAdjuntoActividad(listaRespuestas, actividadRespuestaActualizar, nombreArchivo , actividadRespuestaActualizar.adjunto).then(
+    this.servicio.agregarAdjuntoActividad(this.listaRespuestas, actividadRespuestaActualizar, nombreArchivo, actividadRespuestaActualizar.adjunto).then(
       (respuesta) => {
-        console.log("Actividad actualizada con adjunto: " + actividadRespuestaActualizar.id);
+        this.actividadesGestionadas++;
       }, error => {
         console.log(error);
         alert('Ha ocurrido un error al actualizar la actividad');
@@ -230,7 +231,7 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
-  generarllaveSoporte(): string{
+  generarllaveSoporte(): string {
     var fecha = new Date();
     var valorprimitivo = fecha.valueOf().toString();
     return valorprimitivo;
@@ -239,9 +240,51 @@ export class MisActividadesComponent implements OnInit {
   subirAdjuntoActividad(fileInput: any, actividad) {
     if (fileInput.target.files && fileInput.target.files[0]) {
       actividad.adjunto = fileInput.target.files[0];
+      this.fileuploadActual = fileInput.srcElement.value;
     }
-    else{
+    else {
       actividad.adjunto = null;
     }
+  }
+
+  confirmar(): void {
+    let adjuntoBorrar: string;
+    this.servicio.obtenerAdjuntos(this.listaRespuestas, this.actividadRespuestaActualizar).then(
+      (respuesta) => {
+        adjuntoBorrar = respuesta[0].FileName;
+        this.actividadRespuestaActualizar.respuesta = false;
+        this.ActualizarActividadyBorrarAdjuntos(this.actividadRespuestaActualizar, adjuntoBorrar);
+      }, error => {
+        console.log(error);
+      }
+    );
+  }
+
+  ActualizarActividadyBorrarAdjuntos(actividadRespuesta: Respuesta, adjuntoBorrar): any {
+    this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
+      (respuesta) => {
+        this.borrarAdjuntosActividad(actividadRespuesta, adjuntoBorrar);
+      }, error => {
+        console.log(error);
+        alert('Ha ocurrido un error al actualizar la actividad');
+      }
+    );
+  }
+
+  borrarAdjuntosActividad(actividadRespuesta: Respuesta, adjuntoBorrar: string): any {
+    this.servicio.borrarAdjunto(this.listaRespuestas, actividadRespuesta, adjuntoBorrar).then(
+      (respuesta) => {
+        this.actividadesGestionadas--;
+        this.modalRef.hide();
+        this.switcheActividadSeleccionada.checked = false;
+      }, error => {
+        console.log(error);
+      }
+    );
+  }
+
+  declinar(): void {
+    this.switcheActividadSeleccionada.checked = true;
+    this.modalRef.hide();
   }
 }
