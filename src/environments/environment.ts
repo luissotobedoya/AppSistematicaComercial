@@ -9,5 +9,6 @@ export const environment = {
   maestroUsuarios: 'MaestroUsuarios',
   maestroActividadesGenerales: 'MaestroActividadesGenerales',
   grupoAdministradoresTienda: 'GrupoAdministradoresTiendas',
-  grupoJefesZona: 'GrupoJefesZona'
+  grupoJefesZona: 'GrupoJefesZona',
+  actividadesExtraordinarias:'ActividadesExtraordinariasTienda'
 };

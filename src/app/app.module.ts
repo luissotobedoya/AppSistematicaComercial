@@ -6,6 +6,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
+import { BsDatepickerModule } from 'ngx-bootstrap';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+
 
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
@@ -16,6 +20,8 @@ import { AsignacionTareasComponent } from './asignacion-tareas/asignacion-tareas
 import { SolicitudesTiendaComponent } from './solicitudes-tienda/solicitudes-tienda.component';
 import { ParametrizacionComponent } from './parametrizacion/parametrizacion.component';
 import { SPServicio } from './servicios/sp.servicio';
+import { ActividadesExtrasComponent } from './actividades-extras/actividades-extras.component';
+
 
 @NgModule({
   declarations: [
@@ -27,14 +33,17 @@ import { SPServicio } from './servicios/sp.servicio';
     AsignacionTareasComponent,
     SolicitudesTiendaComponent,
     ParametrizacionComponent,
+    ActividadesExtrasComponent,
     
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    FormsModule,    
+    BrowserAnimationsModule,
     AlertModule.forRoot(),
     ReactiveFormsModule,
-    ModalModule.forRoot(), 
+    ModalModule.forRoot(),
+    BsDatepickerModule.forRoot(),
     RouterModule.forRoot([
       {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
       {path:'mis-actividades', component:MisActividadesComponent},
@@ -43,9 +52,10 @@ import { SPServicio } from './servicios/sp.servicio';
       {path:'documentacion', component:DocumentacionComponent},
       {path:'asignacion-tareas', component:AsignacionTareasComponent},
       {path:'solicitudes-tienda', component:SolicitudesTiendaComponent},
-      {path:'parametrizacion', component:ParametrizacionComponent}
+      {path:'parametrizacion', component:ParametrizacionComponent},
+      {path:'actividades-extras', component:ActividadesExtrasComponent}
     ]),
-    HttpModule,
+    HttpModule
   ],
   providers: [SPServicio],
   bootstrap: [AppComponent]

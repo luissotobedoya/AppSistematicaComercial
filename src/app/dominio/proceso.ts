@@ -8,4 +8,7 @@ export class Proceso{
         this.nombre = nombre;
     }
 
+
+    
+
 }
