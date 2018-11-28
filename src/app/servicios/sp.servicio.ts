@@ -124,11 +124,10 @@ export class SPServicio {
     }
 
     agregarActividadExtraordinaria(actividaextraordinaria:ActividadExtraordinaria){
-        console.log("agregarActividad");
         let ObjActividad = {
            Fecha: actividaextraordinaria.fecha,
            UsuariosTiendaId: {
-                    results: actividaextraordinaria.usuariosId // User Ids from UIL as an array of numbers
+                    results: actividaextraordinaria.usuariosId
                    }, 
            Title:actividaextraordinaria.actividad,
            Clasificacion:actividaextraordinaria.clasificacion,
