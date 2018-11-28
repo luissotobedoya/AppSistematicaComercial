@@ -46,7 +46,7 @@
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
                     <div *ngIf="actividad.tipoValidacion == 'Adjunto'">
-                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad" title="Adjuntar archivo" (change)="subirAdjuntoActividad($event, actividad)">
+                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad" tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
                     </div>
                 </div>
             </div>

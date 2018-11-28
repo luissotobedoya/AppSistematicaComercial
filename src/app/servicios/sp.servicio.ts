@@ -8,8 +8,7 @@ import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
 @Injectable()
 export class SPServicio {
     constructor() { 
-
-       
+        
     }
 
     public obtenerConfiguracion() {
@@ -28,11 +27,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-<<<<<<< HEAD
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQzMzU4MTI1LCJuYmYiOjE1NDMzNTgxMjUsImV4cCI6MTU0MzM4NzIyNSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.YxcJg5uxbp1Ykabx7mVMkwJNkcQNRjd7vxE_la98cjFUCQic0DGDLhz_t8y4K6WwPUqnYwf2iW5JNi7Hs-OU6WkhOALrQ3BgiSfpIiuF5___LqOybsvCX1LLI2YLjDGItXJEIjFqjWdow-xMT6jfmxBzheC7SguSZC2Daqnmz9KW0NOfBV-0r7kBngK-Ei46_RuXYJ-0BJ_GvqqVldyp9OmwJLWaJO3RbaYLB7anFrZoM48KNguEyRslmcAbOpREqCsiA9EgOZzlMdiX6l2aToL-BuKmImXzWsw4Q8OJ2l3SSzuLxxm2sn8jayLhtNbwipMGFZyT_axMOch_ZUWe0A'
-=======
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQzMzM5MjAyLCJuYmYiOjE1NDMzMzkyMDIsImV4cCI6MTU0MzM2ODMwMiwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.bMEarPFZ4bnhVnCwhfAbjUZhch_Xsltl6hVNINAS0lj9hWtkK44klCsBWbhj4v1FaR-CcAEmQEkKCUrzDuicZJmmnozy7oSNy-OeVLMEralOpNbIGyOEegj-SKy3nVP_g3UUm30BxlNJmErAYk9rH1oyIpvFVjdVN9f32DOa0Cb7Mfwu9bLgTiCw6jrI4VS7NFzzim0Xy2KWoOqJYDGHJ1pUKkhlzDgFsnn7knTrepunC8GFfEbTKEFuNjhk24uUKfcVz-ZX3LBPD6hQo1my1hK8xhzvG4HbAuelcx6Rqip-E8bTaqlgmlRDiY35TUtFp7wm7Z61_EEb_0fB2eAlRw'
->>>>>>> DevEsteban
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQzNDE1MTQ2LCJuYmYiOjE1NDM0MTUxNDYsImV4cCI6MTU0MzQ0NDI0NiwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.Bx2S03gsByqdDFwOnQ-bzdwQ7H05PpCWCW6mh0hPy0sAHwRt1VErFdejTkzdh1HEXKVhOSp_IbcpzsdNnFK2UIhc_W2JFz2Ws8RFntEl3XFDQZizGlXrMfiInebZvTbT0aG1Wh9xhdcRUFCDsN4am85XZ746zFdv4Apt-aumoJAZ4U_5n8Oq7jTLEYh8m93WigsYsFhuDQHhnpxppn4FmZBp09C_fKRWtyJMJ07iJ_QzvtZvFHGPlsU6oSjDjn-x_989TXazPAZJWMmKpUz3sZVQJxo46mPQh6B71ffD2v07vzbzjF0pGC4yyUD4j-MSqqpx9EoljUH2YxxASFyXyQ'
             }
         }, environment.urlWeb);
 
@@ -120,28 +115,27 @@ export class SPServicio {
         return elemento.attachmentFiles.add(nombreArchivo, archivo);
     }
 
-<<<<<<< HEAD
     obtenerAdjuntos(nombreLista: string, respuesta: Respuesta){
         return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.get();
     }
 
     borrarAdjunto(nombreLista: string, respuesta: Respuesta, nombreAdjunto: string){
         return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.getByName(nombreAdjunto).delete();
-=======
-    agregarActividadExtraordinaria(actividaextraordinaria:ActividadExtraordinaria){
-         console.log("agregarActividad");
-         let ObjActividad = {
-            Fecha: actividaextraordinaria.fecha,
-            UsuariosTiendaId: {
-                     results: actividaextraordinaria.usuariosId // User Ids from UIL as an array of numbers
-                    }, 
-            Title:actividaextraordinaria.actividad,
-            Clasificacion:actividaextraordinaria.clasificacion,
-            Proceso:actividaextraordinaria.proceso,
-            TipoValidacion:actividaextraordinaria.tipoValidacion
-         };
-         let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add( ObjActividad );
-        return elemento;
->>>>>>> DevEsteban
     }
+
+    agregarActividadExtraordinaria(actividaextraordinaria:ActividadExtraordinaria){
+        console.log("agregarActividad");
+        let ObjActividad = {
+           Fecha: actividaextraordinaria.fecha,
+           UsuariosTiendaId: {
+                    results: actividaextraordinaria.usuariosId // User Ids from UIL as an array of numbers
+                   }, 
+           Title:actividaextraordinaria.actividad,
+           Clasificacion:actividaextraordinaria.clasificacion,
+           Proceso:actividaextraordinaria.proceso,
+           TipoValidacion:actividaextraordinaria.tipoValidacion
+        };
+        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add( ObjActividad );
+       return elemento;
+   }
 }

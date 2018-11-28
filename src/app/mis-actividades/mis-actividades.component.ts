@@ -115,6 +115,7 @@ export class MisActividadesComponent implements OnInit {
         this.actividadesRespuestas.push(this.procesosRespuestas[i]);
       }
     }
+    console.log(this.actividadesRespuestas);
   }
 
   actualizarActividad(event, switcheActividad, actividad, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>) {
@@ -181,7 +182,6 @@ export class MisActividadesComponent implements OnInit {
   }
 
   actualizarActividadAdjuntos(event: any, switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
-
     if (event.target.checked == false) {
       this.mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, templateConfirmacion);
     } else {
@@ -223,6 +223,7 @@ export class MisActividadesComponent implements OnInit {
     let nombreArchivo = "SC-" + this.generarllaveSoporte() + "-" + actividadRespuestaActualizar.adjunto.name;
     this.servicio.agregarAdjuntoActividad(this.listaRespuestas, actividadRespuestaActualizar, nombreArchivo, actividadRespuestaActualizar.adjunto).then(
       (respuesta) => {
+        actividadRespuestaActualizar.adjunto = null;
         this.actividadesGestionadas++;
       }, error => {
         console.log(error);
