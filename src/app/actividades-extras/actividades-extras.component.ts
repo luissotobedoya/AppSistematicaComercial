@@ -10,7 +10,6 @@ import { ItemAddResult } from 'sp-pnp-js';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
-
 @Component({
   selector: 'app-actividades-extras',
   templateUrl: './actividades-extras.component.html',
