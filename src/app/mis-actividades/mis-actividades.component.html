@@ -1,3 +1,6 @@
+<div class="loading" *ngIf='loading'>
+    <img class="img-logo" src="https://estudiodemoda.sharepoint.com/sites/EM/sc/ImagenesSC/aplicacion/loading.gif" alt="loading...">
+</div>
 <div class="zona-cabecera">
     <div class="row">
         <div class="col-md-4">
@@ -41,12 +44,14 @@
                 <h3 class="titulo-actividades">Actividades</h3>
                 <div *ngFor="let actividad of actividadesRespuestas" class="actividad">
                     <label class="switch">
-                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta" (change)="actualizarActividad($event, switcheActividad, actividad, template, templateConfirmation)">
+                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta"
+                            (change)="actualizarActividad($event, switcheActividad, actividad, template, templateConfirmation)">
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
                     <div *ngIf="actividad.tipoValidacion == 'Adjunto'">
-                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad" tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
+                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad"
+                            tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
                     </div>
                 </div>
             </div>
@@ -68,8 +73,8 @@
 
     <ng-template #templateConfirmation>
         <div class="modal-body text-center">
-          <p>{{mensajeConfirmacion}}</p>
-          <button type="button" class="btn btn-default" (click)="confirmar()" >Si</button>
-          <button type="button" class="btn btn-primary" (click)="declinar()" >No</button>
+            <p>{{mensajeConfirmacion}}</p>
+            <button type="button" class="btn btn-default" (click)="confirmar()">Si</button>
+            <button type="button" class="btn btn-primary" (click)="declinar()">No</button>
         </div>
-      </ng-template>
+    </ng-template>

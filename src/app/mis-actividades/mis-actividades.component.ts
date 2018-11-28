@@ -32,14 +32,17 @@ export class MisActividadesComponent implements OnInit {
   public modalRef: BsModalRef;
   listaRespuestas: string;
   fileuploadActual;
+  loading: boolean;
 
   constructor(
     private servicio: SPServicio,
     private servicioModal: BsModalService) {
     this.listaRespuestas = this.ObtenerNombreListaActual();
+    this.loading = false;
   }
 
   ngOnInit() {
+    this.loading = true;
     this.ObtenerUsuarioActual();
   }
 
@@ -62,6 +65,7 @@ export class MisActividadesComponent implements OnInit {
         this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
         this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
         this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
+        this.loading = false;
       },
       error => {
         console.log('Error obteniendo las actividades del usuario: ' + error);
@@ -78,6 +82,7 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerProcesosPorClasificacion(clasificacion) {
+    this.loading = true;
     this.clasificacionSeleccionada = clasificacion;
     this.LimpiarProcesos();
     this.LimpiarActividades();
@@ -89,6 +94,7 @@ export class MisActividadesComponent implements OnInit {
       }
     }
     this.procesosRespuestasUnicos = this.ObtenerProcesosUnicos(this.procesosRespuestas);
+    this.loading = false;
   }
 
   LimpiarActividades(): any {
@@ -108,6 +114,7 @@ export class MisActividadesComponent implements OnInit {
   }
 
   obtenerActividades(proceso) {
+    this.loading = true;
     this.LimpiarActividades();
     this.mostrarActividades = true;
     for (var i = 0; i < this.procesosRespuestas.length; i++) {
@@ -115,10 +122,11 @@ export class MisActividadesComponent implements OnInit {
         this.actividadesRespuestas.push(this.procesosRespuestas[i]);
       }
     }
-    console.log(this.actividadesRespuestas);
+    this.loading = false;
   }
 
   actualizarActividad(event, switcheActividad, actividad, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>) {
+    this.loading = true;
     this.actividadRespuestaActualizar = actividad;
     switch (this.actividadRespuestaActualizar.tipoValidacion) {
       case "Adjunto":
@@ -143,19 +151,19 @@ export class MisActividadesComponent implements OnInit {
   }
 
   actualizarActividadValidacion(actividadRespuesta: Respuesta): any {
-    throw new Error("Method not implemented.");
+    this.loading = false;
   }
 
   actualizarActividadReporte(actividadRespuesta: Respuesta): any {
-    throw new Error("Method not implemented.");
+    this.loading = false;
   }
 
   actualizarActividadCheckboxReporte(actividadRespuesta: Respuesta): any {
-    throw new Error("Method not implemented.");
+    this.loading = false;
   }
 
   actualizarActividadCheckboxAprobacion(actividadRespuesta: Respuesta): any {
-    throw new Error("Method not implemented.");
+    this.loading = false;
   }
 
   actualizarActividadCheckbox(event: any, actividadRespuesta: Respuesta): any {
@@ -174,6 +182,7 @@ export class MisActividadesComponent implements OnInit {
         if (actividadRespuesta.respuesta == true) {
           this.actividadesGestionadas++;
         }
+        this.loading = false;
       }, error => {
         console.log(error);
         alert('Ha ocurrido un error al actualizar la actividad');
@@ -205,6 +214,7 @@ export class MisActividadesComponent implements OnInit {
   }
 
   mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>): any {
+    this.loading = false;
     switcheActividad.checked = true;
     this.actividadRespuestaActualizar = actividadRespuesta;
     this.switcheActividadSeleccionada = switcheActividad;
@@ -213,6 +223,7 @@ export class MisActividadesComponent implements OnInit {
   }
 
   mostrarAlertaValidacionAdjunto(switcheActividad, template: TemplateRef<any>): any {
+    this.loading = false;
     switcheActividad.checked = false;
     this.tituloModal = "No hay soporte";
     this.mensajeModal = "Debes adjuntar un soporte para finalizar o cerrar esta actividad";
@@ -225,6 +236,7 @@ export class MisActividadesComponent implements OnInit {
       (respuesta) => {
         actividadRespuestaActualizar.adjunto = null;
         this.actividadesGestionadas++;
+        this.loading = false;
       }, error => {
         console.log(error);
         alert('Ha ocurrido un error al actualizar la actividad');

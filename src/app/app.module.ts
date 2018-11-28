@@ -9,8 +9,6 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule, TooltipModule  } from 'ngx-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
-
-
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
 import { InformesComponent } from './informes/informes.component';
