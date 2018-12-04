@@ -181,7 +181,7 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   checkValueDias(eventChk) {
-    let isChk = eventChk.target.checked;
+    let isChk = eventChk.target.checked; 
     if (isChk === true) {
       let valueChk = eventChk.target.value;
       this.diasSeleccionados.push(valueChk);

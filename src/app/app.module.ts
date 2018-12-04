@@ -6,7 +6,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { BsDatepickerModule, TooltipModule  } from 'ngx-bootstrap';
+import { BsDatepickerModule, TooltipModule,ProgressbarModule   } from 'ngx-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -31,14 +31,14 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
     AsignacionTareasComponent,
     SolicitudesTiendaComponent,
     ParametrizacionComponent,
-    ActividadesExtrasComponent,
-    
+    ActividadesExtrasComponent    
   ],
   imports: [
-    BrowserModule,
+    BrowserModule,       
     FormsModule,    
     BrowserAnimationsModule,
     AlertModule.forRoot(),
+    ProgressbarModule.forRoot(),
     ReactiveFormsModule,
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),

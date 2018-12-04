@@ -1,7 +1,96 @@
 <div class="titulo-pagina">
-  <h3>{{tituloPagina}}</h3>
+    <h3>{{tituloPagina}}</h3>
 </div>
 
 <div class="zona-cuerpo">
-  
+    <div class="container">
+        <form [formGroup]="informeForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Fecha</label>
+                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" bsDaterangepicker [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
+                        <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
+                            <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Responsable</label>
+                        <select name="" id="" class="form-control" [(ngModel)]="slctResponsableModel" (change)="SeleccionarResponsable($event.target.value)" formControlName="slcResponsable" [ngClass]="{ 'is-invalid': submitted && f.slcResponsable.errors }">                      
+                          <option *ngFor="let itemResponsable of ObjResponsable" [value]="itemResponsable.id" [text]="itemResponsable.nombre">{{itemResponsable.nombre}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.slcResponsable.errors" class="invalid-feedback">
+                            <div *ngIf="f.slcResponsable.errors.required">Este campo es requerido</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for=" exampleInputEmail1 ">{{NombreCampo}}</label>
+                        <select name=" " id=" " class="form-control" [disabled]="DisalbeTienda" formControlName="slcTienda" [ngClass]="{ 'is-invalid': submitted && f.slcTienda.errors }">                        
+                          <option value=" " *ngFor="let itemZona of ObjZona " [value]="itemZona.id " [text]="itemZona.nombre">{{itemZona.nombre}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.slcTienda.errors" class="invalid-feedback">
+                            <div *ngIf="f.slcTienda.errors.required">Este campo es requerido</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row ">
+                <div class="col-md-2 ">
+                    <button type="button " class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </form>
+        <hr>
+        <br>
+        <div class="row" [hidden]="maxPrioridad>0">
+            <div class="col-4">
+                <small><em>Prioridad alta</em></small>
+                <progressbar [max]="maxPrioridad" [value]="dynamicPrioridadAlta" type="danger">
+                    <span class="text-nowrap">{{dynamicPrioridadAlta}} / {{maxPrioridad}}</span>
+                </progressbar>
+            </div>
+            <div class="col-4">
+                <small><em>Prioridad media</em></small>
+                <progressbar [max]="maxPrioridad" [value]="dynamicPrioridadMedia" type="warning">
+                    <span class="text-nowrap">{{dynamicPrioridadMedia}} / {{maxPrioridad}}</span>
+                </progressbar>
+            </div>
+            <div class="col-4">
+                <small><em>Prioridad baja</em></small>
+                <progressbar [max]="maxPrioridad" [value]="dynamicPrioridadBaja" type="success">
+                    <span class="text-nowrap">{{dynamicPrioridadBaja}} / {{maxPrioridad}}</span>
+                </progressbar>
+            </div>
+        </div>
+        <br>
+        <table datatable class="table  table-sm">
+            <thead>
+                <tr>
+                    <th>Actividad</th>
+                    <th>Fecha</th>
+                    <th>Actividad realizada</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let itemsActividad of objRespuestaActividad">
+                    <td>{{itemsActividad.nombreAcitvidad}}</td>
+                    <td>{{itemsActividad.fecha | date:'dd-MM-yyyy'}}</td>
+                    <td>
+                        <div *ngIf="itemsActividad.respuesta === true">
+                            Sí
+                        </div>
+                        <div *ngIf="itemsActividad.respuesta === false">
+                            No
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+
+    </div>
 </div>
