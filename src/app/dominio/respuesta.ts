@@ -16,7 +16,7 @@ export class Respuesta {
     public static fromJson(element: any) {
         return new Respuesta(element.Title,
             element.Fecha,
-            element.UsuarioId,
+            element.Usuario,
             element.Responsable,
             element.Clasificacion,
             element.Proceso,

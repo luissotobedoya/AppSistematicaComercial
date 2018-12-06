@@ -1,6 +1,9 @@
 <div class="loading" *ngIf='loading'>
     <img class="img-logo" src="https://estudiodemoda.sharepoint.com/sites/EM/sc/ImagenesSC/aplicacion/loading.gif" alt="loading...">
 </div>
+<div class="titulo-pagina">
+    <h3>{{tituloPagina}}</h3>
+  </div>
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit(template)">
     <div class="row">
         <div class="col-xs-12 col-md-6 form-group">

@@ -16,6 +16,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
   styleUrls: ['./actividades-extras.component.css']
 })
 export class ActividadesExtrasComponent implements OnInit {
+  tituloPagina = "Actividades extraordinarias";
   registerForm: FormGroup;
   submitted = false;
   clasificaciones: Clasificacion[] = [];

@@ -49,7 +49,12 @@
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
-                    <div *ngIf="actividad.tipoValidacion == 'Adjunto'">
+                    <div *ngIf="actividad.tipoValidacion == 'Adjunto' || 
+                    actividad.tipoValidacion == 'Checkbox y Aprobación' || 
+                    actividad.tipoValidacion == 'Checkbox y Reporte' ||
+                    actividad.tipoValidacion == 'Reporte' || 
+                    actividad.tipoValidacion == 'Validación'">
+
                         <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad"
                             tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
                     </div>
