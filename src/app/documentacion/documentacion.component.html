@@ -3,5 +3,26 @@
 </div>
 
 <div class="zona-cuerpo">
-  
+  <table class="table table-hover" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Actividad</th>
+        <th>Clasificacion</th>
+        <th>Proceso</th>
+        <th>Tarea</th>
+        <th>Tipo de responsable</th>
+        <th>Adjunto</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let actividad of actividades">
+        <td>{{actividad.actividad}}</td>
+        <td>{{actividad.clasificacion.Title}}</td>
+        <td>{{actividad.proceso.Title}}</td>
+        <td>{{actividad.tarea.Title}}</td>
+        <td>{{actividad.responsable.Title}}</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
 </div>

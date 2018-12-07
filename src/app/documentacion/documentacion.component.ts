@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import * as $ from 'jquery';
+import 'datatables.net';
+import 'datatables.net-bs4';
 import { SPServicio } from '../servicios/sp.servicio';
-import { Respuesta } from '../dominio/respuesta';
+import { Actividad } from '../dominio/actividad';
 
 @Component({
   selector: 'app-documentacion',
@@ -9,41 +12,24 @@ import { Respuesta } from '../dominio/respuesta';
 })
 export class DocumentacionComponent implements OnInit {
   tituloPagina = "Documentación";
-  listaRespuestas: string;
-  respuestasActividades: Respuesta[] = []
+  actividades: Actividad[] = [];
+  dataTable: any;
 
-  constructor(private servicio: SPServicio) { 
-    this.listaRespuestas = this.ObtenerNombreListaActual();
+  constructor(private servicio: SPServicio, private chRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this.obtenerTiposValidacion();
+    this.obtenerActividadesGenerales();
   }
 
-  obtenerActividadesConAdjunto(){
-    let FechaActual = new Date();
-    this.servicio.obtenerActividadesConAdjuntoDeTiendaPorFecha(this.listaRespuestas,FechaActual,9).subscribe(
+  obtenerActividadesGenerales() {
+    this.servicio.obtenerActividadesGenerales().subscribe(
       (Response) => {
-        this.respuestasActividades =  Respuesta.fromJsonList(Response);
-        console.log(this.respuestasActividades);
-      }, err => {
-        console.log('Error obteniendo usuario: ' + err);
-      }
-    )
-  }
-
-  ObtenerNombreListaActual(): string {
-    const nombrelista = 'RespuestasActividades';
-    let añoActual = new Date().getFullYear();
-    let mesActual = ("0" + (new Date().getMonth() + 1)).slice(-2);
-    let listaRespuestas = nombrelista + añoActual + mesActual;
-    return listaRespuestas;
-  }
-
-  obtenerTiposValidacion(){
-    this.servicio.obtenerTiposValidacion().then(
-      (Response) => {
-        console.log(Response);
+        this.actividades = Actividad.fromJsonList(Response);
+        console.log(this.actividades);
+        this.chRef.detectChanges();
+        const table: any = $('table');
+        this.dataTable = table.DataTable();
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
       }

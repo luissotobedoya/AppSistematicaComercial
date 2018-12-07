@@ -2,12 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {HttpModule} from '@angular/http';
+import { HttpClientModule } from '@angular/common/http'
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule, TooltipModule,ProgressbarModule   } from 'ngx-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { DataTablesModule } from 'angular-datatables';
 
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
@@ -37,12 +39,14 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
     BrowserModule,       
     FormsModule,    
     BrowserAnimationsModule,
+    HttpClientModule,
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
     ReactiveFormsModule,
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TooltipModule.forRoot(),
+    DataTablesModule,
     RouterModule.forRoot([
       {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
       {path:'mis-actividades', component:MisActividadesComponent},
