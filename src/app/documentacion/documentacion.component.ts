@@ -17,7 +17,7 @@ export class DocumentacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.obtenerActividadesConAdjunto();
+    this.obtenerTiposValidacion();
   }
 
   obtenerActividadesConAdjunto(){
@@ -38,6 +38,16 @@ export class DocumentacionComponent implements OnInit {
     let mesActual = ("0" + (new Date().getMonth() + 1)).slice(-2);
     let listaRespuestas = nombrelista + añoActual + mesActual;
     return listaRespuestas;
+  }
+
+  obtenerTiposValidacion(){
+    this.servicio.obtenerTiposValidacion().then(
+      (Response) => {
+        console.log(Response);
+      }, err => {
+        console.log('Error obteniendo usuario: ' + err);
+      }
+    )
   }
 
 }

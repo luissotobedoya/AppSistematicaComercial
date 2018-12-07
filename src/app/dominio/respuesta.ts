@@ -10,6 +10,7 @@ export class Respuesta {
         public tipoValidacion: string,
         public observaciones,
         public respuesta: boolean,
+        public aprobacionActividad?: string,
         public id?: number,
         public adjunto?: File) { }
 
@@ -23,6 +24,7 @@ export class Respuesta {
             element.TipoValidacion,
             element.Observaciones,
             element.Respuesta,
+            element.AprobacionActividad,
             element.Id)
     }
 

@@ -27,7 +27,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0MDE2NDY5LCJuYmYiOjE1NDQwMTY0NjksImV4cCI6MTU0NDA0NTU2OSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.FGOZdzt4ln2JpRxTUsNlApef3m1h8Ppi1FlUL34dOwafwOgDhQkYcIaYD2BCiiryDp87rZuUqXhSNRbP49H5uYHnBQHve9PotB-H5Fy9CJObE_GYm36l9Ni_j9Z0AIibo3Jhh_3p-cmbI1QEdzEiyp9tf2pvm4k5BDyRkPRajF2T5Kv3fwDOuM2EirkPrXcDa15BTyypp6YlnmjoMlAXGBTXW9osGXTru_2bB8aO3-zxTse-f-VegIRiT4Ocb1S4xhuZikZCp_FRTA2taVrSB15yZ8ifl3cQo7hQXLhLdowCgqOlvLpw7iQOgkqs9RHbb8Kv8TlHvCWwf7Wdki5IjA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0MTg5ODIzLCJuYmYiOjE1NDQxODk4MjMsImV4cCI6MTU0NDIxODkyMywiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.aak0X5wJO4mnSjCWz1jlG3SVNSNVem--OEpI0eU24-TEqkxdSv75yKNsIMtDknuA2FyWmybKJA2fsLgh2fqTMBT05QfyG5ZGb5A-KumrH-wpqu0_NKBTN7V41H6DyaokegjbLDPu_AbxXrMI-QxxlSTiRRVcMOtBGW6KGpvLLYoEOK0DXWh5HkDkYTJ-DgT740h-AuD6V8si-arep2j_qn1P25GzQs9VP2HZ9u5ufU54CRQlqWa3KNeE890bgpEHYMIGhfI_gLvqU00FqVlffeTiOKg4bltp5Tf_0VSFNiU2o5tEJh0p9ThXQbPS0jB1Y7Cv5ORBwqZBa95M5IjPTg'
             }
         }, environment.urlWeb);
 
@@ -124,6 +124,11 @@ export class SPServicio {
         return respuesta;
     }
 
+    obtenerActividadesDelDia(nombreLista: string, usuarioId: number, fecha: string){
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter("UsuarioId eq " + usuarioId + " and Fecha eq datetime'"+fecha+"' ").getAll());
+        return respuesta;
+    }
+
     ObtenerElementosPorCaml(nombreLista: string, consulta: string) {
         //ejemplo de consulta caml "<View><Query>Aqui va el query</Query></View>";
         const xml = consulta;
@@ -136,7 +141,8 @@ export class SPServicio {
 
     actualizarActividad(nombreLista: string, respuesta: Respuesta): any {
         return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).update({
-            Respuesta: respuesta.respuesta
+            Respuesta: respuesta.respuesta,
+            AprobacionActividad: respuesta.aprobacionActividad
         });
     }
 
@@ -170,6 +176,12 @@ export class SPServicio {
 
     obtenerActividadesConAdjuntoDeTiendaPorFecha(nombreLista: string, fecha: Date, usuarioTiendaId: number) {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.select("ID", "Title", "Fecha", "Usuario/Title", "Usuario/ID", "Responsable", "Clasificacion", "Proceso", "TipoValidacion", "Respuesta", "Observaciones").expand("Usuario").filter("( (TipoValidacion eq 'Adjunto') or (TipoValidacion eq 'Checkbox y Aprobación') or (TipoValidacion eq 'Checkbox y Aprobación') or (TipoValidacion eq 'Checkbox y Reporte') or (TipoValidacion eq 'Reporte') or (TipoValidacion eq 'Validación')) and (UsuarioId eq " + usuarioTiendaId + ") ").get());
+        return respuesta;
+    }
+
+    obtenerTiposValidacion(){
+        let campoTipoValidacion =  this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoTipoValidacion);
+        let respuesta = campoTipoValidacion.select('Choices').get();
         return respuesta;
     }
 

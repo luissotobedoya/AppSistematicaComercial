@@ -59,18 +59,38 @@ export class MisActividadesComponent implements OnInit {
 
   ObtenerActividadesUsuarioActual() {
     let consulta = '<View><Query><Where><And><Eq><FieldRef Name="Fecha"/><Value Type="DateTime" IncludeTimeValue="False"><Today/></Value></Eq><Eq><FieldRef Name="Usuario" LookupId="TRUE" /><Value Type="Lookup">' + this.usuarioActual.id + '</Value></Eq></And></Where></Query></View>';
-    this.servicio.ObtenerElementosPorCaml(this.listaRespuestas, consulta).subscribe(
-      (Response) => {
-        this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
-        this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
-        this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
-        this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
-        this.loading = false;
-      },
-      error => {
-        console.log('Error obteniendo las actividades del usuario: ' + error);
-      }
-    );
+    let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(),1)) + "T08:00:00Z";
+    console.log(fechaActual);
+
+      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, 25, fechaActual).subscribe(
+        (Response) => {
+          this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
+          this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
+          this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
+          this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
+          this.loading = false;
+        },
+        error => {
+          console.log('Error obteniendo las actividades del usuario: ' + error);
+        }
+      );
+  }
+
+   addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+
+  ObtenerFormatoFecha(date) {
+    var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+    return [year, month, day].join('-');
   }
 
   ObtenerNombreListaActual(): string {
@@ -136,34 +156,33 @@ export class MisActividadesComponent implements OnInit {
         this.actualizarActividadCheckbox(event, this.actividadRespuestaActualizar);
         break;
       case "Checkbox y Aprobación":
-        this.actualizarActividadCheckboxAprobacion(this.actividadRespuestaActualizar);
-        break;
-      case "Checkbox y Reporte":
-        this.actualizarActividadCheckboxReporte(this.actividadRespuestaActualizar);
-        break;
-      case "Reporte":
-        this.actualizarActividadReporte(this.actividadRespuestaActualizar);
-        break;
-      case "Validación":
-        this.actualizarActividadValidacion(this.actividadRespuestaActualizar);
+        this.actualizarActividadCheckboxAprobacion(event, switcheActividad, this.actividadRespuestaActualizar, template, templateConfirmacion);
         break;
     }
   }
 
-  actualizarActividadValidacion(actividadRespuesta: Respuesta): any {
-    this.loading = false;
-  }
-
-  actualizarActividadReporte(actividadRespuesta: Respuesta): any {
-    this.loading = false;
-  }
-
-  actualizarActividadCheckboxReporte(actividadRespuesta: Respuesta): any {
-    this.loading = false;
-  }
-
-  actualizarActividadCheckboxAprobacion(actividadRespuesta: Respuesta): any {
-    this.loading = false;
+  actualizarActividadCheckboxAprobacion(event: any, switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
+    if (event.target.checked == false) {
+      this.mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, templateConfirmacion);
+    } else {
+      if (event.target.checked == true) {
+        if (!actividadRespuesta.adjunto) {
+          this.mostrarAlertaValidacionAdjunto(switcheActividad, template);
+        }
+        else {
+          actividadRespuesta.respuesta = true;
+          actividadRespuesta.aprobacionActividad = "Sin aprobar";
+          this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
+            (respuesta) => {
+              this.AgregarAdjuntoActividad(actividadRespuesta);
+            }, error => {
+              console.log(error);
+              alert('Ha ocurrido un error al actualizar la actividad');
+            }
+          );
+        }
+      }
+    }
   }
 
   actualizarActividadCheckbox(event: any, actividadRespuesta: Respuesta): any {
@@ -266,6 +285,7 @@ export class MisActividadesComponent implements OnInit {
       (respuesta) => {
         adjuntoBorrar = respuesta[0].FileName;
         this.actividadRespuestaActualizar.respuesta = false;
+        this.actividadRespuestaActualizar.aprobacionActividad = "";
         this.ActualizarActividadyBorrarAdjuntos(this.actividadRespuestaActualizar, adjuntoBorrar);
       }, error => {
         console.log(error);

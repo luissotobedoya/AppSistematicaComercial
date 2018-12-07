@@ -10,5 +10,6 @@ export const environment = {
   maestroActividadesGenerales: 'MaestroActividadesGenerales',
   grupoAdministradoresTienda: 'GrupoAdministradoresTiendas',
   grupoJefesZona: 'GrupoJefesZona',
-  actividadesExtraordinarias:'ActividadesExtraordinariasTienda'
+  actividadesExtraordinarias:'ActividadesExtraordinariasTienda',
+  nombreCampoTipoValidacion: 'TipoValidacion'
 };
