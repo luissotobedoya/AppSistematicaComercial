@@ -3,12 +3,12 @@
 </div>
 <div class="titulo-pagina">
     <h3>{{tituloPagina}}</h3>
-  </div>
+</div>
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit(template)">
     <div class="row">
         <div class="col-xs-12 col-md-6 form-group">
             <label for="lblFechas">Fechas de Actividad</label>
-            <input type="text" formControlName="Fecha" placeholder="Rango de fechas" class="form-control"
+            <input type="text" formControlName="Fecha" placeholder="Rango de fechas" class="form-control" [minDate]="minDate" [maxDate]="maxDate" [bsConfig]="bsConfig"
                 bsDaterangepicker [ngClass]="{ 'is-invalid': submitted && f.Fecha.errors }">
         </div>
         <div *ngIf="submitted && f.Fecha.errors" class="invalid-feedback">
@@ -78,21 +78,6 @@
             </div>
         </div>
         <div class="col-xs-12  col-md-4 form-group">
-            <label for="ddtipoActividad">Tipo Actividad</label>
-            <select id="tipoActividad" class="form-control" formControlName="TipoActividad" [ngClass]="{ 'is-invalid': submitted && f.TipoActividad.errors }">
-                <option value=""></option>
-                <option value="Adjunto">Adjunto</option>
-                <option value="Checkbox">Checkbox</option>
-                <option value="Checkbox y Aprobación">Checkbox y Aprobación</option>
-                <option value="Checkbox y Reporte">Checkbox y Reporte</option>
-                <option value="Reporte">Reporte</option>
-                <option value="Validación">Validación</option>
-            </select>
-            <div *ngIf="submitted && f.TipoActividad.errors" class="invalid-feedback">
-                <div *ngIf="f.TipoActividad.errors.required">Es requerido</div>
-            </div>
-        </div>
-        <div class="col-xs-12  col-md-4 form-group">
             <label for="DDProcesos">Proceso</label>
             <select id="Procesos" class="form-control" formControlName="Proceso" [ngClass]="{ 'is-invalid': submitted && f.Proceso.errors }">
                 <option value=""></option>
@@ -102,8 +87,6 @@
                 <div *ngIf="f.Proceso.errors.required">Es requerido</div>
             </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-xs-12 col-md-4 form-group">
             <label for="lblNombreActividad">Nombre de la actividad</label>
             <input type="text" class="form-control" formControlName="NombreActividad" [ngClass]="{ 'is-invalid': submitted && f.NombreActividad.errors }">
@@ -111,6 +94,32 @@
                 <div *ngIf="f.NombreActividad.errors.required">Es requerido</div>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12  col-md-4 form-group">
+            <label for="prioridad">Prioridad</label>
+            <select id="prioridad" class="form-control" formControlName="prioridad" [ngClass]="{ 'is-invalid': submitted && f.prioridad.errors }">
+                <option value=""></option>
+                <option *ngFor="let prioridad of prioridades" [value]="prioridad" [text]="prioridad"></option>
+            </select>
+            <div *ngIf="submitted && f.prioridad.errors" class="invalid-feedback">
+                <div *ngIf="f.prioridad.errors.required">Es requerido</div>
+            </div>
+        </div>
+        <div class="col-xs-12  col-md-4 form-group">
+            <label for="ddtipoActividad">Tipo Actividad</label>
+            <select id="tipoActividad" class="form-control" formControlName="TipoActividad" [ngClass]="{ 'is-invalid': submitted && f.TipoActividad.errors }" (change)="mostrarObservaciones($event);">
+                <option value=""></option>
+                <option *ngFor="let tipoActividad of tipoActividades" [value]="tipoActividad" [text]="tipoActividad"></option>
+            </select>
+            <div *ngIf="submitted && f.TipoActividad.errors" class="invalid-feedback">
+                <div *ngIf="f.TipoActividad.errors.required">Es requerido</div>
+            </div>
+        </div>
+        <div id="Divobservaciones" class="col-xs-12 col-md-4 form-group" [hidden]="!mostrarDivObservaciones">
+                <label for="observaciones">Observaciones</label>
+                <textarea id="observaciones" formControlName="observaciones" class="form-control" rows="3"></textarea>
+            </div>
     </div>
     <div class="row">
         <div class="col-xs-12  col-md-12 form-group">

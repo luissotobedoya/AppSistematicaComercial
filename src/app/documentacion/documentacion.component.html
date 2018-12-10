@@ -21,7 +21,7 @@
         <td>{{actividad.proceso.Title}}</td>
         <td>{{actividad.tarea.Title}}</td>
         <td>{{actividad.responsable.Title}}</td>
-        <td></td>
+        <td><a *ngIf="actividad.adjunto != null" href="{{actividad.adjunto}}">Descargar</a></td>
       </tr>
     </tbody>
   </table>

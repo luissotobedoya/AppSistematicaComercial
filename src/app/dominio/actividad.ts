@@ -7,6 +7,7 @@ export class Actividad {
         public tarea: any,
         public tipoValidacion: string,
         public observaciones: string,
+        public adjunto: any,
         public id?: number) { }
 
     public static fromJson(element: any) {
@@ -17,6 +18,7 @@ export class Actividad {
             element.Tarea,
             element.TipoValidacion,
             element.Observaciones,
+            (element.AttachmentFiles != null && element.AttachmentFiles.length > 0) ? element.AttachmentFiles[0].ServerRelativeUrl : null,
             element.Id)
     }
 

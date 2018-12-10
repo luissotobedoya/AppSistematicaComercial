@@ -4,6 +4,7 @@ import { default as pnp, ItemAddResult, CamlQuery } from 'sp-pnp-js';
 import { environment } from '../../environments/environment';
 import { Respuesta } from '../dominio/respuesta';
 import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
+import { Actividad } from '../dominio/actividad';
 
 @Injectable()
 export class SPServicio {
@@ -27,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0MjIwNjM0LCJuYmYiOjE1NDQyMjA2MzQsImV4cCI6MTU0NDI0OTczNCwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.gba52S8MrI_Z2DaoIk1BsBj6hJiZEPmkEgCQgJw8JosfcFpRTjPXCGBnkdRkPIuGgwLB9ctgZjCI-EdjFzeMTbWygXJ_Oa1Dqzh-Dsr-y7Wil8ylkhVYnDHTcaOYKlwJSUTCgxoZU_oUA5lcJG31qIm-1FC2Ir9rL2s8jgLQWdj7j6AJCpG6rBGfTkQV9GD8MQZJNt0ivUN39ROcw2d8SzFLcszmlLEQ119exNREVdPI9lJvJfDNncvUS-CA9b8GdpHj6bzN3KVn8707i2x8w0w_CXEqHS2xP5J6hVt0i42eUQXchKUJvHSvqEWQgnM7bYA0N8U30fbrs2b_koVrmA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0NDY4MDUzLCJuYmYiOjE1NDQ0NjgwNTMsImV4cCI6MTU0NDQ5NzE1MywiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.j7KWsxqakcbLWrDabdq2Of-Gk7odbyMn-HehrM7nEytIjoKk2EL4S7_x01rh5zM-t8tgj83b0b0Jd-tDAjOOtDQaegvupCZfT24d9pF_HOOunaT4gRaGkYCLl47O4Ft0MVX3B7EoQInGolVDY9VPqhimpsOz5dQaXHfDp_YldAfVYUIgcwQg2goCcpwl9wzxsP0iND2KdlhFL48aUoPTzL_cwCkbRv0A2gYX073Cp2h4lILQJKCBXRtjrVENy1Pqy6fLjL-Ku1NuMQeLAZLtvXIV5Oq4JyC_62MDmIkmC93sMvZ4h0LvsuAUsGQaCC3PbWimpIoFGCJu2kpmw7c2Mw'
             }
         }, environment.urlWeb);
 
@@ -115,7 +116,9 @@ export class SPServicio {
     }
 
     obtenerActividadesGenerales(){
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).items.select("Title", "Clasificacion/Title", "Clasificacion/ID", "Proceso/Title", "Proceso/ID", "Tarea/Title", "Tarea/ID", "Responsable/Title", "Responsable/ID").expand("Clasificacion", "Proceso", "Tarea", "Responsable").getAll(500));
+        const campoOrdenar : string = "Title";
+        const modoOrdnamientoASC = true;
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).items.select("ID","Title", "Clasificacion/Title", "Clasificacion/ID", "Proceso/Title", "Proceso/ID", "Tarea/Title", "Tarea/ID", "Responsable/Title", "Responsable/ID", "TipoValidacion", "Observaciones", "AttachmentFiles").expand("Clasificacion", "Proceso", "Tarea", "Responsable", "AttachmentFiles").orderBy(campoOrdenar, modoOrdnamientoASC).getAll(500));
         return respuesta;
     }
 
@@ -173,7 +176,9 @@ export class SPServicio {
             Title: actividaextraordinaria.actividad,
             Clasificacion: actividaextraordinaria.clasificacion,
             Proceso: actividaextraordinaria.proceso,
-            TipoValidacion: actividaextraordinaria.tipoValidacion
+            TipoValidacion: actividaextraordinaria.tipoValidacion,
+            Prioridad: actividaextraordinaria.prioridad,
+            Observaciones: actividaextraordinaria.observaciones
         };
         let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
         return elemento;
@@ -187,6 +192,12 @@ export class SPServicio {
     obtenerTiposValidacion(){
         let campoTipoValidacion =  this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoTipoValidacion);
         let respuesta = campoTipoValidacion.select('Choices').get();
+        return respuesta;
+    }
+
+    obtenerPrioridades(){
+        let campoPrioridad =  this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoPrioridad);
+        let respuesta = campoPrioridad.select('Choices').get();
         return respuesta;
     }
 

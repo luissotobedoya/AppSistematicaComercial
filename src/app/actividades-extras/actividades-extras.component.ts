@@ -9,6 +9,7 @@ import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
 import { ItemAddResult } from 'sp-pnp-js';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-actividades-extras',
@@ -17,11 +18,20 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 })
 export class ActividadesExtrasComponent implements OnInit {
   tituloPagina = "Actividades extraordinarias";
+
+  //Calendarios
+  colorTheme = 'theme-blue';
+  bsConfig: Partial<BsDatepickerConfig>;
+  minDate: Date;
+  maxDate: Date;
+
   registerForm: FormGroup;
   submitted = false;
   clasificaciones: Clasificacion[] = [];
   ObjProceso: Proceso[] = [];
   ObjTiendas: TiendaXJefe[] = [];
+  prioridades: string[] = [];
+  tipoActividades: string[] = [];
   Fecha: string;
   diasSeleccionados: any[] = [];
   tiendasSeleccionadas: Number[] = [];
@@ -33,29 +43,40 @@ export class ActividadesExtrasComponent implements OnInit {
   public modalRef: BsModalRef;
   loading: boolean;
   actividadExtraordinariaGuardar: ActividadExtraordinaria;
+  mostrarDivObservaciones = false;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder,
     private servicioModal: BsModalService) {
-    this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "");
+    this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "","", "");
     this.contadorEntradas = 0;
     this.ContadorSucces = 0;
     this.loading = false;
+    this.minDate = new Date();
+    this.maxDate = new Date();
+    this.minDate.setDate(this.minDate.getDate());
+    this.maxDate.setDate(this.maxDate.getDate() + 365000);
+  }
+
+  aplicarTema() {
+    this.bsConfig = Object.assign({}, { containerClass: this.colorTheme });
   }
 
   ngOnInit() {
+    this.aplicarTema();
     this.loading = true;
     this.registerForm = this.formBuilder.group({
       Fecha: ['', Validators.required],
       Clasificacion: ['', Validators.required],
       TipoActividad: ['', Validators.required],
       Proceso: ['', Validators.required],
+      prioridad: ['', Validators.required],
+      observaciones: [''],
       NombreActividad: ['', Validators.required]
     });
     this.obtenerClasificacionExtra();
   }
 
   get f() { return this.registerForm.controls; }
-
 
   mostrarAlerta(template: TemplateRef<any>, Titulo, Mensaje): any {
     this.tituloModal = Titulo;
@@ -88,11 +109,35 @@ export class ActividadesExtrasComponent implements OnInit {
         this.servicio.ObtenerTiendaXJefe(Usuario).subscribe(
           (ResponseTienda) => {
             this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);
-            this.loading = false;
+            this.obtenerTipoActividades();
           }
         );
       }
     );
+  }
+
+  obtenerTipoActividades() : any {
+    this.servicio.obtenerTiposValidacion().then(
+      (Response) => {
+        let respuesta = Response;
+        this.tipoActividades = respuesta.Choices.results;
+        this.obtenerPrioridades();
+      }, err => {
+        console.log('Error obteniendo tipo de actividades: ' + err);
+      }
+    )
+  }
+
+  obtenerPrioridades(): any {
+    this.servicio.obtenerPrioridades().then(
+      (Response) => {
+        let respuesta = Response;
+        this.prioridades = respuesta.Choices.results;
+        this.loading = false;
+      }, err => {
+        console.log('Error obteniendo prioridades: ' + err);
+      }
+    )
   }
 
   seleccionarTienda(TiendasChk) {
@@ -148,7 +193,6 @@ export class ActividadesExtrasComponent implements OnInit {
         this.contadorEntradas++;
         this.actividadExtraordinariaGuardar = this.retornarActividadExtra(FechaActividad.toISOString());
         this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
-        console.log(this.actividadExtraordinariaGuardar);
       }
       inicio.setDate(inicio.getDate() + 1);
     }
@@ -178,6 +222,8 @@ export class ActividadesExtrasComponent implements OnInit {
     this.actividadExtraordinariaGuardar.clasificacion = this.registerForm.controls['Clasificacion'].value;
     this.actividadExtraordinariaGuardar.proceso = this.registerForm.controls['Proceso'].value;
     this.actividadExtraordinariaGuardar.tipoValidacion = this.registerForm.controls['TipoActividad'].value;
+    this.actividadExtraordinariaGuardar.prioridad = this.registerForm.controls["prioridad"].value;
+    this.actividadExtraordinariaGuardar.observaciones = this.registerForm.controls["observaciones"].value;
     return this.actividadExtraordinariaGuardar;
   }
 
@@ -191,6 +237,15 @@ export class ActividadesExtrasComponent implements OnInit {
       let valueChk = eventChk.target.value;
       const index = this.diasSeleccionados.indexOf(valueChk, 0);
       this.diasSeleccionados.splice(index, 1);
+    }
+  }
+
+  mostrarObservaciones(event){
+    let valor = event.target.value;
+    if(valor == "Adjunto" || valor == "Checkbox y Aprobación"){
+      this.mostrarDivObservaciones = true;
+    }else{
+      this.mostrarDivObservaciones = false;
     }
   }
 }
