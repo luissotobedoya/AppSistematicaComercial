@@ -10,6 +10,9 @@ import * as $ from 'jquery';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons';
+import { ExcelService } from "../servicios/excel.service";
+import { BsDatepickerConfig } from "ngx-bootstrap";
+
 
 @Component({
   selector: "app-informes",
@@ -18,6 +21,10 @@ import 'datatables.net-buttons';
 })
 
 export class InformesComponent implements OnInit {
+
+    //Calendarios
+  colorTheme = 'theme-blue';
+  bsConfig: Partial<BsDatepickerConfig>;
   tituloPagina = "Informes";
   ObjZona: JefeZona[] = [];
   ObjClasificacion: Clasificacion[] = [];
@@ -53,7 +60,7 @@ export class InformesComponent implements OnInit {
   maxDate: Date;
   dataTable: any;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel :ExcelService) {
     this.NombreCampo = "";
     this.DisalbeTienda = true;
     this.txtFecha = [];
@@ -75,8 +82,13 @@ export class InformesComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  aplicarTema() {
+    this.bsConfig = Object.assign({}, { containerClass: this.colorTheme });
+  }
+
   ngOnInit() {
     this.loading = true;
+    this.aplicarTema();
     this.informeForm = this.formBuilder.group({
       txtFecha: ["", Validators.required],
       slcResponsable: ["", Validators.required],
@@ -124,12 +136,6 @@ export class InformesComponent implements OnInit {
     });
   }
 
-  pageChanged(event) {
-    const startItem = (event.page - 1) * event.itemsPerPage;
-    const endItem = event.page * event.itemsPerPage;
-    this.returnedArray = this.objActividad.slice(startItem, endItem);
-  }
-
   onSubmit() {
     this.submitted = true;
 
@@ -137,7 +143,6 @@ export class InformesComponent implements OnInit {
       return;
     }
 
-    let d = new Date();
     let ArrayFecha = this.informeForm.controls['txtFecha'].value;
     let fecha1 = new Date(ArrayFecha[0]);
     let fecha1String = this.formatDate(fecha1);
@@ -153,7 +158,6 @@ export class InformesComponent implements OnInit {
     this.contadorEntradas = 0;
 
     arrayMEses = this.dateRange(fecha1String, fecha2String);
-
 
     for (const FechaMes of arrayMEses) {
       let date = new Date(FechaMes);
@@ -256,6 +260,10 @@ export class InformesComponent implements OnInit {
     });
   }
 
+  ExportarExcel():void {
+    this.servicioExcel.exportAsExcelFile(this.objActividad, 'Informe Actividades');
+ }
+
   CrearObjetoInforme(NombreLista, stringConsulta) {
     this.loading = true;
 
@@ -272,7 +280,6 @@ export class InformesComponent implements OnInit {
         }
       });
   }
-
 
   dateRange(startDate, endDate) {
     let start = startDate.split('-');

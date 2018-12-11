@@ -13,7 +13,8 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Fecha</label>
-                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" bsDaterangepicker [minDate]="minDate" [maxDate]="maxDate" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
+                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" [bsConfig]="bsConfig"
+                            bsDaterangepicker [minDate]="minDate" [maxDate]="maxDate" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
                         <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
                             <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
                         </div>
@@ -22,8 +23,9 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Responsable</label>
-                        <select name="" id="" class="form-control" [(ngModel)]="slctResponsableModel" (change)="SeleccionarResponsable($event.target.value)" formControlName="slcResponsable" [ngClass]="{ 'is-invalid': submitted && f.slcResponsable.errors }">                      
-                          <option *ngFor="let itemResponsable of ObjResponsable" [value]="itemResponsable.id" [text]="itemResponsable.nombre">{{itemResponsable.nombre}}</option>
+                        <select name="" id="" class="form-control" [(ngModel)]="slctResponsableModel" (change)="SeleccionarResponsable($event.target.value)"
+                            formControlName="slcResponsable" [ngClass]="{ 'is-invalid': submitted && f.slcResponsable.errors }">
+                            <option *ngFor="let itemResponsable of ObjResponsable" [value]="itemResponsable.id" [text]="itemResponsable.nombre">{{itemResponsable.nombre}}</option>
                         </select>
                         <div *ngIf="submitted && f.slcResponsable.errors" class="invalid-feedback">
                             <div *ngIf="f.slcResponsable.errors.required">Este campo es requerido</div>
@@ -33,8 +35,9 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for=" exampleInputEmail1 ">{{NombreCampo}}</label>
-                        <select name=" " id=" " class="form-control" [disabled]="DisalbeTienda" formControlName="slcTienda" [ngClass]="{ 'is-invalid': submitted && f.slcTienda.errors }">                        
-                          <option value=" " *ngFor="let itemZona of ObjZona " [value]="itemZona.id " [text]="itemZona.nombre">{{itemZona.nombre}}</option>
+                        <select name=" " id=" " class="form-control" [disabled]="DisalbeTienda" formControlName="slcTienda"
+                            [ngClass]="{ 'is-invalid': submitted && f.slcTienda.errors }">
+                            <option value=" " *ngFor="let itemZona of ObjZona " [value]="itemZona.id " [text]="itemZona.nombre">{{itemZona.nombre}}</option>
                         </select>
                         <div *ngIf="submitted && f.slcTienda.errors" class="invalid-feedback">
                             <div *ngIf="f.slcTienda.errors.required">Este campo es requerido</div>
@@ -54,40 +57,42 @@
             <div class="col-md-12">
                 No se encontraron registros
             </div>
-
         </div>
-        <div class="row" [hidden]="!(maxPrioridad > 0)">
-            <div class="col-4">
-                <div class="row">
-                    <div class="col-12">
-                        <small><em>Prioridad alta <strong><span class="text-nowrap">{{dynamicPrioridadAlta}} / {{maxPrioridad}}</span></strong></em></small>
+        <div class="container" [hidden]="!(maxPrioridad > 0)">
+            <div class="row">
+                <div class="col-sm">
+                    <div>
+                        <small><em>Prioridad alta <strong><span class="text-nowrap">{{dynamicPrioridadAlta}}/{{maxPrioridad}}</span></strong></em></small>
+                    </div>
+                    <div>
+                        <span class="text-nowrap"> <em>Actividades realizadas
+                                {{actividadesRealizadasAlta}}/{{dynamicPrioridadAlta}}</em></span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <span class="text-nowrap"> <em>Actividades realizadas {{actividadesRealizadasAlta}} / {{dynamicPrioridadAlta}}</em></span>
+                <div class="col-sm">
+                    <div>
+                        <small><em>Prioridad media <strong><span class="text-nowrap">{{dynamicPrioridadMedia}}/{{maxPrioridad}}</span></strong></em></small>
+                    </div>
+                    <div>
+                        <span class="text-nowrap"><em>Actividades realizadas
+                                {{actividadesRealizadasMedia}}/{{dynamicPrioridadMedia}}</em></span>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div>
+                        <small><em>Prioridad baja <strong> <span class="text-nowrap">{{dynamicPrioridadBaja}}/{{maxPrioridad}}</span></strong></em></small>
+                    </div>
+                    <div>
+                        <span class="text-nowrap"><em> Actividades realizadas
+                                {{actividadesRealizadasBaja}}/{{dynamicPrioridadBaja}}</em></span>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="col-12">
-                    <small><em>Prioridad media <strong><span class="text-nowrap">{{dynamicPrioridadMedia}} / {{maxPrioridad}}</span></strong></em></small>
-                </div>
-
-                <div class="col-12">
-                    <span class="text-nowrap"><em>Actividades realizadas {{actividadesRealizadasMedia}}/{{dynamicPrioridadMedia}}</em></span>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="col-12">
-                    <small><em>Prioridad baja <strong> <span class="text-nowrap">{{dynamicPrioridadBaja}} / {{maxPrioridad}}</span></strong></em></small>
-                </div>
-                <div class="col-12">
-                    <span class="text-nowrap"><em> Actividades realizadas {{actividadesRealizadasBaja}} / {{dynamicPrioridadBaja}}</em></span>
-                </div>
-            </div>
         </div>
-        <br>
+        <div>
+            <button class="exportar-excel btn btn-success" [hidden]="!(maxPrioridad > 0)" (click)="ExportarExcel()">Exportar
+                a excel</button>
+        </div>
         <table class="table  table-sm" [hidden]="!(maxPrioridad > 0)">
             <thead>
                 <tr>
@@ -114,6 +119,5 @@
             </tbody>
             <br>
         </table>
-        <br>
     </div>
 </div>

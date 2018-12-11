@@ -21,6 +21,7 @@ import { SolicitudesTiendaComponent } from './solicitudes-tienda/solicitudes-tie
 import { ParametrizacionComponent } from './parametrizacion/parametrizacion.component';
 import { SPServicio } from './servicios/sp.servicio';
 import { ActividadesExtrasComponent } from './actividades-extras/actividades-extras.component';
+import { ExcelService } from './servicios/excel.service';
 
 
 @NgModule({
@@ -61,7 +62,7 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
     ]),
     HttpModule
   ],
-  providers: [SPServicio],
+  providers: [SPServicio, ExcelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
