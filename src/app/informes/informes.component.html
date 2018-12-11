@@ -13,7 +13,7 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Fecha</label>
-                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" bsDaterangepicker [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
+                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" bsDaterangepicker [minDate]="minDate" [maxDate]="maxDate" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
                         <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
                             <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
                         </div>
@@ -50,24 +50,41 @@
         </form>
         <hr>
         <br>
+        <div class="row MensajeRegistros" [hidden]="cantidadRegistros">
+            <div class="col-md-12">
+                No se encontraron registros
+            </div>
+
+        </div>
         <div class="row" [hidden]="!(maxPrioridad > 0)">
             <div class="col-4">
-                <small><em>Prioridad alta</em></small>
-                <progressbar [max]="maxPrioridad" [value]="dynamicPrioridadAlta" type="danger">
-                    <span class="text-nowrap">{{dynamicPrioridadAlta}} / {{maxPrioridad}}</span>
-                </progressbar>
+                <div class="row">
+                    <div class="col-12">
+                        <small><em>Prioridad alta <strong><span class="text-nowrap">{{dynamicPrioridadAlta}} / {{maxPrioridad}}</span></strong></em></small>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <span class="text-nowrap"> <em>Actividades realizadas {{actividadesRealizadasAlta}} / {{dynamicPrioridadAlta}}</em></span>
+                    </div>
+                </div>
             </div>
             <div class="col-4">
-                <small><em>Prioridad media</em></small>
-                <progressbar [max]="maxPrioridad" [value]="dynamicPrioridadMedia" type="warning">
-                    <span class="text-nowrap">{{dynamicPrioridadMedia}} / {{maxPrioridad}}</span>
-                </progressbar>
+                <div class="col-12">
+                    <small><em>Prioridad media <strong><span class="text-nowrap">{{dynamicPrioridadMedia}} / {{maxPrioridad}}</span></strong></em></small>
+                </div>
+
+                <div class="col-12">
+                    <span class="text-nowrap"><em>Actividades realizadas {{actividadesRealizadasMedia}}/{{dynamicPrioridadMedia}}</em></span>
+                </div>
             </div>
             <div class="col-4">
-                <small><em>Prioridad baja</em></small>
-                <progressbar [max]="maxPrioridad" [value]="dynamicPrioridadBaja" type="success">
-                    <span class="text-nowrap">{{dynamicPrioridadBaja}} / {{maxPrioridad}}</span>
-                </progressbar>
+                <div class="col-12">
+                    <small><em>Prioridad baja <strong> <span class="text-nowrap">{{dynamicPrioridadBaja}} / {{maxPrioridad}}</span></strong></em></small>
+                </div>
+                <div class="col-12">
+                    <span class="text-nowrap"><em> Actividades realizadas {{actividadesRealizadasBaja}} / {{dynamicPrioridadBaja}}</em></span>
+                </div>
             </div>
         </div>
         <br>
@@ -80,9 +97,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let itemsActividad of objRespuestaActividad">
+                <tr *ngFor="let itemsActividad of returnedArray">
                     <td>{{itemsActividad.nombreAcitvidad}}</td>
                     <td>{{itemsActividad.fecha | date:'dd-MM-yyyy'}}</td>
+                    <td>{{itemsActividad.prioridad}}</td>
                     <td>
                         <div *ngIf="itemsActividad.respuesta === true">
                             Sí
@@ -93,8 +111,11 @@
                     </td>
                 </tr>
             </tbody>
+            <br>
         </table>
         <br>
-
+        <div class="row" [hidden]="!(maxPrioridad > 0)">
+            <pagination [totalItems]="maxPrioridad" (pageChanged)="pageChanged($event)"></pagination>
+        </div>
     </div>
 </div>

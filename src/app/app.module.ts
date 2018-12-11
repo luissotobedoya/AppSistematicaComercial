@@ -6,7 +6,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { BsDatepickerModule, TooltipModule,ProgressbarModule   } from 'ngx-bootstrap';
+import { BsDatepickerModule, TooltipModule,ProgressbarModule, PaginationModule } from 'ngx-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -43,6 +43,7 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot(),
     TooltipModule.forRoot(),
+    PaginationModule.forRoot(),
     RouterModule.forRoot([
       {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
       {path:'mis-actividades', component:MisActividadesComponent},

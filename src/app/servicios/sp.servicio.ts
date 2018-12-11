@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
-import { default as pnp, ItemAddResult, CamlQuery } from 'sp-pnp-js';
+import { default as pnp, ItemAddResult, CamlQuery, ListEnsureResult } from 'sp-pnp-js';
 import { environment } from '../../environments/environment';
 import { Respuesta } from '../dominio/respuesta';
 import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
+import { promise } from 'protractor';
 
 @Injectable()
 export class SPServicio {
@@ -27,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0MDE2NDY5LCJuYmYiOjE1NDQwMTY0NjksImV4cCI6MTU0NDA0NTU2OSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.FGOZdzt4ln2JpRxTUsNlApef3m1h8Ppi1FlUL34dOwafwOgDhQkYcIaYD2BCiiryDp87rZuUqXhSNRbP49H5uYHnBQHve9PotB-H5Fy9CJObE_GYm36l9Ni_j9Z0AIibo3Jhh_3p-cmbI1QEdzEiyp9tf2pvm4k5BDyRkPRajF2T5Kv3fwDOuM2EirkPrXcDa15BTyypp6YlnmjoMlAXGBTXW9osGXTru_2bB8aO3-zxTse-f-VegIRiT4Ocb1S4xhuZikZCp_FRTA2taVrSB15yZ8ifl3cQo7hQXLhLdowCgqOlvLpw7iQOgkqs9RHbb8Kv8TlHvCWwf7Wdki5IjA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0NTM0OTg4LCJuYmYiOjE1NDQ1MzQ5ODgsImV4cCI6MTU0NDU2NDA4OCwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.B2REgA7T98fFeK6ZPMpIJnPaKoE5FtlyJ_KscV7y3vytsRDEZr6jSxJ6IvZBW79K8bARuuh6oJ6uiELWIfjL6NV66DLlr0R4qiZvoNYD12RfPO5TYkFDU_hwAwo3VktkbrspIj2iPaRhlxE0FbYxcVqOwCQGHetcdVHd1QzYpPn9WFf8Haiql7aOChaOFDEkDeDBLWzKpkG427qhwkibyrkRjgRsa2-Hp5YGQpq2J41kBLeRE8-thTsXSDgKfVt50V9Cz6rHy3L0FhkstUmHy7y3aW-QpYUpdYAL6ttyXEGM_zbcJ375BNF3doo5CpZGICnXnqR4gCAzowNZPTB-3Q' 
             }
         }, environment.urlWeb);
 
@@ -81,11 +82,16 @@ export class SPServicio {
 
     ObtenerClasificacionesExtras() {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.orderBy("OrdenClasificacion", true).filter("AplicaTienda eq '1'").get());
-        return respuesta;
+        return respuesta; 
     }
 
     ObtenerRespuestaActividades(nombreLista, StringConsulta) {
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").get());
+        // let respuesta = await from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").get().then(response => {
+        //     let preprocessedData;
+        //     //do things with response
+        //     return preprocessedData;
+        // }));
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").getAll(5000));
         return respuesta;
     }
 
@@ -171,6 +177,19 @@ export class SPServicio {
     obtenerActividadesConAdjuntoDeTiendaPorFecha(nombreLista: string, fecha: Date, usuarioTiendaId: number) {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.select("ID", "Title", "Fecha", "Usuario/Title", "Usuario/ID", "Responsable", "Clasificacion", "Proceso", "TipoValidacion", "Respuesta", "Observaciones").expand("Usuario").filter("( (TipoValidacion eq 'Adjunto') or (TipoValidacion eq 'Checkbox y Aprobación') or (TipoValidacion eq 'Checkbox y Aprobación') or (TipoValidacion eq 'Checkbox y Reporte') or (TipoValidacion eq 'Reporte') or (TipoValidacion eq 'Validación')) and (UsuarioId eq " + usuarioTiendaId + ") ").get());
         return respuesta;
+    }
+
+
+    async validacionLista(){
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.ensure("RespuestasActividades201901").then((ler: ListEnsureResult) => {
+            if (ler.created) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+        
     }
 
 
