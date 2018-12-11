@@ -38,12 +38,8 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
   imports: [
     BrowserModule,       
     FormsModule,    
-<<<<<<< HEAD
     BrowserAnimationsModule,
     HttpClientModule,
-=======
-    BrowserAnimationsModule, 
->>>>>>> DevEsteban
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
     ReactiveFormsModule,

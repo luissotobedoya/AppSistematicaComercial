@@ -1,12 +1,15 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
 import { SPServicio } from "../servicios/sp.servicio";
 import { JefeZona } from "../dominio/Informe/JefeZona";
 import { Clasificacion } from "../dominio/clasificacion";
 import { ProcesoExtra } from "../dominio/procesosExtra";
-import { Responsable } from "../dominio/Informe/Responsable";
 import { RespuestaActividad } from "../dominio/Informe/RespuestaActividad";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { async } from "q";
+import { Responsable } from "../dominio/Informe/Responsable";
+import * as $ from 'jquery';
+import 'datatables.net';
+import 'datatables.net-bs4';
+import 'datatables.net-buttons';
 
 @Component({
   selector: "app-informes",
@@ -42,14 +45,15 @@ export class InformesComponent implements OnInit {
   actividadesRealizadasAlta: number;
   actividadesRealizadasMedia: number;
   actividadesRealizadasBaja: number;
-  contadorConsultas:number;
-  contadorEntradas:number;  
+  contadorConsultas: number;
+  contadorEntradas: number;
   contentArray: any;
   returnedArray: any;
-  minDate:Date;
+  minDate: Date;
   maxDate: Date;
+  dataTable: any;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef) {
     this.NombreCampo = "";
     this.DisalbeTienda = true;
     this.txtFecha = [];
@@ -66,10 +70,10 @@ export class InformesComponent implements OnInit {
     this.actividadesRealizadasBaja = 0;
     this.dynamicPrioridadAlta = 0;
     this.dynamicPrioridadMedia = 0;
-    this.dynamicPrioridadBaja = 0;   
-    this.minDate=new Date("2018/11/01");
+    this.dynamicPrioridadBaja = 0;
+    this.minDate = new Date("2018/11/01");
     this.maxDate = new Date();
-  }  
+  }
 
   ngOnInit() {
     this.loading = true;
@@ -129,7 +133,6 @@ export class InformesComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    // stop here if form is invalid
     if (this.informeForm.invalid) {
       return;
     }
@@ -142,16 +145,16 @@ export class InformesComponent implements OnInit {
     let fecha2String = this.formatDate(fecha2);
     let slctResponsable = this.informeForm.controls['slcResponsable'].value;
     const nombreResponsable = this.ObjResponsable.find(x => x.id === +slctResponsable).nombre;
-    let slcTienda = this.informeForm.controls['slcTienda'].value;   
-    
+    let slcTienda = this.informeForm.controls['slcTienda'].value;
+
     let arrayMEses = [];
-    this.objActividad=[];
-    this.contadorConsultas=0;
-    this.contadorEntradas=0; 
+    this.objActividad = [];
+    this.contadorConsultas = 0;
+    this.contadorEntradas = 0;
 
     arrayMEses = this.dateRange(fecha1String, fecha2String);
-   
-    
+
+
     for (const FechaMes of arrayMEses) {
       let date = new Date(FechaMes);
       let mes = date.getMonth();
@@ -163,24 +166,21 @@ export class InformesComponent implements OnInit {
         let fechafinString = this.formatDate(lastDay);
         if (nombreResponsable === "Administrador de tienda") {
 
-          // this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z' and Responsable eq '" + nombreResponsable + "' and Usuario eq '" + slcTienda + "'";
           this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
         else if (nombreResponsable === "Jefe de zonas") {
           this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
 
-        let  month = "" + (lastDay.getMonth() + 1);
-        let  year = lastDay.getFullYear();
+        let month = "" + (lastDay.getMonth() + 1);
+        let year = lastDay.getFullYear();
         let NombreLista = "RespuestasActividades" + year + month;
-        //let NombreLista = "RespuestasActividades201811";        
-
-        this.CrearObjetoInforme(NombreLista, this.stringConsulta);        
+        this.CrearObjetoInforme(NombreLista, this.stringConsulta);
       }
       else if (fecha2.getMonth() === mes) {
         this.contadorConsultas++;
         let fechaInicioString = this.formatDate(firstDay);
-        if (nombreResponsable === "Administrador de tienda") { 
+        if (nombreResponsable === "Administrador de tienda") {
 
           this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
         }
@@ -188,11 +188,9 @@ export class InformesComponent implements OnInit {
           this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
         }
 
-        let  month = "" + (firstDay.getMonth() + 1);
-        let  year = firstDay.getFullYear();
+        let month = "" + (firstDay.getMonth() + 1);
+        let year = firstDay.getFullYear();
         let NombreLista = "RespuestasActividades" + year + month;
-        //let NombreLista = "RespuestasActividades201811";
-
         this.CrearObjetoInforme(NombreLista, this.stringConsulta);
       }
       else {
@@ -207,53 +205,72 @@ export class InformesComponent implements OnInit {
           this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
 
-        let  month = "" + (firstDay.getMonth() + 1);
-        let  year = firstDay.getFullYear();
+        let month = "" + (firstDay.getMonth() + 1);
+        let year = firstDay.getFullYear();
         let NombreLista = "RespuestasActividades" + year + month;
         this.CrearObjetoInforme(NombreLista, this.stringConsulta);
       }
 
-    } 
+    }
 
   }
   ObtenerValoresInforme() {
     this.maxPrioridad = this.objActividad.length;
-    
-    this.returnedArray = this.objActividad.slice(0, 10);
     this.dynamicPrioridadAlta = this.objActividad.filter(x => x.prioridad === "Alta").length;
     this.dynamicPrioridadMedia = this.objActividad.filter(x => x.prioridad === "Media").length;
     this.dynamicPrioridadBaja = this.objActividad.filter(x => x.prioridad === "Baja").length;
-
     this.actividadesRealizadasAlta = this.objActividad.filter(x => x.prioridad === "Alta" && x.respuesta === true).length;
     this.actividadesRealizadasMedia = this.objActividad.filter(x => x.prioridad === "Media" && x.respuesta === true).length;
     this.actividadesRealizadasBaja = this.objActividad.filter(x => x.prioridad === "Baja" && x.respuesta === true).length;
     this.loading = false;
     if (this.maxPrioridad > 0) {
-      this.cantidadRegistros = true; 
+      this.cantidadRegistros = true;
     }
     else if (this.maxPrioridad === 0) {
       this.cantidadRegistros = false;
     }
+    this.AgregarDataTable();
+  }
+
+  private AgregarDataTable() {
+    this.chRef.detectChanges();
+    const table: any = $('table');
+    this.dataTable = table.DataTable({
+      "language": {
+        "info": "Mostrando _START_ de _END_ de _TOTAL_ actividades",
+        "paginate": {
+          "first": "Primero",
+          "last": "Último",
+          "previous": "Anterior",
+          "next": "Siguiente"
+        },
+        "sSearch": "Buscar",
+        "sLengthMenu": "Mostrar actividades _MENU_",
+        "emptyTable": "No hay actividades que mostrar",
+        "infoEmpty": "Mostrando 0 de 0 de _MAX_ actividades",
+        "zeroRecords": "No hay actividades que mostrar",
+        "processing": "Procesando",
+        "infoFiltered": "(filtrado de _MAX_ actividades)",
+        "loadingRecords": "Cargando...",
+      }
+    });
   }
 
   CrearObjetoInforme(NombreLista, stringConsulta) {
     this.loading = true;
-    
-       this.servicio.ObtenerRespuestaActividades(NombreLista,stringConsulta)
-      .subscribe(respuestaActividad => 
-        {
-          this.objRespuestaActividad = RespuestaActividad.fromJsonList(respuestaActividad);
-          for (const iterator of this.objRespuestaActividad) {
-            this.objActividad.push(iterator);
-          }
-          this.contadorEntradas++;
 
-          if (this.contadorConsultas===this.contadorEntradas) {
-            this.ObtenerValoresInforme();
-          }
-           
-        });   
-    
+    this.servicio.ObtenerRespuestaActividades(NombreLista, stringConsulta)
+      .subscribe(respuestaActividad => {
+        this.objRespuestaActividad = RespuestaActividad.fromJsonList(respuestaActividad);
+        for (const iterator of this.objRespuestaActividad) {
+          this.objActividad.push(iterator);
+        }
+        this.contadorEntradas++;
+
+        if (this.contadorConsultas === this.contadorEntradas) {
+          this.ObtenerValoresInforme();
+        }
+      });
   }
 
 

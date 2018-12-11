@@ -60,9 +60,7 @@ export class MisActividadesComponent implements OnInit {
   ObtenerActividadesUsuarioActual() {
     let consulta = '<View><Query><Where><And><Eq><FieldRef Name="Fecha"/><Value Type="DateTime" IncludeTimeValue="False"><Today/></Value></Eq><Eq><FieldRef Name="Usuario" LookupId="TRUE" /><Value Type="Lookup">' + this.usuarioActual.id + '</Value></Eq></And></Where></Query></View>';
     let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(),1)) + "T08:00:00Z";
-    console.log(fechaActual);
-
-      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, 25, fechaActual).subscribe(
+      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, fechaActual).subscribe(
         (Response) => {
           this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
           this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;

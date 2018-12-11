@@ -93,11 +93,12 @@
                 <tr>
                     <th>Actividad</th>
                     <th>Fecha</th>
+                    <th>Prioridad</th>
                     <th>Actividad realizada</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let itemsActividad of returnedArray">
+                <tr *ngFor="let itemsActividad of objActividad">
                     <td>{{itemsActividad.nombreAcitvidad}}</td>
                     <td>{{itemsActividad.fecha | date:'dd-MM-yyyy'}}</td>
                     <td>{{itemsActividad.prioridad}}</td>
@@ -114,8 +115,5 @@
             <br>
         </table>
         <br>
-        <div class="row" [hidden]="!(maxPrioridad > 0)">
-            <pagination [totalItems]="maxPrioridad" (pageChanged)="pageChanged($event)"></pagination>
-        </div>
     </div>
 </div>
