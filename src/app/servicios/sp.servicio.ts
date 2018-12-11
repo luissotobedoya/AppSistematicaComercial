@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Respuesta } from '../dominio/respuesta';
 import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
 import { Actividad } from '../dominio/actividad';
+import { Novedad } from '../dominio/novedad';
 
 @Injectable()
 export class SPServicio {
@@ -50,6 +51,11 @@ export class SPServicio {
         return respuesta;
     }
 
+    ObtenerTiposolicitud() {
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroTipoSolicitud).items.get());
+        return respuesta;
+    }
+
     ObtenerCantidadPrioridadAlta(nombreLista) {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter("Prioridad eq 'Alta'").get());
         return respuesta;
@@ -92,6 +98,11 @@ export class SPServicio {
         //     return preprocessedData;
         // }));
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").getAll(5000));
+        return respuesta;
+    }
+
+    ObtenerSolicitudes(StringConsulta) {        
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.Novedades).items.filter(StringConsulta).select("Tienda/Title", "TipoSolicitud/Title", "Descripcion", "Fecha", "Cantidad").expand("Tienda","TipoSolicitud").getAll(5000));
         return respuesta;
     }
 
@@ -186,6 +197,18 @@ export class SPServicio {
             Observaciones: actividaextraordinaria.observaciones
         };
         let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
+        return elemento;
+    }
+
+    agregarNovedad(agregarNovedad:Novedad) {
+        let objNovedad = {
+            TiendaId:agregarNovedad.tienda,
+            Fecha: agregarNovedad.fecha,
+            TipoSolicitudId:agregarNovedad.tipoSolicitud,
+            Descripcion: agregarNovedad.descripcion,
+            Cantidad: agregarNovedad.cantidad
+        };
+        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.Novedades).items.add(objNovedad);
         return elemento;
     }
 

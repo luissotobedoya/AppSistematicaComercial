@@ -1,7 +1,65 @@
+<div class="loading" *ngIf='loading'>
+    <img class="img-logo" src="https://estudiodemoda.sharepoint.com/sites/EM/sc/ImagenesSC/aplicacion/loading.gif" alt="loading...">
+</div>
 <div class="titulo-pagina">
-  <h3>{{tituloPagina}}</h3>
+    <h3>{{tituloPagina}}</h3>
 </div>
 
-<div class="zona-cuerpo">
-  
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="InputTienda">Tienda</label>
+            <select name=" " id=" " class="form-control" [(ngModel)]="Tienda">   
+                  <option value=""></option>                     
+                  <option *ngFor="let itemTienda of ObjTiendas" [value]="itemTienda.id " [text]="itemTienda.nombre">{{itemTienda.nombre}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="lblFechas">Fecha de la solicitud</label>
+            <input type="text" placeholder="Rango de fechas" class="form-control" [(ngModel)]="FechaSolicitud" [bsConfig]="bsConfig" bsDaterangepicker>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="InputTienda">Tipo solicitud</label>
+            <select name=" " id=" " class="form-control" [(ngModel)]="TipoSolicitud">   
+              <option value=""></option>                     
+              <option value=" " *ngFor="let itemSolicitud of ObjTipoSolicitud" [value]="itemSolicitud.Id " [text]="itemSolicitud.Title">{{itemSolicitud.nombre}}</option>
+            </select>
+        </div>
+    </div>
 </div>
+<br>
+<div class="row ">
+    <div class="col-md-2 ">
+        <button type="button " class="btn btn-primary" (click)="buscarSolicitudes()">Buscar solicitudes</button>
+    </div>
+</div>
+<br>
+<hr>
+<div class="row MensajeRegistros" [hidden]="cantidadRegistros">
+    <div class="col-md-12">
+        No se encontraron registros
+    </div>
+</div>
+<table class="table  table-sm" [hidden]="mostrarTabla">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Tipo solicitud</th>
+            <th>Cantidad</th>
+            <th>Descripcion</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let itemsSolicitud of ObjRespuestaConsulta">
+            <td>{{itemsSolicitud.Fecha | date:'dd-MM-yyyy'}}</td>
+            <td>{{itemsSolicitud.TipoSolicitud.Title}}</td>
+            <td>{{itemsSolicitud.Cantidad}}</td>
+            <td>{{itemsSolicitud.Descripcion}}</td>
+        </tr>
+    </tbody>
+    <br>
+</table>

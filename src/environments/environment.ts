@@ -12,5 +12,7 @@ export const environment = {
   grupoJefesZona: 'GrupoJefesZona',
   actividadesExtraordinarias:'ActividadesExtraordinariasTienda',
   nombreCampoTipoValidacion: 'TipoValidacion',
-  nombreCampoPrioridad: 'Prioridad'
+  nombreCampoPrioridad: 'Prioridad',
+  maestroTipoSolicitud: 'TipoSolicitud',
+  Novedades: 'Novedades'
 };

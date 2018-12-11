@@ -1,7 +1,79 @@
+<div class="loading" *ngIf='loading'>
+    <img class="img-logo" src="https://estudiodemoda.sharepoint.com/sites/EM/sc/ImagenesSC/aplicacion/loading.gif" alt="loading...">
+</div>
 <div class="titulo-pagina">
-  <h3>{{tituloPagina}}</h3>
+    <h3>{{tituloPagina}}</h3>
 </div>
 
-<div class="zona-cuerpo">
-  
-</div>
+
+<form [formGroup]="NovedadForm" (ngSubmit)="onSubmit(template)">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="InputTienda">Tienda</label>
+                <select name=" " id=" " class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTienda.errors }" formControlName="txtTienda">                        
+                      <option value=" " *ngFor="let itemTienda of ObjTiendas" [value]="itemTienda.id " [text]="itemTienda.nombre">{{itemTienda.nombre}}</option>
+                    </select>
+                <div *ngIf="submitted && f.txtTienda.errors" class="invalid-feedback">
+                    <div *ngIf="f.txtTienda.errors.required">Este campo es requerido</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="InputTienda">Fecha</label>
+                <input type="text" placeholder="Datepicker" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }" formControlName="txtFecha" class="form-control" bsDatepicker>
+                <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
+                    <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="InputTienda">Tipo solicitud</label>
+                <select name=" " id=" " class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTipoSolicitud.errors }" formControlName="txtTipoSolicitud">                        
+                      <option value=" " *ngFor="let itemSolicitud of ObjTipoSolicitud" [value]="itemSolicitud.Id " [text]="itemSolicitud.Title">{{itemSolicitud.nombre}}</option>
+                    </select>
+                <div *ngIf="submitted && f.txtTipoSolicitud.errors" class="invalid-feedback">
+                    <div *ngIf="f.txtTipoSolicitud.errors.required">Este campo es requerido</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Cantidad</label>
+                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtCantidad.errors }" formControlName="txtCantidad">
+                <div *ngIf="submitted && f.txtCantidad.errors" class="invalid-feedback">
+                    <div *ngIf="f.txtCantidad.errors.required">Este campo es requerido</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <label for="exampleFormControlTextarea1">Descripción</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" formControlName="txtDescripcion" [ngClass]="{ 'is-invalid': submitted && f.txtDescripcion.errors }"></textarea>
+            <div *ngIf="submitted && f.txtDescripcion.errors" class="invalid-feedback">
+                <div *ngIf="f.txtDescripcion.errors.required">Este campo es requerido</div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row ">
+        <div class="col-md-2 ">
+            <button type="button " class="btn btn-primary">Guardar novedad</button>
+        </div>
+    </div>
+</form>
+<!-- Modales -->
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">{{tituloModal}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {{mensajeModal}}
+    </div>
+</ng-template>
