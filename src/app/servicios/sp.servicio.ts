@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
-import { default as pnp, ItemAddResult, CamlQuery } from 'sp-pnp-js';
+import { default as pnp, ItemAddResult, CamlQuery, ListEnsureResult } from 'sp-pnp-js';
 import { environment } from '../../environments/environment';
 import { Respuesta } from '../dominio/respuesta';
 import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
@@ -82,11 +82,16 @@ export class SPServicio {
 
     ObtenerClasificacionesExtras() {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.orderBy("OrdenClasificacion", true).filter("AplicaTienda eq '1'").get());
-        return respuesta;
+        return respuesta; 
     }
 
     ObtenerRespuestaActividades(nombreLista, StringConsulta) {
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").get());
+        // let respuesta = await from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").get().then(response => {
+        //     let preprocessedData;
+        //     //do things with response
+        //     return preprocessedData;
+        // }));
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").getAll(5000));
         return respuesta;
     }
 
@@ -199,6 +204,19 @@ export class SPServicio {
         let campoPrioridad =  this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoPrioridad);
         let respuesta = campoPrioridad.select('Choices').get();
         return respuesta;
+    }
+
+
+    async validacionLista(){
+        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.ensure("RespuestasActividades201901").then((ler: ListEnsureResult) => {
+            if (ler.created) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        });
+        
     }
 
 

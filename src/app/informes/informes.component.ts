@@ -6,6 +6,7 @@ import { ProcesoExtra } from "../dominio/procesosExtra";
 import { Responsable } from "../dominio/Informe/Responsable";
 import { RespuestaActividad } from "../dominio/Informe/RespuestaActividad";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { async } from "q";
 
 @Component({
   selector: "app-informes",
@@ -28,6 +29,7 @@ export class InformesComponent implements OnInit {
   slctProceso: string;
   stringConsulta: string;
   objRespuestaActividad: RespuestaActividad[] = [];
+  objActividad = [];
   informeForm: FormGroup;
   submitted = false;
   maxPrioridad: number;
@@ -36,6 +38,16 @@ export class InformesComponent implements OnInit {
   dynamicPrioridadBaja: number;
   type: string;
   loading: boolean;
+  cantidadRegistros: boolean;
+  actividadesRealizadasAlta: number;
+  actividadesRealizadasMedia: number;
+  actividadesRealizadasBaja: number;
+  contadorConsultas:number;
+  contadorEntradas:number;  
+  contentArray: any;
+  returnedArray: any;
+  minDate:Date;
+  maxDate: Date;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder) {
     this.NombreCampo = "";
@@ -48,7 +60,16 @@ export class InformesComponent implements OnInit {
     this.stringConsulta = "";
     this.maxPrioridad = 0;
     this.loading = false;
-  }
+    this.cantidadRegistros = true;
+    this.actividadesRealizadasAlta = 0;
+    this.actividadesRealizadasMedia = 0;
+    this.actividadesRealizadasBaja = 0;
+    this.dynamicPrioridadAlta = 0;
+    this.dynamicPrioridadMedia = 0;
+    this.dynamicPrioridadBaja = 0;   
+    this.minDate=new Date("2018/11/01");
+    this.maxDate = new Date();
+  }  
 
   ngOnInit() {
     this.loading = true;
@@ -99,6 +120,12 @@ export class InformesComponent implements OnInit {
     });
   }
 
+  pageChanged(event) {
+    const startItem = (event.page - 1) * event.itemsPerPage;
+    const endItem = event.page * event.itemsPerPage;
+    this.returnedArray = this.objActividad.slice(startItem, endItem);
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -107,6 +134,7 @@ export class InformesComponent implements OnInit {
       return;
     }
 
+    let d = new Date();
     let ArrayFecha = this.informeForm.controls['txtFecha'].value;
     let fecha1 = new Date(ArrayFecha[0]);
     let fecha1String = this.formatDate(fecha1);
@@ -114,34 +142,140 @@ export class InformesComponent implements OnInit {
     let fecha2String = this.formatDate(fecha2);
     let slctResponsable = this.informeForm.controls['slcResponsable'].value;
     const nombreResponsable = this.ObjResponsable.find(x => x.id === +slctResponsable).nombre;
-    let slcTienda = this.informeForm.controls['slcTienda'].value;
+    let slcTienda = this.informeForm.controls['slcTienda'].value;   
+    
+    let arrayMEses = [];
+    this.objActividad=[];
+    this.contadorConsultas=0;
+    this.contadorEntradas=0;
 
-    if (nombreResponsable === "Administrador de tienda") {
-      this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z' and Responsable eq '" + nombreResponsable + "' and Usuario eq '" + slcTienda + "'";
-    }
-    else if (nombreResponsable === "Jefe de zonas") {
-      this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z' and Responsable eq '" + nombreResponsable + "' and Jefe eq '" + slcTienda + "'";
-    }
+    arrayMEses = this.dateRange(fecha1String, fecha2String);
+   
+    
+    for (const FechaMes of arrayMEses) {
+      let date = new Date(FechaMes);
+      let mes = date.getMonth();
+      let firstDay = new Date(date.getFullYear(), mes, 1);
+      let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-    let d = new Date(),
-      month = "" + (d.getMonth() + 1),
-      year = d.getFullYear();
-    let NombreLista = "RespuestasActividades" + year + month;
-    //let NombreLista = "RespuestasActividades201811";
+      if (fecha1.getMonth() === mes) {
+        this.contadorConsultas++;
+        let fechafinString = this.formatDate(lastDay);
+        if (nombreResponsable === "Administrador de tienda") {
 
-    this.loading = true;
-    this.servicio
-      .ObtenerRespuestaActividades(NombreLista, this.stringConsulta)
-      .subscribe(respuestaActividad => {
-        this.objRespuestaActividad = RespuestaActividad.fromJsonList(respuestaActividad);
-        this.maxPrioridad = this.objRespuestaActividad.length;
-        this.dynamicPrioridadAlta = this.objRespuestaActividad.filter(x => x.prioridad === "Alta").length;
-        this.dynamicPrioridadMedia = this.objRespuestaActividad.filter(x => x.prioridad === "Media").length;
-        this.dynamicPrioridadBaja = this.objRespuestaActividad.filter(x => x.prioridad === "Baja").length;
-        this.loading = false;
-      });
-     
+          // this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z' and Responsable eq '" + nombreResponsable + "' and Usuario eq '" + slcTienda + "'";
+          this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
+        }
+        else if (nombreResponsable === "Jefe de zonas") {
+          this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
+        }
+
+        let  month = "" + (lastDay.getMonth() + 1);
+        let  year = lastDay.getFullYear();
+        let NombreLista = "RespuestasActividades" + year + month;
+        //let NombreLista = "RespuestasActividades201811";        
+
+        this.CrearObjetoInforme(NombreLista, this.stringConsulta);        
+      }
+      else if (fecha2.getMonth() === mes) {
+        this.contadorConsultas++;
+        let fechaInicioString = this.formatDate(firstDay);
+        if (nombreResponsable === "Administrador de tienda") { 
+
+          this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
+        }
+        else if (nombreResponsable === "Jefe de zonas") {
+          this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
+        }
+
+        let  month = "" + (firstDay.getMonth() + 1);
+        let  year = firstDay.getFullYear();
+        let NombreLista = "RespuestasActividades" + year + month;
+        //let NombreLista = "RespuestasActividades201811";
+
+        this.CrearObjetoInforme(NombreLista, this.stringConsulta);
+      }
+      else {
+        this.contadorConsultas++;
+        let fechaInicioString = this.formatDate(firstDay);
+        let fechafinString = this.formatDate(lastDay);
+        if (nombreResponsable === "Administrador de tienda") {
+
+          this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
+        }
+        else if (nombreResponsable === "Jefe de zonas") {
+          this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
+        }
+
+        let  month = "" + (firstDay.getMonth() + 1);
+        let  year = firstDay.getFullYear();
+        let NombreLista = "RespuestasActividades" + year + month;
+        this.CrearObjetoInforme(NombreLista, this.stringConsulta);
+      }
+
+    } 
+
   }
+  ObtenerValoresInforme() {
+    this.maxPrioridad = this.objActividad.length;
+    
+    this.returnedArray = this.objActividad.slice(0, 10);
+    this.dynamicPrioridadAlta = this.objActividad.filter(x => x.prioridad === "Alta").length;
+    this.dynamicPrioridadMedia = this.objActividad.filter(x => x.prioridad === "Media").length;
+    this.dynamicPrioridadBaja = this.objActividad.filter(x => x.prioridad === "Baja").length;
+
+    this.actividadesRealizadasAlta = this.objActividad.filter(x => x.prioridad === "Alta" && x.respuesta === true).length;
+    this.actividadesRealizadasMedia = this.objActividad.filter(x => x.prioridad === "Media" && x.respuesta === true).length;
+    this.actividadesRealizadasBaja = this.objActividad.filter(x => x.prioridad === "Baja" && x.respuesta === true).length;
+    this.loading = false;
+    if (this.maxPrioridad > 0) {
+      this.cantidadRegistros = true; 
+    }
+    else if (this.maxPrioridad === 0) {
+      this.cantidadRegistros = false;
+    }
+  }
+
+  CrearObjetoInforme(NombreLista, stringConsulta) {
+    this.loading = true;
+    
+       this.servicio.ObtenerRespuestaActividades(NombreLista,stringConsulta)
+      .subscribe(respuestaActividad => 
+        {
+          this.objRespuestaActividad = RespuestaActividad.fromJsonList(respuestaActividad);
+          for (const iterator of this.objRespuestaActividad) {
+            this.objActividad.push(iterator);
+          }
+          this.contadorEntradas++;
+
+          if (this.contadorConsultas===this.contadorEntradas) {
+            this.ObtenerValoresInforme();
+          }
+           
+        });   
+    
+  }
+
+
+  dateRange(startDate, endDate) {
+    let start = startDate.split('-');
+    let end = endDate.split('-');
+    let startYear = parseInt(start[0]);
+    let endYear = parseInt(end[0]);
+    let dates = [];
+
+    for (let i = startYear; i <= endYear; i++) {
+      let endMonth = i !== endYear ? 11 : parseInt(end[1]) - 1;
+      let startMon = i === startYear ? parseInt(start[1]) - 1 : 0;
+      for (let j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 : j + 1) {
+        let month = j + 1;
+        let displayMonth = month < 10 ? '0' + month : month;
+        dates.push([i, displayMonth, '01'].join('/'));
+      }
+    }
+    return dates;
+  }
+
 
   formatDate(fecha): string {
     let d = new Date(fecha),

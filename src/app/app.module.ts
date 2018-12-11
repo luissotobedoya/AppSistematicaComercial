@@ -7,7 +7,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
-import { BsDatepickerModule, TooltipModule,ProgressbarModule   } from 'ngx-bootstrap';
+import { BsDatepickerModule, TooltipModule,ProgressbarModule, PaginationModule } from 'ngx-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
 
