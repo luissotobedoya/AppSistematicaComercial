@@ -147,7 +147,7 @@ export class InformesComponent implements OnInit {
     let arrayMEses = [];
     this.objActividad=[];
     this.contadorConsultas=0;
-    this.contadorEntradas=0;
+    this.contadorEntradas=0; 
 
     arrayMEses = this.dateRange(fecha1String, fecha2String);
    

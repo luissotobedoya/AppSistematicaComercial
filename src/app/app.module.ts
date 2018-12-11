@@ -36,7 +36,7 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
   imports: [
     BrowserModule,       
     FormsModule,    
-    BrowserAnimationsModule,
+    BrowserAnimationsModule, 
     AlertModule.forRoot(),
     ProgressbarModule.forRoot(),
     ReactiveFormsModule,
