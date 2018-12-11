@@ -44,8 +44,9 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
     ProgressbarModule.forRoot(),
     ReactiveFormsModule,
     ModalModule.forRoot(),
-    BsDatepickerModule.forRoot(),
+    BsDatepickerModule.forRoot(),    
     TooltipModule.forRoot(),
+    PaginationModule.forRoot(),
     DataTablesModule,
     RouterModule.forRoot([
       {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
