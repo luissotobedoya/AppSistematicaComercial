@@ -43,7 +43,7 @@ export class SPServicio {
     ObtenerUsuarioActual() {
         let respuesta = from(this.obtenerConfiguracion().web.currentUser.get());
         return respuesta;
-    }
+    } 
 
     ObtenerTiendaXJefe(Jefe) {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroUsuarios).items.filter("Jefe eq '" + Jefe + "'").select("Id", "Usuario/Title", "Usuario/Id").expand("Usuario").get());
