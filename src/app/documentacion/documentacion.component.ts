@@ -24,7 +24,6 @@ export class DocumentacionComponent implements OnInit {
     this.obtenerActividadesGenerales();
   }
 
-
   obtenerActividadesGenerales() {
     this.servicio.obtenerActividadesGenerales().subscribe(
       (Response) => {
@@ -50,7 +49,6 @@ export class DocumentacionComponent implements OnInit {
             "loadingRecords": "Cargando...",
           }
         });
-        this.dataTable.buttons().containers('#button-export-dtt');
       }, err => {
         console.log('Error obteniendo actividades: ' + err);
       }
