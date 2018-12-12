@@ -44,7 +44,7 @@ export class NovedadesComponent implements OnInit {
     this.servicio.ObtenerUsuarioActual().subscribe(
       (Response) => {
         let Usuario = Response.Id;
-        this.servicio.ObtenerTiendaXJefe(Usuario).subscribe(
+        this.servicio.ObtenerUsuariosXJefe(Usuario).subscribe(
           (ResponseTienda) => {
             this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);   
             this.ObtenerTipoSolicitud();         

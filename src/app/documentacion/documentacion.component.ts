@@ -5,7 +5,6 @@ import 'datatables.net-bs4';
 import 'datatables.net-buttons';
 import { SPServicio } from '../servicios/sp.servicio';
 import { Actividad } from '../dominio/actividad';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-documentacion',
@@ -25,6 +24,9 @@ export class DocumentacionComponent implements OnInit {
   }
 
   obtenerActividadesGenerales() {
+    if ( $.fn.dataTable.isDataTable( 'table' ) ) {
+      this.dataTable.destroy();
+    } 
     this.servicio.obtenerActividadesGenerales().subscribe(
       (Response) => {
         this.actividades = Actividad.fromJsonList(Response);
@@ -52,7 +54,7 @@ export class DocumentacionComponent implements OnInit {
       }, err => {
         console.log('Error obteniendo actividades: ' + err);
       }
-    )
+    );
   }
 
 }

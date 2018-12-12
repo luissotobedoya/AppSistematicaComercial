@@ -154,6 +154,9 @@ export class InformesComponent implements OnInit {
 
     arrayMEses = this.dateRange(fecha1String, fecha2String);
 
+    if ( $.fn.dataTable.isDataTable( 'table' ) ) {
+      this.dataTable.destroy();
+    } 
 
     for (const FechaMes of arrayMEses) {
       let date = new Date(FechaMes);

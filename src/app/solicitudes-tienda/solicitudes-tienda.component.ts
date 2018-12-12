@@ -65,10 +65,10 @@ export class SolicitudesTiendaComponent implements OnInit {
     let siwtch = 0;
     let StringConsulta = "";
     this.ObjRespuestaConsulta = [];
-    debugger;
 
-    //DataTables_Table_0_wrapper
-    
+    if ( $.fn.dataTable.isDataTable( 'table' ) ) {
+      this.dataTable.destroy();
+    } 
     
     if (this.Tienda !== "" && this.Tienda  !== undefined) {
         StringConsulta = "Tienda eq '" + this.Tienda + "'";
