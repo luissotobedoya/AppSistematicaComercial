@@ -19,7 +19,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 export class ActividadesExtrasComponent implements OnInit {
   tituloPagina = "Actividades extraordinarias";
 
-  //Calendarios
+  
   colorTheme = 'theme-blue';
   bsConfig: Partial<BsDatepickerConfig>;
   minDate: Date;
@@ -106,7 +106,7 @@ export class ActividadesExtrasComponent implements OnInit {
     this.servicio.ObtenerUsuarioActual().subscribe(
       (Response) => {
         let Usuario = Response.Id;
-        this.servicio.ObtenerTiendaXJefe(Usuario).subscribe(
+        this.servicio.ObtenerUsuariosXJefe(Usuario).subscribe(
           (ResponseTienda) => {
             this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);
             this.obtenerTipoActividades();
@@ -125,7 +125,7 @@ export class ActividadesExtrasComponent implements OnInit {
       }, err => {
         console.log('Error obteniendo tipo de actividades: ' + err);
       }
-    )
+    );
   }
 
   obtenerPrioridades(): any {
@@ -137,7 +137,7 @@ export class ActividadesExtrasComponent implements OnInit {
       }, err => {
         console.log('Error obteniendo prioridades: ' + err);
       }
-    )
+    );
   }
 
   seleccionarTienda(TiendasChk) {
