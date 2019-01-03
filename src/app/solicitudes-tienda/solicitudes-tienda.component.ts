@@ -41,7 +41,7 @@ export class SolicitudesTiendaComponent implements OnInit {
     this.servicio.ObtenerUsuarioActual().subscribe(
       (Response) => {
         let Usuario = Response.Id;
-        this.servicio.ObtenerTiendaXJefe(Usuario).subscribe(
+        this.servicio.ObtenerUsuariosXJefe(Usuario).subscribe(
           (ResponseTienda) => {
             this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);   
             this.ObtenerTipoSolicitud();         
@@ -54,7 +54,6 @@ export class SolicitudesTiendaComponent implements OnInit {
   ObtenerTipoSolicitud() {
     this.servicio.ObtenerTiposolicitud().subscribe(
       (respuestaTipoSolicitud) => {
-        console.log(respuestaTipoSolicitud);
           this.ObjTipoSolicitud = respuestaTipoSolicitud;   
           this.loading = false;       
       }
@@ -95,7 +94,6 @@ export class SolicitudesTiendaComponent implements OnInit {
 
     this.servicio.ObtenerSolicitudes(StringConsulta).subscribe(
       (respuestaConsulta) => {
-        console.log(respuestaConsulta);
           this.ObjRespuestaConsulta = respuestaConsulta;  
           if (respuestaConsulta.length===0) {
              this.cantidadRegistros=false;

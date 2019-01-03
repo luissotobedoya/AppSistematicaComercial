@@ -170,7 +170,7 @@ export class ActividadesExtrasComponent implements OnInit {
     }
 
     if (this.diasSeleccionados.length === 0) {
-      this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un dia en el que desea la actividad");
+      this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
       return;
     }
 

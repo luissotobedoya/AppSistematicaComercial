@@ -5,13 +5,12 @@
     <h3>{{tituloPagina}}</h3>
 </div>
 
-
 <form [formGroup]="NovedadForm" (ngSubmit)="onSubmit(template)">
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
                 <label for="InputTienda">Tienda</label>
-                <select name=" " id=" " class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTienda.errors }" formControlName="txtTienda">                        
+                <select name="tienda" id="tienda" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTienda.errors }" formControlName="txtTienda">                        
                       <option value=" " *ngFor="let itemTienda of ObjTiendas" [value]="itemTienda.id " [text]="itemTienda.nombre">{{itemTienda.nombre}}</option>
                     </select>
                 <div *ngIf="submitted && f.txtTienda.errors" class="invalid-feedback">
@@ -22,7 +21,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label for="InputTienda">Fecha</label>
-                <input type="text" placeholder="Datepicker" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }" formControlName="txtFecha" class="form-control" bsDatepicker>
+                <input type="text" placeholder="ingrese una fecha" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }" formControlName="txtFecha" class="form-control" bsDatepicker>
                 <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
                     <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
                 </div>
@@ -31,7 +30,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label for="InputTienda">Tipo solicitud</label>
-                <select name=" " id=" " class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTipoSolicitud.errors }" formControlName="txtTipoSolicitud">                        
+                <select name="tipo-solicitud" id="tipo-solicitud" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTipoSolicitud.errors }" formControlName="txtTipoSolicitud">                        
                       <option value=" " *ngFor="let itemSolicitud of ObjTipoSolicitud" [value]="itemSolicitud.Id " [text]="itemSolicitud.Title">{{itemSolicitud.nombre}}</option>
                     </select>
                 <div *ngIf="submitted && f.txtTipoSolicitud.errors" class="invalid-feedback">
@@ -42,7 +41,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label for="exampleInputEmail1">Cantidad</label>
-                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtCantidad.errors }" formControlName="txtCantidad">
+                <input type="text" numbersOnly class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtCantidad.errors }" formControlName="txtCantidad">
                 <div *ngIf="submitted && f.txtCantidad.errors" class="invalid-feedback">
                     <div *ngIf="f.txtCantidad.errors.required">Este campo es requerido</div>
                 </div>

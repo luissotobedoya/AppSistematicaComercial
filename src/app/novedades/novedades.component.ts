@@ -63,7 +63,6 @@ export class NovedadesComponent implements OnInit {
   ObtenerTipoSolicitud() {
     this.servicio.ObtenerTiposolicitud().subscribe(
       (respuestaTipoSolicitud) => {
-        console.log(respuestaTipoSolicitud);
           this.ObjTipoSolicitud = respuestaTipoSolicitud;   
           this.loading = false;       
       }
@@ -76,21 +75,19 @@ export class NovedadesComponent implements OnInit {
 
   onSubmit(template: TemplateRef<any>) {
     this.submitted = true;
-
     if (this.NovedadForm.invalid) {      
       return;
     }
-
     this.loading = true;
-
     this.servicio.agregarNovedad(this.retornarNovedades()).then(
       (iar: ItemAddResult) => {
           this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
            this.timer = setTimeout(() => {
              window.location.reload();
-           }, 3000);        
+           }, 3000);
+           this.loading = false;      
       }, err => {
-        alert('Fail create!!');
+        alert('Error al crear una novedad');
       }
     );
 

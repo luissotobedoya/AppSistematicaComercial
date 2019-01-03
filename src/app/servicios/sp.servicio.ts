@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { from } from 'rxjs';
-import { default as pnp, ItemAddResult, CamlQuery, ListEnsureResult } from 'sp-pnp-js';
+import { default as pnp, CamlQuery, ListEnsureResult } from 'sp-pnp-js';
 import { environment } from '../../environments/environment';
 import { Respuesta } from '../dominio/respuesta';
 import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
-import { Actividad } from '../dominio/actividad';
 import { Novedad } from '../dominio/novedad';
 
 @Injectable()
@@ -29,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USIsImtpZCI6IndVTG1ZZnNxZFF1V3RWXy1oeFZ0REpKWk00USJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ0NjI1NzI0LCJuYmYiOjE1NDQ2MjU3MjQsImV4cCI6MTU0NDY1NDgyNCwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.UwV13Ah0n4d4-v-mORkar9QCXcbG9pYoZld5d76pRp-fVmF1H6ibJN-7UPeCEy6n3n5_t90xm2q_XcuJxWNxRiOKLt27T4DP-NKK844drxm0TrAY-yeyu74_Xd1YnVeDoFzXlh7c0ha8eN2jgRAnXn4xf0qT9lVkChGNiXslLGygxSkwUnjrC4Wyo38OuRTzaqu8n-LpUideIDnAbb24025zjMaYPbp0LU-PerBEGcosgoIYNVOnqX0xnYMcTMDdM-oFKJl3aGrOCXWxOxycOAz_5nP01McsJBUtHtSWo9lrpX2zxe5IbYKzHhH11DtCR3A8T6kVcwNbQPNm9dJ7uA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im5iQ3dXMTF3M1hrQi14VWFYd0tSU0xqTUhHUSIsImtpZCI6Im5iQ3dXMTF3M1hrQi14VWFYd0tSU0xqTUhHUSJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTQ2NTQwMDk1LCJuYmYiOjE1NDY1NDAwOTUsImV4cCI6MTU0NjU2OTE5NSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.lm51gYeWU0AigAiDYuVVaBtScwTXDQXHRmvu4JsRZOfDJFA9J2aOZX6w6H5NFq9TU2LK9TGwWuZOtyMc_RfQfbzeQaD5_DdabgRVYNqKBuqxruUiPGtKjlda2SkBMdRiwQlcqT3i4juVx9WQtUcDP54pv4L8lSatZCeQAj5GFIrzP4aGEbqRGiYtx-8HckRjCGN6MB1QJWsYKyjmuMBDtRKY1I4zUhlr191ub3sq2EAcBXECo7Q9cpFzl88DpYQdXDc9DjFdTlK32fTTg9bld3VGCg7Wz9_v5cALOKilaeT-ZEju4jQW8G6gBWGTx6rEBNMInsDSK3qNFL99S4T4jQ'
             }
         }, environment.urlWeb);
 
@@ -48,11 +47,6 @@ export class SPServicio {
 
     ObtenerUsuariosXJefe(Jefe) {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroUsuarios).items.filter("Jefe eq '" + Jefe + "'").select("Id", "Usuario/Title", "Usuario/Id").expand("Usuario").get());
-        return respuesta;
-    }
-
-    ObtenerTiendaXJefe(Jefe) {
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroUsuarios).items.filter("Jefe eq '" + Jefe + "' and Responsable eq '1'").select("Id", "Usuario/Title", "Usuario/Id").expand("Usuario").get());
         return respuesta;
     }
 
@@ -97,11 +91,6 @@ export class SPServicio {
     }
 
     ObtenerRespuestaActividades(nombreLista, StringConsulta) {
-        // let respuesta = await from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").get().then(response => {
-        //     let preprocessedData;
-        //     //do things with response
-        //     return preprocessedData;
-        // }));
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter(StringConsulta).select("Title", "Usuario/Title", "Respuesta", "Fecha", "Prioridad").expand("Usuario").getAll(5000));
         return respuesta;
     }
@@ -164,7 +153,7 @@ export class SPServicio {
         const q: CamlQuery = {
             ViewXml: xml,
         };
-        let respuesta = from(this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).getItemsByCAMLQuery(q));
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).getItemsByCAMLQuery(q));
         return respuesta;
     }
 
@@ -181,7 +170,7 @@ export class SPServicio {
     }
 
     obtenerAdjuntos(nombreLista: string, respuesta: Respuesta) {
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.get();
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.get();
     }
 
     borrarAdjunto(nombreLista: string, respuesta: Respuesta, nombreAdjunto: string) {
@@ -201,7 +190,7 @@ export class SPServicio {
             Prioridad: actividaextraordinaria.prioridad,
             Observaciones: actividaextraordinaria.observaciones
         };
-        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
+        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
         return elemento;
     }
 
@@ -234,9 +223,8 @@ export class SPServicio {
         return respuesta;
     }
 
-
     async validacionLista(){
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.ensure("RespuestasActividades201901").then((ler: ListEnsureResult) => {
+        let respuesta = await this.obtenerConfiguracion().web.lists.ensure("RespuestasActividades201901").then((ler: ListEnsureResult) => {
             if (ler.created) {
                 return true;
             }
@@ -244,8 +232,5 @@ export class SPServicio {
                 return false;
             }
         });
-        
     }
-
-
 }

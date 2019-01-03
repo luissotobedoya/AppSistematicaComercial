@@ -4,6 +4,7 @@ import { Usuario } from '../dominio/usuario';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Respuesta } from '../dominio/respuesta';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-mis-actividades',
@@ -58,7 +59,6 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let consulta = '<View><Query><Where><And><Eq><FieldRef Name="Fecha"/><Value Type="DateTime" IncludeTimeValue="False"><Today/></Value></Eq><Eq><FieldRef Name="Usuario" LookupId="TRUE" /><Value Type="Lookup">' + this.usuarioActual.id + '</Value></Eq></And></Where></Query></View>';
     let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(),1)) + "T08:00:00Z";
       this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, fechaActual).subscribe(
         (Response) => {
@@ -308,10 +308,16 @@ export class MisActividadesComponent implements OnInit {
         this.actividadesGestionadas--;
         this.modalRef.hide();
         this.switcheActividadSeleccionada.checked = false;
+        console.log(actividadRespuesta.id);
+        this.LimpiarControlAdjunto(actividadRespuesta.id);
       }, error => {
         console.log(error);
       }
     );
+  }
+
+  LimpiarControlAdjunto(idControlAdjunto){
+      (<HTMLInputElement>document.getElementById("adjunto-"+idControlAdjunto)).value = null;
   }
 
   declinar(): void {

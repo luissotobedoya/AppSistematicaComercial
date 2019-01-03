@@ -10,6 +10,7 @@ import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule, TooltipModule,ProgressbarModule, PaginationModule } from 'ngx-bootstrap';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
+import { NumberDirective } from './directivas/numbers-only.directive';
 
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
@@ -34,7 +35,8 @@ import { ExcelService } from './servicios/excel.service';
     AsignacionTareasComponent,
     SolicitudesTiendaComponent,
     ParametrizacionComponent,
-    ActividadesExtrasComponent    
+    ActividadesExtrasComponent,
+    NumberDirective    
   ],
   imports: [
     BrowserModule,       

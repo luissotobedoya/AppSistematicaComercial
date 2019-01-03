@@ -49,7 +49,7 @@
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
-                    <span *ngIf="actividad.tipoValidacion == 'Checkbox y Aprobación' && actividad.aprobacionActividad != ''" class="aprobacion-actividad">({{actividad.aprobacionActividad}})</span>
+                    <span *ngIf="actividad.tipoValidacion == 'Checkbox y Aprobación' && actividad.aprobacionActividad != ''" class="aprobacion-actividad">{{actividad.aprobacionActividad}}</span>
                     <div *ngIf="actividad.tipoValidacion == 'Adjunto' || 
                     actividad.tipoValidacion == 'Checkbox y Aprobación'">
                         <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad"
@@ -76,7 +76,7 @@
     <ng-template #templateConfirmation>
         <div class="modal-body text-center">
             <p>{{mensajeConfirmacion}}</p>
-            <button type="button" class="btn btn-default" (click)="confirmar()">Si</button>
+            <button type="button" class="btn btn-default" (click)="confirmar()">Sí</button>
             <button type="button" class="btn btn-primary" (click)="declinar()">No</button>
         </div>
     </ng-template>
