@@ -11,7 +11,7 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons';
 import { ExcelService } from "../servicios/excel.service";
-import { BsDatepickerConfig } from "ngx-bootstrap";
+import { BsDatepickerConfig, BsLocaleService } from "ngx-bootstrap";
 
 @Component({
   selector: "app-informes",
@@ -58,7 +58,7 @@ export class InformesComponent implements OnInit {
   dataTable: any;
   NombreLista: string;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel: ExcelService) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel: ExcelService,  private _localeService: BsLocaleService) {
     this.NombreCampo = "";
     this.DisalbeTienda = true;
     this.txtFecha = [];
@@ -78,6 +78,7 @@ export class InformesComponent implements OnInit {
     this.dynamicPrioridadBaja = 0;
     this.minDate = new Date("2018/11/01");
     this.maxDate = new Date();
+    this._localeService.use('engb');
     this.NombreLista = this.ObtenerNombreListaActual();
   }
 

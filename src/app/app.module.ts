@@ -8,10 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { BsDatepickerModule, TooltipModule,ProgressbarModule, PaginationModule } from 'ngx-bootstrap';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { enGbLocale } from 'ngx-bootstrap/locale';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { NumberDirective } from './directivas/numbers-only.directive';
-
 import { AppComponent } from './app.component';
 import { MisActividadesComponent } from './mis-actividades/mis-actividades.component';
 import { InformesComponent } from './informes/informes.component';
@@ -24,6 +25,7 @@ import { SPServicio } from './servicios/sp.servicio';
 import { ActividadesExtrasComponent } from './actividades-extras/actividades-extras.component';
 import { ExcelService } from './servicios/excel.service';
 
+defineLocale('engb', enGbLocale);
 
 @NgModule({
   declarations: [

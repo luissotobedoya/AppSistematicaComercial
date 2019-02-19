@@ -4,7 +4,7 @@ import { Novedad } from '../dominio/novedad';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TiendaXJefe } from '../dominio/TiendaXJefe';
 import { ItemAddResult } from 'sp-pnp-js';
-import { BsModalService } from 'ngx-bootstrap';
+import { BsModalService, BsLocaleService } from 'ngx-bootstrap';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 
@@ -26,9 +26,10 @@ export class NovedadesComponent implements OnInit {
   public modalRef: BsModalRef;
   timer: any;
   
-  constructor(private servicio:SPServicio, private formBuilder: FormBuilder,private servicioModal: BsModalService) {
+  constructor(private servicio:SPServicio, private formBuilder: FormBuilder,private servicioModal: BsModalService,private _localeService: BsLocaleService) {
     
     this.NovedadGuardar = new Novedad(null,null,null,"",null);
+    this._localeService.use('engb');
    }
 
   ngOnInit() {

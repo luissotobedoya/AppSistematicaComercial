@@ -10,6 +10,8 @@ import { ItemAddResult } from 'sp-pnp-js';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+
 
 @Component({
   selector: 'app-actividades-extras',
@@ -43,7 +45,7 @@ export class ActividadesExtrasComponent implements OnInit {
   mostrarDivObservaciones = false;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder,
-    private servicioModal: BsModalService) {
+    private servicioModal: BsModalService, private _localeService: BsLocaleService) {
     this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "","", "");
     this.contadorEntradas = 0;
     this.ContadorSucces = 0;
@@ -52,6 +54,7 @@ export class ActividadesExtrasComponent implements OnInit {
     this.maxDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 1);
     this.maxDate.setDate(this.maxDate.getDate() + 365000);
+    this._localeService.use('engb');
   }
 
   aplicarTema() {

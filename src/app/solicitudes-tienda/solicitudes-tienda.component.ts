@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from "@angular/core";
-import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap';
 import { SPServicio } from '../servicios/sp.servicio';
 import { TiendaXJefe } from '../dominio/TiendaXJefe';
 import * as $ from 'jquery';
@@ -29,10 +29,11 @@ export class SolicitudesTiendaComponent implements OnInit {
   mostrarTabla: boolean;
   
   
-  constructor(private servicio:SPServicio, private chRef: ChangeDetectorRef) {
+  constructor(private servicio:SPServicio, private chRef: ChangeDetectorRef,private _localeService: BsLocaleService) {
     this.loading=false;
     this.cantidadRegistros=true;
     this.mostrarTabla=true;
+    this._localeService.use('engb');
    }
 
   ngOnInit() {
