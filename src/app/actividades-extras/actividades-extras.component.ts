@@ -4,7 +4,7 @@ import { SPServicio } from '../servicios/sp.servicio';
 import { Proceso } from '../dominio/proceso';
 import { ProcesoExtra } from '../dominio/procesosExtra';
 import { TiendaXJefe } from '../dominio/TiendaXJefe';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActividadExtraordinaria } from '../dominio/actividadExtraordinaria';
 import { ItemAddResult } from 'sp-pnp-js';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -18,13 +18,10 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 })
 export class ActividadesExtrasComponent implements OnInit {
   tituloPagina = "Actividades extraordinarias";
-
-  
   colorTheme = 'theme-blue';
   bsConfig: Partial<BsDatepickerConfig>;
   minDate: Date;
   maxDate: Date;
-
   registerForm: FormGroup;
   submitted = false;
   clasificaciones: Clasificacion[] = [];
@@ -53,7 +50,7 @@ export class ActividadesExtrasComponent implements OnInit {
     this.loading = false;
     this.minDate = new Date();
     this.maxDate = new Date();
-    this.minDate.setDate(this.minDate.getDate());
+    this.minDate.setDate(this.minDate.getDate() + 1);
     this.maxDate.setDate(this.maxDate.getDate() + 365000);
   }
 
@@ -153,7 +150,6 @@ export class ActividadesExtrasComponent implements OnInit {
     }
   }
 
-
   onSubmit(template: TemplateRef<any>) {
     this.submitted = true;
     if (this.registerForm.invalid) {
@@ -190,12 +186,21 @@ export class ActividadesExtrasComponent implements OnInit {
       const index = this.diasSeleccionados.indexOf(dt.toString(), 0);
       if (index > -1) {
         let FechaActividad = inicio;
+        let fechaISO = this.AsignarFormatoFechaISO(FechaActividad);
         this.contadorEntradas++;
-        this.actividadExtraordinariaGuardar = this.retornarActividadExtra(FechaActividad.toISOString());
+        this.actividadExtraordinariaGuardar = this.retornarActividadExtra(fechaISO);
         this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
       }
       inicio.setDate(inicio.getDate() + 1);
     }
+  }
+
+  private AsignarFormatoFechaISO(FechaActividad: Date) {
+    let diaActividadExtraordinaria = ("0" + FechaActividad.getDate()).slice(-2);
+    let mesActividadExtraordinaria = ("0" + (FechaActividad.getMonth() + 1)).slice(-2);
+    let anoActividadExtraordinaria = FechaActividad.getFullYear();
+    let fechaISO = new Date(anoActividadExtraordinaria + "-" + mesActividadExtraordinaria + "-" + diaActividadExtraordinaria).toISOString();
+    return fechaISO;
   }
 
   guardarAvtividadExtra(actividadExtraordinariaGuardar: ActividadExtraordinaria, template: TemplateRef<any>): any {
@@ -216,7 +221,7 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   retornarActividadExtra(fecha): ActividadExtraordinaria {
-    this.actividadExtraordinariaGuardar.fecha = fecha;
+    this.actividadExtraordinariaGuardar.fecha = new Date(fecha);
     this.actividadExtraordinariaGuardar.usuariosId = this.tiendasSeleccionadas;
     this.actividadExtraordinariaGuardar.actividad = this.registerForm.controls['NombreActividad'].value;
     this.actividadExtraordinariaGuardar.clasificacion = this.registerForm.controls['Clasificacion'].value;

@@ -13,7 +13,6 @@ import 'datatables.net-buttons';
 import { ExcelService } from "../servicios/excel.service";
 import { BsDatepickerConfig } from "ngx-bootstrap";
 
-
 @Component({
   selector: "app-informes",
   templateUrl: "./informes.component.html",
@@ -21,8 +20,6 @@ import { BsDatepickerConfig } from "ngx-bootstrap";
 })
 
 export class InformesComponent implements OnInit {
-
-    //Calendarios
   colorTheme = 'theme-blue';
   bsConfig: Partial<BsDatepickerConfig>;
   tituloPagina = "Informes";
@@ -59,8 +56,9 @@ export class InformesComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
   dataTable: any;
+  NombreLista: string;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel :ExcelService) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel: ExcelService) {
     this.NombreCampo = "";
     this.DisalbeTienda = true;
     this.txtFecha = [];
@@ -80,6 +78,7 @@ export class InformesComponent implements OnInit {
     this.dynamicPrioridadBaja = 0;
     this.minDate = new Date("2018/11/01");
     this.maxDate = new Date();
+    this.NombreLista = this.ObtenerNombreListaActual();
   }
 
   aplicarTema() {
@@ -106,7 +105,6 @@ export class InformesComponent implements OnInit {
   }
 
   SeleccionarResponsable(IdResponsable) {
-
     if (IdResponsable === "2") {
       this.DisalbeTienda = false;
       this.NombreCampo = "Zona";
@@ -151,77 +149,66 @@ export class InformesComponent implements OnInit {
     let slctResponsable = this.informeForm.controls['slcResponsable'].value;
     const nombreResponsable = this.ObjResponsable.find(x => x.id === +slctResponsable).nombre;
     let slcTienda = this.informeForm.controls['slcTienda'].value;
-
     let arrayMEses = [];
     this.objActividad = [];
     this.contadorConsultas = 0;
     this.contadorEntradas = 0;
-
     arrayMEses = this.dateRange(fecha1String, fecha2String);
-
-    if ( $.fn.dataTable.isDataTable( 'table' ) ) {
+    if ($.fn.dataTable.isDataTable('table')) {
       this.dataTable.destroy();
-    } 
+    }
 
     for (const FechaMes of arrayMEses) {
       let date = new Date(FechaMes);
       let mes = date.getMonth();
       let firstDay = new Date(date.getFullYear(), mes, 1);
       let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
       if (fecha1.getMonth() === mes) {
         this.contadorConsultas++;
         let fechafinString = this.formatDate(lastDay);
         if (nombreResponsable === "Administrador de tienda") {
-
           this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
         else if (nombreResponsable === "Jefe de zonas") {
           this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
 
-        let month = "" + (lastDay.getMonth() + 1);
-        let year = lastDay.getFullYear();
-        let NombreLista = "RespuestasActividades" + year + month;
-        this.CrearObjetoInforme(NombreLista, this.stringConsulta);
+        this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
       }
       else if (fecha2.getMonth() === mes) {
         this.contadorConsultas++;
         let fechaInicioString = this.formatDate(firstDay);
         if (nombreResponsable === "Administrador de tienda") {
-
           this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
         }
         else if (nombreResponsable === "Jefe de zonas") {
           this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
         }
-
-        let month = "" + (firstDay.getMonth() + 1);
-        let year = firstDay.getFullYear();
-        let NombreLista = "RespuestasActividades" + year + month;
-        this.CrearObjetoInforme(NombreLista, this.stringConsulta);
+        this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
       }
       else {
         this.contadorConsultas++;
         let fechaInicioString = this.formatDate(firstDay);
         let fechafinString = this.formatDate(lastDay);
         if (nombreResponsable === "Administrador de tienda") {
-
           this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
         else if (nombreResponsable === "Jefe de zonas") {
           this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
         }
-
-        let month = "" + (firstDay.getMonth() + 1);
-        let year = firstDay.getFullYear();
-        let NombreLista = "RespuestasActividades" + year + month;
-        this.CrearObjetoInforme(NombreLista, this.stringConsulta);
+        this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
       }
-
     }
-
   }
+
+  ObtenerNombreListaActual(): string {
+    const nombrelista = 'RespuestasActividades';
+    let añoActual = new Date().getFullYear();
+    let mesActual = ("0" + (new Date().getMonth() + 1)).slice(-2);
+    let listaRespuestas = nombrelista + añoActual + mesActual;
+    return listaRespuestas;
+  }
+
   ObtenerValoresInforme() {
     this.maxPrioridad = this.objActividad.length;
     this.dynamicPrioridadAlta = this.objActividad.filter(x => x.prioridad === "Alta").length;
@@ -264,13 +251,12 @@ export class InformesComponent implements OnInit {
     });
   }
 
-  ExportarExcel():void {
+  ExportarExcel(): void {
     this.servicioExcel.exportAsExcelFile(this.objActividad, 'Informe Actividades');
- }
+  }
 
   CrearObjetoInforme(NombreLista, stringConsulta) {
     this.loading = true;
-
     this.servicio.ObtenerRespuestaActividades(NombreLista, stringConsulta)
       .subscribe(respuestaActividad => {
         this.objRespuestaActividad = RespuestaActividad.fromJsonList(respuestaActividad);
@@ -303,7 +289,6 @@ export class InformesComponent implements OnInit {
     }
     return dates;
   }
-
 
   formatDate(fecha): string {
     let d = new Date(fecha),

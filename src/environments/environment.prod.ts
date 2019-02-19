@@ -6,5 +6,14 @@ export const environment = {
   maestroProcesos: 'MaestroProcesos',
   maestroTareas: 'MaestroTareas',
   maestroResponsables: 'MaestroResponsables',
-  maestroActividadesGenerales: 'MaestroActividadesGenerales'
+  maestroUsuarios: 'MaestroUsuarios',
+  maestroActividadesGenerales: 'MaestroActividadesGenerales',
+  grupoAdministradoresTienda: 'GrupoAdministradoresTiendas',
+  grupoJefesZona: 'GrupoJefesZona',
+  actividadesExtraordinarias:'ActividadesExtraordinariasTienda',
+  nombreCampoTipoValidacion: 'TipoValidacion',
+  nombreCampoPrioridad: 'Prioridad',
+  maestroTipoSolicitud: 'TipoSolicitud',
+  Novedades: 'Novedades'
 };
+

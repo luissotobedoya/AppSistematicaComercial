@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   urlWeb:'https://estudiodemoda.sharepoint.com/sites/EM/sc',
-  urlReltativa: '/sites/EM/scDev',
+  urlReltativa: '/sites/EM/sc',
   maestroClasificacion: 'MaestroClasificacion',
   maestroProcesos: 'MaestroProcesos',
   maestroTareas: 'MaestroTareas',
