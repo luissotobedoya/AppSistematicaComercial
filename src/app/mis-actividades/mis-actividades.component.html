@@ -49,9 +49,9 @@
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
-                    <span *ngIf="actividad.tipoValidacion == 'Checkbox y Aprobación' && actividad.aprobacionActividad != ''" class="aprobacion-actividad">{{actividad.aprobacionActividad}}</span>
-                    <div *ngIf="actividad.tipoValidacion == 'Adjunto' || 
-                    actividad.tipoValidacion == 'Checkbox y Aprobación'">
+                    <span *ngIf="(actividad.tipoValidacion|lowercase) == 'checkbox y aprobación' && actividad.aprobacionActividad != ''" class="aprobacion-actividad">{{actividad.aprobacionActividad}}</span>
+                    <div *ngIf="(actividad.tipoValidacion|lowercase) == 'adjunto' || 
+                    (actividad.tipoValidacion|lowercase) == 'checkbox y aprobación'">
                         <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad"
                             tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
                     </div>

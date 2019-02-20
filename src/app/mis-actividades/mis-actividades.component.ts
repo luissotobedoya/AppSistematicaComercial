@@ -54,6 +54,7 @@ export class MisActividadesComponent implements OnInit {
         this.ObtenerActividadesUsuarioActual();
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
+        this.loading = false;
       }
     )
   }
@@ -146,14 +147,14 @@ export class MisActividadesComponent implements OnInit {
   actualizarActividad(event, switcheActividad, actividad, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>) {
     this.loading = true;
     this.actividadRespuestaActualizar = actividad;
-    switch (this.actividadRespuestaActualizar.tipoValidacion) {
-      case "Adjunto":
+    switch (this.actividadRespuestaActualizar.tipoValidacion.toLowerCase()) {
+      case "adjunto":
         this.actualizarActividadAdjuntos(event, switcheActividad, this.actividadRespuestaActualizar, template, templateConfirmacion);
         break;
-      case "Checkbox":
+      case "checkbox":
         this.actualizarActividadCheckbox(event, this.actividadRespuestaActualizar);
         break;
-      case "Checkbox y Aprobación":
+      case "checkbox y aprobación":
         this.actualizarActividadCheckboxAprobacion(event, switcheActividad, this.actividadRespuestaActualizar, template, templateConfirmacion);
         break;
     }
@@ -202,6 +203,7 @@ export class MisActividadesComponent implements OnInit {
         this.loading = false;
       }, error => {
         console.log(error);
+        this.loading = false;
         alert('Ha ocurrido un error al actualizar la actividad');
       }
     );
@@ -222,6 +224,7 @@ export class MisActividadesComponent implements OnInit {
               this.AgregarAdjuntoActividad(actividadRespuesta);
             }, error => {
               console.log(error);
+              this.loading = false;
               alert('Ha ocurrido un error al actualizar la actividad');
             }
           );
@@ -256,6 +259,7 @@ export class MisActividadesComponent implements OnInit {
         this.loading = false;
       }, error => {
         console.log(error);
+        this.loading = false;
         alert('Ha ocurrido un error al actualizar la actividad');
       }
     );
@@ -308,7 +312,6 @@ export class MisActividadesComponent implements OnInit {
         this.actividadesGestionadas--;
         this.modalRef.hide();
         this.switcheActividadSeleccionada.checked = false;
-        console.log(actividadRespuesta.id);
         this.LimpiarControlAdjunto(actividadRespuesta.id);
       }, error => {
         console.log(error);

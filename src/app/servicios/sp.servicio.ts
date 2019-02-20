@@ -28,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCIsImtpZCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTUwNTg3MzEzLCJuYmYiOjE1NTA1ODczMTMsImV4cCI6MTU1MDYxNjQxMywiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.o8Ey73hdkdWGgjF1wWc6BcBAwXFApoTbt_WPJ-6mlqxBhvUFA6rI4EbQnAenb8kL68qC31r_L_Y05l8ZLiX6Gqb6_64N5scCPsvA9KNmffnGX_pKelzekYN5yrX7_xyEdfJx3koT6EqPZ9gBcMvxafdC0vSQ97VuJIAsjRkrrYahYCgYa8AjRfj_TgKsEOMVjVwbMaObh3ZXpndaCYRc0NS4QwM8DYlOHGJMB85fMAYBXZH9TP4U_-OuRx9ODQpJ5LaavcUZU_H9Y5cAlOPRCHNk3adzq23BV8t8dA9K_zU_syuIcswFx3Q8K3xTU_HUXePia-xxg-Og-o1uvLEYpQ'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCIsImtpZCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTUwNjcxNjk0LCJuYmYiOjE1NTA2NzE2OTQsImV4cCI6MTU1MDcwMDc5NCwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.AH151VtU3JAEZLoDor7DmOWas_2y1ih6LaKGkFyOXykEP1oqXlfw_EtwgRD6SEX9Bctbd8waR4j4g2hRas9EhMo1XbgWrjS5EDEvMvd6ArV02LWgij3q7TOFxpQPydtwWSSToSGI-50OlAW9YAWy_rC5MXxvcAedN0NMA7fXYeaL70ANVWFLE1l5bqElNHMu-PnKsaI7lhLczGN2y2hHr1EMsz5jPimYCzhlaCvuHohCVrl8zEu5pt5CdVm8WEH-JHhtXQUbMJ5zVEeBfGWezfd7QkpwcZoM7MpWZ3iRLRNBc5L7BgfsfgUEu3hp_TLWgsgmGfvi6T3WqK5lIZLu_g'
             }
         }, environment.urlWeb);
 
@@ -158,14 +158,14 @@ export class SPServicio {
     }
 
     actualizarActividad(nombreLista: string, respuesta: Respuesta): any {
-        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).update({
+        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).update({
             Respuesta: respuesta.respuesta,
             AprobacionActividad: respuesta.aprobacionActividad
         });
     }
 
     agregarAdjuntoActividad(nombreLista: string, respuesta: Respuesta, nombreArchivo: string, archivo: File) {
-        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id);
+        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id);
         return elemento.attachmentFiles.add(nombreArchivo, archivo);
     }
 
@@ -174,7 +174,7 @@ export class SPServicio {
     }
 
     borrarAdjunto(nombreLista: string, respuesta: Respuesta, nombreAdjunto: string) {
-        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.getByName(nombreAdjunto).delete();
+        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.getByName(nombreAdjunto).delete();
     }
 
     agregarActividadExtraordinaria(actividaextraordinaria: ActividadExtraordinaria) {
@@ -190,7 +190,7 @@ export class SPServicio {
             Prioridad: actividaextraordinaria.prioridad,
             Observaciones: actividaextraordinaria.observaciones
         };
-        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
+        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
         return elemento;
     }
 
@@ -202,7 +202,7 @@ export class SPServicio {
             Descripcion: agregarNovedad.descripcion,
             Cantidad: agregarNovedad.cantidad
         };
-        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(environment.Novedades).items.add(objNovedad);
+        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.Novedades).items.add(objNovedad);
         return elemento;
     }
 
