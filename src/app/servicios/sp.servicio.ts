@@ -158,14 +158,14 @@ export class SPServicio {
     }
 
     actualizarActividad(nombreLista: string, respuesta: Respuesta): any {
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).update({
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).update({
             Respuesta: respuesta.respuesta,
             AprobacionActividad: respuesta.aprobacionActividad
         });
     }
 
     agregarAdjuntoActividad(nombreLista: string, respuesta: Respuesta, nombreArchivo: string, archivo: File) {
-        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id);
+        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id);
         return elemento.attachmentFiles.add(nombreArchivo, archivo);
     }
 
@@ -174,7 +174,7 @@ export class SPServicio {
     }
 
     borrarAdjunto(nombreLista: string, respuesta: Respuesta, nombreAdjunto: string) {
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.getByName(nombreAdjunto).delete();
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.getByName(nombreAdjunto).delete();
     }
 
     agregarActividadExtraordinaria(actividaextraordinaria: ActividadExtraordinaria) {
@@ -190,7 +190,7 @@ export class SPServicio {
             Prioridad: actividaextraordinaria.prioridad,
             Observaciones: actividaextraordinaria.observaciones
         };
-        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
+        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(environment.actividadesExtraordinarias).items.add(ObjActividad);
         return elemento;
     }
 
@@ -202,7 +202,7 @@ export class SPServicio {
             Descripcion: agregarNovedad.descripcion,
             Cantidad: agregarNovedad.cantidad
         };
-        let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.Novedades).items.add(objNovedad);
+        let elemento = this.obtenerConfiguracion().web.lists.getByTitle(environment.Novedades).items.add(objNovedad);
         return elemento;
     }
 
