@@ -4,7 +4,6 @@ import { Usuario } from '../dominio/usuario';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Respuesta } from '../dominio/respuesta';
-import * as $ from 'jquery';
 
 @Component({
   selector: 'app-mis-actividades',
