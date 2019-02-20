@@ -43,10 +43,11 @@ export class ActividadesExtrasComponent implements OnInit {
   loading: boolean;
   actividadExtraordinariaGuardar: ActividadExtraordinaria;
   mostrarDivObservaciones = false;
+  fechaGuardar: Date;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder,
     private servicioModal: BsModalService, private _localeService: BsLocaleService) {
-    this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "","", "");
+    this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "", "", "");
     this.contadorEntradas = 0;
     this.ContadorSucces = 0;
     this.loading = false;
@@ -116,7 +117,7 @@ export class ActividadesExtrasComponent implements OnInit {
     );
   }
 
-  obtenerTipoActividades() : any {
+  obtenerTipoActividades(): any {
     this.servicio.obtenerTiposValidacion().then(
       (Response) => {
         let respuesta = Response;
@@ -188,22 +189,21 @@ export class ActividadesExtrasComponent implements OnInit {
       let dt = inicio.getDay();
       const index = this.diasSeleccionados.indexOf(dt.toString(), 0);
       if (index > -1) {
-        let FechaActividad = inicio;
-        let fechaISO = this.AsignarFormatoFechaISO(FechaActividad);
+        let FechaActividad = this.AsignarFormatoFecha(inicio);
         this.contadorEntradas++;
-        this.actividadExtraordinariaGuardar = this.retornarActividadExtra(fechaISO);
+        this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(FechaActividad));
         this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
       }
       inicio.setDate(inicio.getDate() + 1);
     }
   }
 
-  private AsignarFormatoFechaISO(FechaActividad: Date) {
+  private AsignarFormatoFecha(FechaActividad: Date) {
     let diaActividadExtraordinaria = ("0" + FechaActividad.getDate()).slice(-2);
     let mesActividadExtraordinaria = ("0" + (FechaActividad.getMonth() + 1)).slice(-2);
     let anoActividadExtraordinaria = FechaActividad.getFullYear();
-    let fechaISO = new Date(anoActividadExtraordinaria + "-" + mesActividadExtraordinaria + "-" + diaActividadExtraordinaria).toISOString();
-    return fechaISO;
+    let fechaRetornar = new Date(anoActividadExtraordinaria, parseInt(mesActividadExtraordinaria), parseInt(diaActividadExtraordinaria), FechaActividad.getHours(), FechaActividad.getMinutes(), FechaActividad.getSeconds()).toISOString();
+    return fechaRetornar;
   }
 
   guardarAvtividadExtra(actividadExtraordinariaGuardar: ActividadExtraordinaria, template: TemplateRef<any>): any {
@@ -224,7 +224,7 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   retornarActividadExtra(fecha): ActividadExtraordinaria {
-    this.actividadExtraordinariaGuardar.fecha = new Date(fecha);
+    this.actividadExtraordinariaGuardar.fecha = fecha;
     this.actividadExtraordinariaGuardar.usuariosId = this.tiendasSeleccionadas;
     this.actividadExtraordinariaGuardar.actividad = this.registerForm.controls['NombreActividad'].value;
     this.actividadExtraordinariaGuardar.clasificacion = this.registerForm.controls['Clasificacion'].value;
@@ -236,7 +236,7 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   checkValueDias(eventChk) {
-    let isChk = eventChk.target.checked; 
+    let isChk = eventChk.target.checked;
     if (isChk === true) {
       let valueChk = eventChk.target.value;
       this.diasSeleccionados.push(valueChk);
@@ -248,11 +248,11 @@ export class ActividadesExtrasComponent implements OnInit {
     }
   }
 
-  mostrarObservaciones(event){
+  mostrarObservaciones(event) {
     let valor = event.target.value;
-    if(valor == "Adjunto" || valor == "Checkbox y Aprobación"){
+    if (valor == "Adjunto" || valor == "Checkbox y Aprobación") {
       this.mostrarDivObservaciones = true;
-    }else{
+    } else {
       this.mostrarDivObservaciones = false;
     }
   }
