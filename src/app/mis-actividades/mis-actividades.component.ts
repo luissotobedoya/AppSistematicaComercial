@@ -4,6 +4,7 @@ import { Usuario } from '../dominio/usuario';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Respuesta } from '../dominio/respuesta';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-mis-actividades',
@@ -36,68 +37,71 @@ export class MisActividadesComponent implements OnInit {
   tieneActividades: boolean;
   textoNoActividades: string;
 
-  constructor(
-    private servicio: SPServicio,
-    private servicioModal: BsModalService) {
+  constructor(private servicio: SPServicio, private servicioModal: BsModalService) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
     this.listaRespuestas = this.ObtenerNombreListaActual();
     this.tieneActividades = false;
     this.textoNoActividades = '';
     this.loading = false;
   }
 
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+            console.log("perfilación correcta");
+            break;
+          case "jefe de zonas":
+            console.log("perfilación correcta");
+            break;
+          case "administrador sistemática comercial":
+            console.log("perfilación correcta");
+            break;
+          default:
+            window.location.href = environment.urlWeb;
+            break;
+        }
+      } else {
+        window.location.href = environment.urlWeb;
+      }
+    }
+    else {
+      window.location.href = environment.urlWeb;
+    }
+  }
+
   ngOnInit() {
     this.loading = true;
-    this.ObtenerUsuarioActual();
-  }
-
-  ObtenerUsuarioActual() {
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (Response) => {
-        this.usuarioActual = new Usuario(Response.Id, Response.Title, null);
-        this.ObtenerRolUsuario();
-      }, err => {
-        console.log('Error obteniendo usuario: ' + err);
-        this.loading = false;
-      }
-    )
-  }
-
-  ObtenerRolUsuario() {
-    this.servicio.ObtenerRolUsuarioActual(this.usuarioActual.id).subscribe(
-      (Response) => {
-        this.usuarioActual.rol = Response[0].Responsable.Title;
-        this.ObtenerActividadesUsuarioActual();
-      }, err => {
-        console.log('Error obteniendo rol de usuario: ' + err);
-      }
-    )
+    this.ObtenerActividadesUsuarioActual();
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(),1)) + "T08:00:00Z";
-      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
-        (Response) => {
-          this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
-          this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
-          if(this.totalActividades > 0){
-            this.tieneActividades = true;
-            this.textoNoActividades = '';
-            this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
-            this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
-          }else{
-            this.tieneActividades = false;
-            this.actividadesGestionadas = 0;
-            this.textoNoActividades = "No hay actividades para este usuario y este rol";
-          }
-          this.loading = false;
-        },
-        error => {
-          console.log('Error obteniendo las actividades del usuario: ' + error);
+    let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(), 1)) + "T08:00:00Z";
+    this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
+      (Response) => {
+        this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
+        this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
+        if (this.totalActividades > 0) {
+          this.tieneActividades = true;
+          this.textoNoActividades = '';
+          this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
+          this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
+        } else {
+          this.tieneActividades = false;
+          this.actividadesGestionadas = 0;
+          this.textoNoActividades = "No hay actividades para este usuario y este rol";
         }
-      );
+        this.loading = false;
+      },
+      error => {
+        console.log('Error obteniendo las actividades del usuario: ' + error);
+      }
+    );
   }
 
-   addDays(date, days) {
+  addDays(date, days) {
     var result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
@@ -341,8 +345,8 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
-  LimpiarControlAdjunto(idControlAdjunto){
-      (<HTMLInputElement>document.getElementById("adjunto-"+idControlAdjunto)).value = null;
+  LimpiarControlAdjunto(idControlAdjunto) {
+    (<HTMLInputElement>document.getElementById("adjunto-" + idControlAdjunto)).value = null;
   }
 
   declinar(): void {

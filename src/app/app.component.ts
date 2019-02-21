@@ -41,6 +41,10 @@ export class AppComponent implements OnInit {
     this.ObtenerUsuarioActual();
   }
 
+  destruirSessiones(): any {
+    sessionStorage.removeItem("usuario");
+  }
+
   abrirCerrarMenu() {
     $(document).ready(function () {
       $("#menu-toggle").click(function (e) {
@@ -81,6 +85,7 @@ export class AppComponent implements OnInit {
       (Response) => {
         this.usuarioActual.rol = Response[0].Responsable.Title;
         this.responsableUsuario = Response[0].Responsable.Title;
+        sessionStorage.setItem('usuario', JSON.stringify(this.usuarioActual));
         this.pintarMenuSegunRol();
       }, err => {
         console.log('Error obteniendo rol de usuario: ' + err);
