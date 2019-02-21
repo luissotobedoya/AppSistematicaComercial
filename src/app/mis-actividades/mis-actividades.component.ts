@@ -33,11 +33,15 @@ export class MisActividadesComponent implements OnInit {
   listaRespuestas: string;
   fileuploadActual;
   loading: boolean;
+  tieneActividades: boolean;
+  textoNoActividades: string;
 
   constructor(
     private servicio: SPServicio,
     private servicioModal: BsModalService) {
     this.listaRespuestas = this.ObtenerNombreListaActual();
+    this.tieneActividades = false;
+    this.textoNoActividades = '';
     this.loading = false;
   }
 
@@ -50,7 +54,7 @@ export class MisActividadesComponent implements OnInit {
     this.servicio.ObtenerUsuarioActual().subscribe(
       (Response) => {
         this.usuarioActual = new Usuario(Response.Id, Response.Title, null);
-        this.ObtenerActividadesUsuarioActual();
+        this.ObtenerRolUsuario();
       }, err => {
         console.log('Error obteniendo usuario: ' + err);
         this.loading = false;
@@ -58,14 +62,33 @@ export class MisActividadesComponent implements OnInit {
     )
   }
 
+  ObtenerRolUsuario() {
+    this.servicio.ObtenerRolUsuarioActual(this.usuarioActual.id).subscribe(
+      (Response) => {
+        this.usuarioActual.rol = Response[0].Responsable.Title;
+        this.ObtenerActividadesUsuarioActual();
+      }, err => {
+        console.log('Error obteniendo rol de usuario: ' + err);
+      }
+    )
+  }
+
   ObtenerActividadesUsuarioActual() {
     let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(),1)) + "T08:00:00Z";
-      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, fechaActual).subscribe(
+      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
         (Response) => {
           this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
           this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
-          this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
-          this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
+          if(this.totalActividades > 0){
+            this.tieneActividades = true;
+            this.textoNoActividades = '';
+            this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
+            this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
+          }else{
+            this.tieneActividades = false;
+            this.actividadesGestionadas = 0;
+            this.textoNoActividades = "No hay actividades para este usuario y este rol";
+          }
           this.loading = false;
         },
         error => {

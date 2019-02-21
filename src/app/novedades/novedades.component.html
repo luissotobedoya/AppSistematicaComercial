@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                <label for="InputTienda">Tienda</label>
+                <label for="InputTienda">Asignar a:</label>
                 <select name="tienda" id="tienda" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.txtTienda.errors }" formControlName="txtTienda">                        
                       <option value=" " *ngFor="let itemTienda of ObjTiendas" [value]="itemTienda.id " [text]="itemTienda.nombre">{{itemTienda.nombre}}</option>
                     </select>

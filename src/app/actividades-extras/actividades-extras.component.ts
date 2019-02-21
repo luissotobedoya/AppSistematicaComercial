@@ -12,7 +12,6 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 
-
 @Component({
   selector: 'app-actividades-extras',
   templateUrl: './actividades-extras.component.html',
@@ -199,10 +198,10 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   private AsignarFormatoFecha(FechaActividad: Date) {
-    let diaActividadExtraordinaria = ("0" + FechaActividad.getDate()).slice(-2);
-    let mesActividadExtraordinaria = ("0" + (FechaActividad.getMonth() + 1)).slice(-2);
+    let diaActividadExtraordinaria = FechaActividad.getDate();
+    let mesActividadExtraordinaria = FechaActividad.getMonth();
     let anoActividadExtraordinaria = FechaActividad.getFullYear();
-    let fechaRetornar = new Date(anoActividadExtraordinaria, parseInt(mesActividadExtraordinaria), parseInt(diaActividadExtraordinaria), FechaActividad.getHours(), FechaActividad.getMinutes(), FechaActividad.getSeconds()).toISOString();
+    let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, FechaActividad.getHours(), FechaActividad.getMinutes(), FechaActividad.getSeconds()).toISOString();
     return fechaRetornar;
   }
 

@@ -24,6 +24,7 @@ import { ParametrizacionComponent } from './parametrizacion/parametrizacion.comp
 import { SPServicio } from './servicios/sp.servicio';
 import { ActividadesExtrasComponent } from './actividades-extras/actividades-extras.component';
 import { ExcelService } from './servicios/excel.service';
+import { InformesAdministradorTiendasComponent } from './informes-administrador-tiendas/informes-administrador-tiendas.component';
 
 defineLocale('engb', enGbLocale);
 
@@ -38,7 +39,8 @@ defineLocale('engb', enGbLocale);
     SolicitudesTiendaComponent,
     ParametrizacionComponent,
     ActividadesExtrasComponent,
-    NumberDirective    
+    NumberDirective,
+    InformesAdministradorTiendasComponent    
   ],
   imports: [
     BrowserModule,       
@@ -57,10 +59,11 @@ defineLocale('engb', enGbLocale);
       {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
       {path:'mis-actividades', component:MisActividadesComponent},
       {path:'informes',component:InformesComponent},
+      {path:'informes-administrador-tiendas', component:InformesAdministradorTiendasComponent},
       {path:'novedades', component:NovedadesComponent},
       {path:'documentacion', component:DocumentacionComponent},
       {path:'asignacion-tareas', component:AsignacionTareasComponent},
-      {path:'solicitudes-tienda', component:SolicitudesTiendaComponent},
+      {path:'revisar-novedades', component:SolicitudesTiendaComponent},
       {path:'parametrizacion', component:ParametrizacionComponent},
       {path:'actividades-extras', component:ActividadesExtrasComponent}
     ]),

@@ -18,7 +18,11 @@
 
 <div class="zona-cuerpo">
 
-    <div class="row">
+    <div *ngIf="!tieneActividades" class="row">
+        <h5>{{textoNoActividades}}</h5>
+    </div>
+
+    <div *ngIf="tieneActividades" class="row">
         <div class="col-md-12">
             <div class="botones-clasificacion">
                 <button *ngFor="let clasificacion of clasificacionesRespuestas" [class.selected]="clasificacion === clasificacionSeleccionada"

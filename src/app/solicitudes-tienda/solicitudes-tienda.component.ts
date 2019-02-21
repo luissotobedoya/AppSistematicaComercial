@@ -7,14 +7,13 @@ import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons';
 
-
 @Component({
   selector: 'app-solicitudes-tienda',
   templateUrl: './solicitudes-tienda.component.html',
   styleUrls: ['./solicitudes-tienda.component.css']
 })
 export class SolicitudesTiendaComponent implements OnInit {
-  tituloPagina = "Solicitudes de tiendas";
+  tituloPagina = "Revisar novedades";
   colorTheme = 'theme-blue';
   bsConfig: Partial<BsDatepickerConfig>;
   ObjTiendas: any[];
@@ -27,7 +26,6 @@ export class SolicitudesTiendaComponent implements OnInit {
   cantidadRegistros: boolean;
   dataTable: any;
   mostrarTabla: boolean;
-  
   
   constructor(private servicio:SPServicio, private chRef: ChangeDetectorRef,private _localeService: BsLocaleService) {
     this.loading=false;
