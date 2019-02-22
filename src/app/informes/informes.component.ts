@@ -12,6 +12,8 @@ import 'datatables.net-bs4';
 import 'datatables.net-buttons';
 import { ExcelService } from "../servicios/excel.service";
 import { BsDatepickerConfig, BsLocaleService } from "ngx-bootstrap";
+import { Usuario } from "../dominio/usuario";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-informes",
@@ -57,8 +59,11 @@ export class InformesComponent implements OnInit {
   maxDate: Date;
   dataTable: any;
   NombreLista: string;
+  usuarioActual: Usuario;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel: ExcelService,  private _localeService: BsLocaleService) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel: ExcelService, private _localeService: BsLocaleService, private router: Router) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
     this.NombreCampo = "";
     this.DisalbeTienda = true;
     this.txtFecha = [];
@@ -94,11 +99,40 @@ export class InformesComponent implements OnInit {
       slcResponsable: ["", Validators.required],
       slcTienda: ["", Validators.required]
     });
+    this.ObtenerMaestroResponsables();
+  }
 
+  private ObtenerMaestroResponsables() {
     this.servicio.obtenerMaestroResponsable().subscribe(responsable => {
       this.ObjResponsable = Responsable.fromJsonList(responsable);
       this.loading = false;
     });
+  }
+
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+            this.router.navigate(['/acceso-denegado']);
+            break;
+          case "jefe de zonas":
+            this.router.navigate(['/acceso-denegado']);
+            break;
+          case "administrador sistemática comercial":
+            console.log("perfilación correcta");
+            break;
+          default:
+            this.router.navigate(['/acceso-denegado']);
+            break;
+        }
+      } else {
+        this.router.navigate(['/acceso-denegado']);
+      }
+    }
+    else {
+      this.router.navigate(['/acceso-denegado']);
+    }
   }
 
   get f() {

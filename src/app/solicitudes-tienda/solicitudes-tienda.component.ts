@@ -6,6 +6,8 @@ import * as $ from 'jquery';
 import 'datatables.net';
 import 'datatables.net-bs4';
 import 'datatables.net-buttons';
+import { Usuario } from "../dominio/usuario";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-solicitudes-tienda',
@@ -26,84 +28,110 @@ export class SolicitudesTiendaComponent implements OnInit {
   cantidadRegistros: boolean;
   dataTable: any;
   mostrarTabla: boolean;
-  
-  constructor(private servicio:SPServicio, private chRef: ChangeDetectorRef,private _localeService: BsLocaleService) {
-    this.loading=false;
-    this.cantidadRegistros=true;
-    this.mostrarTabla=true;
+  usuarioActual: Usuario;
+
+  constructor(private servicio: SPServicio, private chRef: ChangeDetectorRef, private _localeService: BsLocaleService, private router: Router) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
+    this.loading = false;
+    this.cantidadRegistros = true;
+    this.mostrarTabla = true;
     this._localeService.use('engb');
-   }
+  }
 
   ngOnInit() {
     this.loading = true;
     this.bsConfig = Object.assign({}, { containerClass: this.colorTheme });
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (Response) => {
-        let Usuario = Response.Id;
-        this.servicio.ObtenerUsuariosXJefe(Usuario).subscribe(
-          (ResponseTienda) => {
-            this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);   
-            this.ObtenerTipoSolicitud();         
-          }
-        );
+    this.obtenerUsuariosPorJefeInmediato();
+  }
+
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+            this.router.navigate(['/acceso-denegado']);
+            break;
+          case "jefe de zonas":
+            console.log("perfilación correcta");
+            break;
+          case "administrador sistemática comercial":
+            this.router.navigate(['/acceso-denegado']);
+            break;
+          default:
+            this.router.navigate(['/acceso-denegado']);
+            break;
+        }
+      } else {
+        this.router.navigate(['/acceso-denegado']);
       }
-    );
+    }
+    else {
+      this.router.navigate(['/acceso-denegado']);
+    }
+  }
+
+  private obtenerUsuariosPorJefeInmediato() {
+    this.servicio.ObtenerUsuariosXJefe(this.usuarioActual.id).subscribe((ResponseTienda) => {
+      this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);
+      this.ObtenerTipoSolicitud();
+    });
   }
 
   ObtenerTipoSolicitud() {
     this.servicio.ObtenerTiposolicitud().subscribe(
       (respuestaTipoSolicitud) => {
-          this.ObjTipoSolicitud = respuestaTipoSolicitud;   
-          this.loading = false;       
+        this.ObjTipoSolicitud = respuestaTipoSolicitud;
+        this.loading = false;
       }
     );
   }
 
-  buscarSolicitudes(){
+  buscarSolicitudes() {
     let siwtch = 0;
     let StringConsulta = "";
     this.ObjRespuestaConsulta = [];
 
-    if ( $.fn.dataTable.isDataTable( 'table' ) ) {
+    if ($.fn.dataTable.isDataTable('table')) {
       this.dataTable.destroy();
-    } 
-    
-    if (this.Tienda !== "" && this.Tienda  !== undefined) {
-        StringConsulta = "Tienda eq '" + this.Tienda + "'";
-        siwtch = 1;
+    }
+
+    if (this.Tienda !== "" && this.Tienda !== undefined) {
+      StringConsulta = "Tienda eq '" + this.Tienda + "'";
+      siwtch = 1;
     }
     if (this.TipoSolicitud !== "" && this.TipoSolicitud !== undefined) {
-      if (siwtch === 1) {         
-        StringConsulta = StringConsulta + " and TipoSolicitud eq '"+this.TipoSolicitud+"'";
+      if (siwtch === 1) {
+        StringConsulta = StringConsulta + " and TipoSolicitud eq '" + this.TipoSolicitud + "'";
       } else {
-          StringConsulta = "TipoSolicitud eq '"+this.TipoSolicitud+"'";
-          siwtch = 1;
+        StringConsulta = "TipoSolicitud eq '" + this.TipoSolicitud + "'";
+        siwtch = 1;
       }
     }
     if (this.FechaSolicitud !== "" && this.FechaSolicitud !== undefined) {
       let fechaInicioString = this.formatDate(this.FechaSolicitud[0]);
       let fecha2String = this.formatDate(this.FechaSolicitud[1]);
-      if (siwtch === 1) {         
+      if (siwtch === 1) {
         StringConsulta = StringConsulta + " and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
       } else {
-          StringConsulta = "Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
-          siwtch = 1;
+        StringConsulta = "Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
+        siwtch = 1;
       }
     }
 
     this.servicio.ObtenerSolicitudes(StringConsulta).subscribe(
       (respuestaConsulta) => {
-          this.ObjRespuestaConsulta = respuestaConsulta;  
-          if (respuestaConsulta.length===0) {
-             this.cantidadRegistros=false;
-             this.mostrarTabla = true;
-          }
-          else {
-            this.cantidadRegistros=true;
-            this.mostrarTabla = false;
-            this.AgregarDataTable();
-          } 
-          this.loading = false;       
+        this.ObjRespuestaConsulta = respuestaConsulta;
+        if (respuestaConsulta.length === 0) {
+          this.cantidadRegistros = false;
+          this.mostrarTabla = true;
+        }
+        else {
+          this.cantidadRegistros = true;
+          this.mostrarTabla = false;
+          this.AgregarDataTable();
+        }
+        this.loading = false;
       }
     );
   }

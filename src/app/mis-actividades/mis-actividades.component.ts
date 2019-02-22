@@ -5,6 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Respuesta } from '../dominio/respuesta';
 import { environment } from 'src/environments/environment.prod';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mis-actividades',
@@ -37,7 +38,7 @@ export class MisActividadesComponent implements OnInit {
   tieneActividades: boolean;
   textoNoActividades: string;
 
-  constructor(private servicio: SPServicio, private servicioModal: BsModalService) {
+  constructor(private servicio: SPServicio, private servicioModal: BsModalService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
     this.ValidarPerfilacion();
     this.listaRespuestas = this.ObtenerNombreListaActual();
@@ -60,15 +61,15 @@ export class MisActividadesComponent implements OnInit {
             console.log("perfilación correcta");
             break;
           default:
-            window.location.href = environment.urlWeb;
+            this.router.navigate(['/acceso-denegado']);
             break;
         }
       } else {
-        window.location.href = environment.urlWeb;
+        this.router.navigate(['/acceso-denegado']);
       }
     }
     else {
-      window.location.href = environment.urlWeb;
+      this.router.navigate(['/acceso-denegado']);
     }
   }
 
@@ -78,7 +79,7 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(), 1)) + "T08:00:00Z";
+    let fechaActual = this.ObtenerFormatoFecha(new Date()) + "T08:00:00Z";
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
@@ -99,12 +100,6 @@ export class MisActividadesComponent implements OnInit {
         console.log('Error obteniendo las actividades del usuario: ' + error);
       }
     );
-  }
-
-  addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
   }
 
   ObtenerFormatoFecha(date) {

@@ -18,13 +18,13 @@ import { MisActividadesComponent } from './mis-actividades/mis-actividades.compo
 import { InformesComponent } from './informes/informes.component';
 import { NovedadesComponent } from './novedades/novedades.component';
 import { DocumentacionComponent } from './documentacion/documentacion.component';
-import { AsignacionTareasComponent } from './asignacion-tareas/asignacion-tareas.component';
 import { SolicitudesTiendaComponent } from './solicitudes-tienda/solicitudes-tienda.component';
 import { ParametrizacionComponent } from './parametrizacion/parametrizacion.component';
 import { SPServicio } from './servicios/sp.servicio';
 import { ActividadesExtrasComponent } from './actividades-extras/actividades-extras.component';
 import { ExcelService } from './servicios/excel.service';
 import { InformesAdministradorTiendasComponent } from './informes-administrador-tiendas/informes-administrador-tiendas.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 defineLocale('engb', enGbLocale);
 
@@ -35,12 +35,12 @@ defineLocale('engb', enGbLocale);
     InformesComponent,
     NovedadesComponent,
     DocumentacionComponent,
-    AsignacionTareasComponent,
     SolicitudesTiendaComponent,
     ParametrizacionComponent,
     ActividadesExtrasComponent,
     NumberDirective,
-    InformesAdministradorTiendasComponent    
+    InformesAdministradorTiendasComponent,
+    PageNotFoundComponent    
   ],
   imports: [
     BrowserModule,       
@@ -62,10 +62,10 @@ defineLocale('engb', enGbLocale);
       {path:'informes-administrador-tiendas', component:InformesAdministradorTiendasComponent},
       {path:'novedades', component:NovedadesComponent},
       {path:'documentacion', component:DocumentacionComponent},
-      {path:'asignacion-tareas', component:AsignacionTareasComponent},
       {path:'revisar-novedades', component:SolicitudesTiendaComponent},
       {path:'parametrizacion', component:ParametrizacionComponent},
-      {path:'actividades-extras', component:ActividadesExtrasComponent}
+      {path:'actividades-extras', component:ActividadesExtrasComponent},
+      {path:'acceso-denegado', component:PageNotFoundComponent}
     ]),
     HttpModule
   ],

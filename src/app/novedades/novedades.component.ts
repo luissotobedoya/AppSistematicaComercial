@@ -6,7 +6,8 @@ import { TiendaXJefe } from '../dominio/TiendaXJefe';
 import { ItemAddResult } from 'sp-pnp-js';
 import { BsModalService, BsLocaleService } from 'ngx-bootstrap';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-
+import { Usuario } from '../dominio/usuario';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-novedades',
@@ -20,17 +21,45 @@ export class NovedadesComponent implements OnInit {
   ObjTiendas: any[];
   ObjTipoSolicitud: any[];
   loading = false;
-  NovedadGuardar:Novedad;
+  NovedadGuardar: Novedad;
   tituloModal: any;
   mensajeModal: any;
   public modalRef: BsModalRef;
   timer: any;
-  
-  constructor(private servicio:SPServicio, private formBuilder: FormBuilder,private servicioModal: BsModalService,private _localeService: BsLocaleService) {
-    
-    this.NovedadGuardar = new Novedad(null,null,null,"",null);
+  usuarioActual: Usuario;
+
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router: Router) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
+    this.NovedadGuardar = new Novedad(null, null, null, "", null);
     this._localeService.use('engb');
-   }
+  }
+
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+            this.router.navigate(['/acceso-denegado']);
+            break;
+          case "jefe de zonas":
+            console.log("perfilación correcta");
+            break;
+          case "administrador sistemática comercial":
+            this.router.navigate(['/acceso-denegado']);
+            break;
+          default:
+            this.router.navigate(['/acceso-denegado']);
+            break;
+        }
+      } else {
+        this.router.navigate(['/acceso-denegado']);
+      }
+    }
+    else {
+      this.router.navigate(['/acceso-denegado']);
+    }
+  }
 
   ngOnInit() {
     this.loading = true;
@@ -41,18 +70,14 @@ export class NovedadesComponent implements OnInit {
       txtCantidad: ["", Validators.required],
       txtDescripcion: ["", Validators.required]
     });
+    this.obtenerUsuariosPorJefeInmediato();
+  }
 
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (Response) => {
-        let Usuario = Response.Id;
-        this.servicio.ObtenerUsuariosXJefe(Usuario).subscribe(
-          (ResponseTienda) => {
-            this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);   
-            this.ObtenerTipoSolicitud();         
-          }
-        );
-      }
-    );
+  private obtenerUsuariosPorJefeInmediato() {
+    this.servicio.ObtenerUsuariosXJefe(this.usuarioActual.id).subscribe((ResponseTienda) => {
+      this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);
+      this.ObtenerTipoSolicitud();
+    });
   }
 
   mostrarAlerta(template: TemplateRef<any>, Titulo, Mensaje): any {
@@ -64,8 +89,8 @@ export class NovedadesComponent implements OnInit {
   ObtenerTipoSolicitud() {
     this.servicio.ObtenerTiposolicitud().subscribe(
       (respuestaTipoSolicitud) => {
-          this.ObjTipoSolicitud = respuestaTipoSolicitud;   
-          this.loading = false;       
+        this.ObjTipoSolicitud = respuestaTipoSolicitud;
+        this.loading = false;
       }
     );
   }
@@ -76,34 +101,29 @@ export class NovedadesComponent implements OnInit {
 
   onSubmit(template: TemplateRef<any>) {
     this.submitted = true;
-    if (this.NovedadForm.invalid) {      
+    if (this.NovedadForm.invalid) {
       return;
     }
     this.loading = true;
     this.servicio.agregarNovedad(this.retornarNovedades()).then(
       (iar: ItemAddResult) => {
-          this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
-           this.timer = setTimeout(() => {
-             window.location.reload();
-           }, 3000);
-           this.loading = false;      
+        this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
+        this.timer = setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+        this.loading = false;
       }, err => {
         alert('Error al crear una novedad');
       }
     );
-
-
   }
 
   retornarNovedades(): Novedad {
-    this.NovedadGuardar.tienda=this.NovedadForm.controls['txtTienda'].value;
-    this.NovedadGuardar.fecha=this.NovedadForm.controls['txtFecha'].value;
-    this.NovedadGuardar.tipoSolicitud=this.NovedadForm.controls['txtTipoSolicitud'].value;
-    this.NovedadGuardar.cantidad=this.NovedadForm.controls['txtCantidad'].value;
-    this.NovedadGuardar.descripcion=this.NovedadForm.controls['txtDescripcion'].value;    
+    this.NovedadGuardar.tienda = this.NovedadForm.controls['txtTienda'].value;
+    this.NovedadGuardar.fecha = this.NovedadForm.controls['txtFecha'].value;
+    this.NovedadGuardar.tipoSolicitud = this.NovedadForm.controls['txtTipoSolicitud'].value;
+    this.NovedadGuardar.cantidad = this.NovedadForm.controls['txtCantidad'].value;
+    this.NovedadGuardar.descripcion = this.NovedadForm.controls['txtDescripcion'].value;
     return this.NovedadGuardar;
   }
-
-
-
 }

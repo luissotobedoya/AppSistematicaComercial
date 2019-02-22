@@ -36,9 +36,10 @@ export class AppComponent implements OnInit {
     this.VerParametrizacion = false;
   }
 
-  public ngOnInit() {
+  async ngOnInit() {
     this.abrirCerrarMenu();
-    this.ObtenerUsuarioActual();
+    await this.ObtenerUsuarioActual();
+    await this.ObtenerRolUsuario();
   }
 
   destruirSessiones(): any {
@@ -63,34 +64,23 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ObtenerUsuarioActual() {
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (Response) => {
-        this.nombreUsuario = Response.Title;
-        this.usuarioActual = new Usuario(Response.Id, Response.Title, "");
-        this.ObtenerImagenUsuario();
-        this.ObtenerRolUsuario();
-      }, errorServicio => {
-        console.log('Error obteniendo usuario: ' + errorServicio);
-      }
-    )
+  async ObtenerUsuarioActual() {
+    const response = await this.servicio.obtenerUsuarioActualPromesa();
+    this.nombreUsuario = response.Title;
+    this.usuarioActual = new Usuario(response.Id, response.Title, "");
+    this.ObtenerImagenUsuario();
   }
 
   ObtenerImagenUsuario(): any {
     this.imagenUsuario = environment.urlWeb + "/_layouts/15/userphoto.aspx?size=k&username=" + this.usuarioActual.nombre;
   }
 
-  ObtenerRolUsuario() {
-    this.servicio.ObtenerRolUsuarioActual(this.usuarioActual.id).subscribe(
-      (Response) => {
-        this.usuarioActual.rol = Response[0].Responsable.Title;
-        this.responsableUsuario = Response[0].Responsable.Title;
-        sessionStorage.setItem('usuario', JSON.stringify(this.usuarioActual));
-        this.pintarMenuSegunRol();
-      }, err => {
-        console.log('Error obteniendo rol de usuario: ' + err);
-      }
-    )
+  async ObtenerRolUsuario() {
+    const response = await this.servicio.obtenerRolUsuarioActualPromesa(this.usuarioActual.id);
+    this.usuarioActual.rol = response[0].Responsable.Title;
+    this.responsableUsuario = response[0].Responsable.Title;
+    sessionStorage.setItem('usuario', JSON.stringify(this.usuarioActual));
+    this.pintarMenuSegunRol();
   }
 
   pintarMenuSegunRol(): any {

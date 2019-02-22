@@ -5,6 +5,8 @@ import 'datatables.net-bs4';
 import 'datatables.net-buttons';
 import { SPServicio } from '../servicios/sp.servicio';
 import { Actividad } from '../dominio/actividad';
+import { Router } from '@angular/router';
+import { Usuario } from '../dominio/usuario';
 
 @Component({
   selector: 'app-documentacion',
@@ -15,12 +17,41 @@ export class DocumentacionComponent implements OnInit {
   tituloPagina = "Documentación";
   actividades: Actividad[] = [];
   dataTable: any;
+  usuarioActual: Usuario;
 
-  constructor(private servicio: SPServicio, private chRef: ChangeDetectorRef) {
+  constructor(private servicio: SPServicio, private chRef: ChangeDetectorRef, private router: Router) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
   }
 
   ngOnInit() {
     this.obtenerActividadesGenerales();
+  }
+
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+            console.log("perfilación correcta");
+            break;
+          case "jefe de zonas":
+            console.log("perfilación correcta");
+            break;
+          case "administrador sistemática comercial":
+            console.log("perfilación correcta");
+            break;
+          default:
+            this.router.navigate(['/acceso-denegado']);
+            break;
+        }
+      } else {
+        this.router.navigate(['/acceso-denegado']);
+      }
+    }
+    else {
+      this.router.navigate(['/acceso-denegado']);
+    }
   }
 
   obtenerActividadesGenerales() {

@@ -28,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCIsImtpZCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTUwNzgxODYxLCJuYmYiOjE1NTA3ODE4NjEsImV4cCI6MTU1MDgxMDk2MSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.KvmEt1sQQySKB32EogNFFFXBENyGaAsnY5p5VfZOrXBe8W-EEvEMTOqPVuGtLDmEpyKyKWcLLu8pU2a0OpNUw9CfDZPTCjgaMkHsYlP2pdB4C_XyMBf013BdqcqjS-w6pZfbnr8fFFaZmgrG7Oxp_9e_Lwe7oOjhqrvhFf_Odr_qcZ4oAlbiGlc-xAzA13NmhacMb2x-KlZeoI2QgxyKDJUjRz--kOMJOj_TUix1TJxmR_JY5oR8lrdhsKwru9s0hlXTKH7LSHFQKVOQUBx8sBAnIf-G2e2AM9LLsLqCa_tnPQM_rFym1962odmq_YA7zczccoqbd27udzn3D92xyA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCIsImtpZCI6Ii1zeE1KTUxDSURXTVRQdlp5SjZ0eC1DRHh3MCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTUwODQzMDI2LCJuYmYiOjE1NTA4NDMwMjYsImV4cCI6MTU1MDg3MjEyNiwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.aLem0fCpg1gq647aaMKKiAaZl4qGWvIwFdO20gexlsPTt-tiPEqiAEKVo2syTMPvPQfUu-nHSDHGtapqxlVtwWFr3Lkb_XW70U_74gnT4pY6gXex57hOmsl_Xn6nHinQP5lwBI0ApMZgNpdT_U5C_Pj9quVXEcIjb2XIjtimvWMS-Z-pPgiH7BeKpo9sukhgVpYT5y8G4sPw8mwpzCQP11J7Ej1ETaWfUTtreczda1CWs-hKuuD4Q2vKIwjEDMW3SG6IHqM0CC8_lPS2nuwegT-ZnJdHGM6_IYAHTXrdLk1m6clOfbZHsW-MqXKnjofbHb8Sc_TNvHEEQD7Zw0j1pQ'
             }
         }, environment.urlWeb);
 
@@ -44,6 +44,10 @@ export class SPServicio {
         let respuesta = from(this.obtenerConfiguracion().web.currentUser.get());
         return respuesta;
     } 
+
+    public async obtenerUsuarioActualPromesa(): Promise<any> {
+        return await from(this.obtenerConfiguracion().web.currentUser.get()).toPromise();
+    }
 
     ObtenerUsuariosXJefe(Jefe) {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroUsuarios).items.filter("Jefe eq '" + Jefe + "'").select("Id", "Usuario/Title", "Usuario/Id").expand("Usuario").get());
@@ -80,6 +84,10 @@ export class SPServicio {
         return respuesta;
     }
 
+    public async obtenerRolUsuarioActualPromesa(usuarioId: number): Promise<any> {
+        return await from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroUsuarios).items.select("Usuario/ID", "Usuario/Title", "Jefe/ID", "Jefe/Title", "Responsable/ID", "Responsable/Title").expand("Usuario", "Jefe", "Responsable").filter("UsuarioId eq " + usuarioId + " ").get()).toPromise();
+    }
+
     ObtenerClasificaciones() {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.orderBy("OrdenClasificacion", true).getAll());
         return respuesta;
@@ -87,7 +95,7 @@ export class SPServicio {
 
     ObtenerClasificacionesExtras() {
         let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroClasificacion).items.orderBy("OrdenClasificacion", true).getAll());
-        return respuesta; 
+        return respuesta;
     }
 
     ObtenerRespuestaActividades(nombreLista, StringConsulta) {
@@ -95,8 +103,8 @@ export class SPServicio {
         return respuesta;
     }
 
-    ObtenerSolicitudes(StringConsulta) {        
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.Novedades).items.filter(StringConsulta).select("Tienda/Title", "TipoSolicitud/Title", "Descripcion", "Fecha", "Cantidad").expand("Tienda","TipoSolicitud").getAll(5000));
+    ObtenerSolicitudes(StringConsulta) {
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.Novedades).items.filter(StringConsulta).select("Tienda/Title", "TipoSolicitud/Title", "Descripcion", "Fecha", "Cantidad").expand("Tienda", "TipoSolicitud").getAll(5000));
         return respuesta;
     }
 
@@ -125,10 +133,10 @@ export class SPServicio {
         return respuesta;
     }
 
-    obtenerActividadesGenerales(){
-        const campoOrdenar : string = "Title";
+    obtenerActividadesGenerales() {
+        const campoOrdenar: string = "Title";
         const modoOrdnamientoASC = true;
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).items.select("ID","Title", "Clasificacion/Title", "Clasificacion/ID", "Proceso/Title", "Proceso/ID", "Tarea/Title", "Tarea/ID", "Responsable/Title", "Responsable/ID", "TipoValidacion", "Observaciones", "AttachmentFiles").expand("Clasificacion", "Proceso", "Tarea", "Responsable", "AttachmentFiles").orderBy(campoOrdenar, modoOrdnamientoASC).getAll(500));
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).items.select("ID", "Title", "Clasificacion/Title", "Clasificacion/ID", "Proceso/Title", "Proceso/ID", "Tarea/Title", "Tarea/ID", "Responsable/Title", "Responsable/ID", "TipoValidacion", "Observaciones", "AttachmentFiles").expand("Clasificacion", "Proceso", "Tarea", "Responsable", "AttachmentFiles").orderBy(campoOrdenar, modoOrdnamientoASC).getAll(500));
         return respuesta;
     }
 
@@ -142,8 +150,8 @@ export class SPServicio {
         return respuesta;
     }
 
-    obtenerActividadesDelDia(nombreLista: string, usuarioId: number, rol: string, fecha: string){
-        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter("UsuarioId eq " + usuarioId + " and Responsable eq '"+rol+"' and Fecha eq datetime'"+fecha+"' ").getAll());
+    obtenerActividadesDelDia(nombreLista: string, usuarioId: number, rol: string, fecha: string) {
+        let respuesta = from(this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter("UsuarioId eq " + usuarioId + " and Responsable eq '" + rol + "' and Fecha eq datetime'" + fecha + "' ").getAll());
         return respuesta;
     }
 
@@ -194,11 +202,11 @@ export class SPServicio {
         return elemento;
     }
 
-    agregarNovedad(agregarNovedad:Novedad) {
+    agregarNovedad(agregarNovedad: Novedad) {
         let objNovedad = {
-            TiendaId:agregarNovedad.tienda,
+            TiendaId: agregarNovedad.tienda,
             Fecha: agregarNovedad.fecha,
-            TipoSolicitudId:agregarNovedad.tipoSolicitud,
+            TipoSolicitudId: agregarNovedad.tipoSolicitud,
             Descripcion: agregarNovedad.descripcion,
             Cantidad: agregarNovedad.cantidad
         };
@@ -211,24 +219,24 @@ export class SPServicio {
         return respuesta;
     }
 
-    obtenerTiposValidacion(){
-        let campoTipoValidacion =  this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoTipoValidacion);
+    obtenerTiposValidacion() {
+        let campoTipoValidacion = this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoTipoValidacion);
         let respuesta = campoTipoValidacion.select('Choices').get();
         return respuesta;
     }
 
-    obtenerPrioridades(){
-        let campoPrioridad =  this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoPrioridad);
+    obtenerPrioridades() {
+        let campoPrioridad = this.obtenerConfiguracion().web.lists.getByTitle(environment.maestroActividadesGenerales).fields.getByInternalNameOrTitle(environment.nombreCampoPrioridad);
         let respuesta = campoPrioridad.select('Choices').get();
         return respuesta;
     }
 
-    async validacionLista(){
+    async validacionLista() {
         let respuesta = await this.obtenerConfiguracion().web.lists.ensure("RespuestasActividades201901").then((ler: ListEnsureResult) => {
             if (ler.created) {
                 return true;
             }
-            else{
+            else {
                 return false;
             }
         });
