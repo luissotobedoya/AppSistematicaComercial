@@ -251,3 +251,11 @@ button.btn.btn-outline-info.ng-pristine.ng-valid.ng-touched.selected{
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.texto-acceso-denegado{
+    text-align: center;
+}
+
+.imagen-acceso-denegado{
+    text-align: center;
+}

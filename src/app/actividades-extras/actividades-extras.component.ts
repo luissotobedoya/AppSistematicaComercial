@@ -11,7 +11,8 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
-
+import { Usuario } from '../dominio/usuario';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-actividades-extras',
@@ -44,9 +45,11 @@ export class ActividadesExtrasComponent implements OnInit {
   actividadExtraordinariaGuardar: ActividadExtraordinaria;
   mostrarDivObservaciones = false;
   fechaGuardar: Date;
+  usuarioActual: Usuario;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder,
-    private servicioModal: BsModalService, private _localeService: BsLocaleService) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router:Router) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
     this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "", "", "");
     this.contadorEntradas = 0;
     this.ContadorSucces = 0;
@@ -77,6 +80,32 @@ export class ActividadesExtrasComponent implements OnInit {
     this.obtenerClasificacionExtra();
   }
 
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+          this.router.navigate(['/acceso-denegado']);
+            break;
+          case "jefe de zonas":
+            console.log("perfilación correcta");
+            break;
+          case "administrador sistemática comercial":
+          this.router.navigate(['/acceso-denegado']);
+            break;
+          default:
+            this.router.navigate(['/acceso-denegado']);
+            break;
+        }
+      } else {
+        this.router.navigate(['/acceso-denegado']);
+      }
+    }
+    else {
+      this.router.navigate(['/acceso-denegado']);
+    }
+  }
+
   get f() { return this.registerForm.controls; }
 
   mostrarAlerta(template: TemplateRef<any>, Titulo, Mensaje): any {
@@ -104,15 +133,10 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   obtenerTiendas() {
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (Response) => {
-        let Usuario = Response.Id;
-        this.servicio.ObtenerUsuariosXJefe(Usuario).subscribe(
-          (ResponseTienda) => {
-            this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);
-            this.obtenerTipoActividades();
-          }
-        );
+    this.servicio.ObtenerUsuariosXJefe(this.usuarioActual.id).subscribe(
+      (ResponseTienda) => {
+        this.ObjTiendas = TiendaXJefe.fromJsonList(ResponseTienda);
+        this.obtenerTipoActividades();
       }
     );
   }
@@ -199,10 +223,10 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   private AsignarFormatoFecha(FechaActividad: Date) {
-    let diaActividadExtraordinaria = ("0" + FechaActividad.getDate()).slice(-2);
-    let mesActividadExtraordinaria = ("0" + (FechaActividad.getMonth() + 1)).slice(-2);
+    let diaActividadExtraordinaria = FechaActividad.getDate();
+    let mesActividadExtraordinaria = FechaActividad.getMonth();
     let anoActividadExtraordinaria = FechaActividad.getFullYear();
-    let fechaRetornar = new Date(anoActividadExtraordinaria, parseInt(mesActividadExtraordinaria), parseInt(diaActividadExtraordinaria), FechaActividad.getHours(), FechaActividad.getMinutes(), FechaActividad.getSeconds()).toISOString();
+    let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, FechaActividad.getHours(), FechaActividad.getMinutes(), FechaActividad.getSeconds()).toISOString();
     return fechaRetornar;
   }
 

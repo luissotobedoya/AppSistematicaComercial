@@ -6,25 +6,28 @@
           Estudio Moda
         </a>
             </li>
-            <li>
+            <li *ngIf="VerMisActividades">
                 <a routerLink="/mis-actividades" routerLinkActive="active">Mis actividades</a>
             </li>
-            <li>
+            <li *ngIf="VerActividadesExtras">
                 <a routerLink="/actividades-extras" routerLinkActive="active">Actividades extraordinarias</a>
             </li>
-            <li>
+            <li *ngIf="VerInformes">
                 <a routerLink="/informes" routerLinkActive="active">Informes</a>
             </li>
-            <li>
+            <li *ngIf="VerInformesTiendas">
+                <a routerLink="/informes-administrador-tiendas" routerLinkActive="active">Informes de tiendas</a>
+            </li>
+            <li *ngIf="VerNovedades">
                 <a routerLink="/novedades" routerLinkActive="active">Novedades</a>
             </li>
-            <li>
+            <li *ngIf="VerRevisarNovedades">
+                <a routerLink="/revisar-novedades" routerLinkActive="active">Revisar novedades</a>
+            </li>
+            <li *ngIf="VerDocumentacion">
                 <a routerLink="/documentacion" routerLinkActive="active">Documentación</a>
             </li>
-            <li>
-                <a routerLink="/solicitudes-tienda" routerLinkActive="active">Solicitudes Tienda</a>
-            </li>
-            <li>
+            <li *ngIf="VerParametrizacion">
                 <a routerLink="/parametrizacion" routerLinkActive="active">Parametrización</a>
             </li>
         </ul>

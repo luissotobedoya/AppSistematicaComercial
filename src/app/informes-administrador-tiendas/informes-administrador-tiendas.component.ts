@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { Usuario } from '../dominio/usuario';
 
 @Component({
-  selector: 'app-parametrizacion',
-  templateUrl: './parametrizacion.component.html',
-  styleUrls: ['./parametrizacion.component.css']
+  selector: 'app-informes-administrador-tiendas',
+  templateUrl: './informes-administrador-tiendas.component.html',
+  styleUrls: ['./informes-administrador-tiendas.component.css']
 })
-export class ParametrizacionComponent implements OnInit {
-  tituloPagina = "Parametrización";
+export class InformesAdministradorTiendasComponent implements OnInit {
   usuarioActual: Usuario;
   constructor(private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
@@ -26,10 +25,10 @@ export class ParametrizacionComponent implements OnInit {
             this.router.navigate(['/acceso-denegado']);
             break;
           case "jefe de zonas":
-            this.router.navigate(['/acceso-denegado']);
+            console.log("perfilación correcta");
             break;
           case "administrador sistemática comercial":
-            console.log("perfilación correcta");
+            this.router.navigate(['/acceso-denegado']);
             break;
           default:
             this.router.navigate(['/acceso-denegado']);

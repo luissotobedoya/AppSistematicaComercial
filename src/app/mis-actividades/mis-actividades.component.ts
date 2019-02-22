@@ -4,6 +4,8 @@ import { Usuario } from '../dominio/usuario';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Respuesta } from '../dominio/respuesta';
+import { environment } from 'src/environments/environment.prod';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mis-actividades',
@@ -33,51 +35,71 @@ export class MisActividadesComponent implements OnInit {
   listaRespuestas: string;
   fileuploadActual;
   loading: boolean;
+  tieneActividades: boolean;
+  textoNoActividades: string;
 
-  constructor(
-    private servicio: SPServicio,
-    private servicioModal: BsModalService) {
+  constructor(private servicio: SPServicio, private servicioModal: BsModalService, private router: Router) {
+    this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
+    this.ValidarPerfilacion();
     this.listaRespuestas = this.ObtenerNombreListaActual();
+    this.tieneActividades = false;
+    this.textoNoActividades = '';
     this.loading = false;
+  }
+
+  private ValidarPerfilacion() {
+    if (this.usuarioActual != null) {
+      if (this.usuarioActual.rol != null) {
+        switch (this.usuarioActual.rol.toLowerCase()) {
+          case "administrador de tienda":
+            console.log("perfilación correcta");
+            break;
+          case "jefe de zonas":
+            console.log("perfilación correcta");
+            break;
+          case "administrador sistemática comercial":
+            console.log("perfilación correcta");
+            break;
+          default:
+            this.router.navigate(['/acceso-denegado']);
+            break;
+        }
+      } else {
+        this.router.navigate(['/acceso-denegado']);
+      }
+    }
+    else {
+      this.router.navigate(['/acceso-denegado']);
+    }
   }
 
   ngOnInit() {
     this.loading = true;
-    this.ObtenerUsuarioActual();
-  }
-
-  ObtenerUsuarioActual() {
-    this.servicio.ObtenerUsuarioActual().subscribe(
-      (Response) => {
-        this.usuarioActual = new Usuario(Response.Id, Response.Title, null);
-        this.ObtenerActividadesUsuarioActual();
-      }, err => {
-        console.log('Error obteniendo usuario: ' + err);
-        this.loading = false;
-      }
-    )
+    this.ObtenerActividadesUsuarioActual();
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(this.addDays(new Date(),1)) + "T08:00:00Z";
-      this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, fechaActual).subscribe(
-        (Response) => {
-          this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
-          this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
+    let fechaActual = this.ObtenerFormatoFecha(new Date()) + "T08:00:00Z";
+    this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
+      (Response) => {
+        this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
+        this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
+        if (this.totalActividades > 0) {
+          this.tieneActividades = true;
+          this.textoNoActividades = '';
           this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
           this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
-          this.loading = false;
-        },
-        error => {
-          console.log('Error obteniendo las actividades del usuario: ' + error);
+        } else {
+          this.tieneActividades = false;
+          this.actividadesGestionadas = 0;
+          this.textoNoActividades = "No hay actividades para este usuario y este rol";
         }
-      );
-  }
-
-   addDays(date, days) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
+        this.loading = false;
+      },
+      error => {
+        console.log('Error obteniendo las actividades del usuario: ' + error);
+      }
+    );
   }
 
   ObtenerFormatoFecha(date) {
@@ -318,8 +340,8 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
-  LimpiarControlAdjunto(idControlAdjunto){
-      (<HTMLInputElement>document.getElementById("adjunto-"+idControlAdjunto)).value = null;
+  LimpiarControlAdjunto(idControlAdjunto) {
+    (<HTMLInputElement>document.getElementById("adjunto-" + idControlAdjunto)).value = null;
   }
 
   declinar(): void {
