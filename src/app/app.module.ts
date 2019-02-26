@@ -25,6 +25,7 @@ import { ActividadesExtrasComponent } from './actividades-extras/actividades-ext
 import { ExcelService } from './servicios/excel.service';
 import { InformesAdministradorTiendasComponent } from './informes-administrador-tiendas/informes-administrador-tiendas.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { InicioComponent } from './inicio/inicio.component';
 
 defineLocale('engb', enGbLocale);
 
@@ -40,7 +41,8 @@ defineLocale('engb', enGbLocale);
     ActividadesExtrasComponent,
     NumberDirective,
     InformesAdministradorTiendasComponent,
-    PageNotFoundComponent    
+    PageNotFoundComponent,
+    InicioComponent    
   ],
   imports: [
     BrowserModule,       
@@ -56,7 +58,8 @@ defineLocale('engb', enGbLocale);
     PaginationModule.forRoot(),
     DataTablesModule,
     RouterModule.forRoot([
-      {path:'',redirectTo:'/mis-actividades',pathMatch:'full'},
+      {path:'',redirectTo:'/inicio',pathMatch:'full'},
+      {path:'inicio', component: InicioComponent},
       {path:'mis-actividades', component:MisActividadesComponent},
       {path:'informes',component:InformesComponent},
       {path:'informes-administrador-tiendas', component:InformesAdministradorTiendasComponent},
