@@ -259,3 +259,12 @@ button.btn.btn-outline-info.ng-pristine.ng-valid.ng-touched.selected{
 .imagen-acceso-denegado{
     text-align: center;
 }
+
+.welcome{
+    position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
