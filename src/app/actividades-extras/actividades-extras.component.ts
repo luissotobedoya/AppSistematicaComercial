@@ -201,7 +201,7 @@ export class ActividadesExtrasComponent implements OnInit {
       Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
       if (Periodicidad === "1") {
           if (this.diasSeleccionados.length === 0) {
-            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un dia en el que desea la actividad");
+            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
             return;
           }
       }
@@ -211,7 +211,7 @@ export class ActividadesExtrasComponent implements OnInit {
              let diaNumero = this.registerForm.controls['diaNumero'].value;
              let mesNumero = this.registerForm.controls['mesNumero'].value;
              if (diaNumero ==="" || mesNumero==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique el dia o cada cuantos meses desea hacer la actividad");
+                this.mostrarAlerta(template, "Alerta", "Por favor indique el día o cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc1 = true;
                 return;
              }
@@ -222,7 +222,7 @@ export class ActividadesExtrasComponent implements OnInit {
          else if(PeriodicidadMensual ==="Opcion2"){
           let stringMes = this.registerForm.controls['stringMes'].value;
             if (stringMes ==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique la periocidad del dia y cada cuantos meses desea hacer la actividad");
+                this.mostrarAlerta(template, "Alerta", "Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc2 = true;
                 return;
              }
@@ -247,7 +247,7 @@ export class ActividadesExtrasComponent implements OnInit {
     Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
       if (Periodicidad === "1") {
           if (this.diasSeleccionados.length === 0) {
-            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un dia en el que desea la actividad");
+            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
             return;
           }
       }
@@ -257,7 +257,7 @@ export class ActividadesExtrasComponent implements OnInit {
              let diaNumero = this.registerForm.controls['diaNumero'].value;
              let mesNumero = this.registerForm.controls['mesNumero'].value;
              if (diaNumero ==="" || mesNumero==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique el dia o cada cuantos meses desea hacer la actividad");
+                this.mostrarAlerta(template, "Alerta", "Por favor indique el día o cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc1 = true;
                 return;
              }
@@ -268,7 +268,7 @@ export class ActividadesExtrasComponent implements OnInit {
          else if(PeriodicidadMensual ==="Opcion2"){
           let stringMes = this.registerForm.controls['stringMes'].value;
             if (stringMes ==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique la periocidad del dia y cada cuantos meses desea hacer la actividad");
+                this.mostrarAlerta(template, "Alerta", "Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc2 = true;
                 return;
              }
