@@ -8,8 +8,7 @@
     <div class="row">
         <div class="col-xs-12 col-md-6 form-group">
             <label for="lblFechas">Fechas de Actividad</label>
-            <input type="text" formControlName="Fecha" placeholder="Rango de fechas" class="form-control" [minDate]="minDate" [maxDate]="maxDate" [bsConfig]="bsConfig"
-                bsDaterangepicker [ngClass]="{ 'is-invalid': submitted && f.Fecha.errors }">
+            <input type="text" formControlName="Fecha" placeholder="Rango de fechas" class="form-control" [minDate]="minDate" [maxDate]="maxDate" [bsConfig]="bsConfig" bsDaterangepicker [ngClass]="{ 'is-invalid': submitted && f.Fecha.errors }">
         </div>
         <div *ngIf="submitted && f.Fecha.errors" class="invalid-feedback">
             <div *ngIf="f.Fecha.errors.required">Es requerido</div>
@@ -19,44 +18,92 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    Dias en los que se realizará la actividad
+                    <!-- Dias en los que se realizará la actividad -->
+                    <div class="form-group row">
+                        <label for="" class="col-sm-2 col-form-label">Periodicidad</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" formControlName="Periodicidad" [ngClass]="{ 'is-invalid': submitted && f.Periodicidad.errors }" (change)="CambioPeriodicidad($event)">                                
+                                <option value="1">Semanal</option>
+                                <option value="2">Mensual</option>                                
+                              </select>
+                            <div *ngIf="submitted && f.Periodicidad.errors" class="invalid-feedback">
+                                <div *ngIf="f.Periodicidad.errors.required">Es requerido</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <div class="col-xs-12 col-md-12 ">
+                    <div class="col-xs-12 col-md-12" *ngIf="ModelPeriodicidad === '1'">
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline1" name="DiasHabiles" value="1" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline1" name="DiasHabiles" value="1" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline1">Lunes</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline2" name="DiasHabiles" value="2" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline2" name="DiasHabiles" value="2" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline2">Martes</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline3" name="DiasHabiles" value="3" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline3" name="DiasHabiles" value="3" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline3">Miércoles</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline4" name="DiasHabiles" value="4" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline4" name="DiasHabiles" value="4" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline4">Jueves</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline5" name="DiasHabiles" value="5" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline5" name="DiasHabiles" value="5" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline5">Viernes</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline6" name="DiasHabiles" value="6" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline6" name="DiasHabiles" value="6" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline6">Sábado</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline7" name="DiasHabiles" value="0" (change)="checkValueDias($event)"
-                                class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline7" name="DiasHabiles" value="0" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline7">Domingo</label>
+                        </div>
+                    </div>
+                    <div *ngIf="ModelPeriodicidad === '2'">
+                        <div class="custom-control custom-radio">
+                            <div class="form-row align-items-center">
+                                <input type="radio" id="customRadio1" name="PeriodicidadMensual" class="custom-control-input" value="Opcion1" formControlName="PeriodicidadMensual">
+                                <label class="custom-control-label" for="customRadio1">El día</label>
+                                <div class="col-auto my-1">
+                                    <input type="number" min="1" max="30" class="form-control form-control-sm" formControlName="diaNumero">
+                                </div>
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">de cada</label>
+                                <div class="col-auto my-1">
+                                    <input type="number" min="1" class="form-control form-control-sm" formControlName="mesNumero">
+                                </div>
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">meses <span *ngIf="ValidatorOpc1" style="color:red">*</span></label>
+
+                            </div>
+                            <div class="form-row align-items-center">
+                                <input type="radio" id="customRadio2" name="PeriodicidadMensual" class="custom-control-input" value="Opcion2" formControlName="PeriodicidadMensual">
+                                <label class="custom-control-label" for="customRadio2">El</label>
+                                <div class="col-auto my-1">
+                                    <select class="form-control form-control-sm" formControlName="stringNumDia">
+                                                    <option value="0">Primer</option>
+                                                    <option value="1">Segundo</option>
+                                                    <option value="2">Tercer</option>
+                                                    <option value="3">Cuarto</option>
+                                                </select>
+                                </div>
+                                <div class="col-auto my-1">
+                                    <select class="form-control form-control-sm" id="periodicidad" formControlName="stringDia">
+                                                    <option value="1">Lunes</option>
+                                                    <option value="2">Martes</option>
+                                                    <option value="3">Miercoles</option>
+                                                    <option value="4">Jueves</option>
+                                                    <option value="5">Viernes</option>
+                                                </select>
+                                </div>
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">de cada</label>
+                                <div class="col-auto my-1">
+                                    <input type="number" min="1" class="form-control form-control-sm" formControlName="stringMes">
+                                </div>
+                                <label class="mr-sm-2" for="inlineFormCustomSelect">meses <span *ngIf="ValidatorOpc2" style="color:red">*</span></label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,9 +164,9 @@
             </div>
         </div>
         <div id="Divobservaciones" class="col-xs-12 col-md-4 form-group" [hidden]="!mostrarDivObservaciones">
-                <label for="observaciones">Observaciones</label>
-                <textarea id="observaciones" formControlName="observaciones" class="form-control" rows="3"></textarea>
-            </div>
+            <label for="observaciones">Observaciones</label>
+            <textarea id="observaciones" formControlName="observaciones" class="form-control" rows="3"></textarea>
+        </div>
     </div>
     <div class="row">
         <div class="col-xs-12  col-md-12 form-group">
@@ -130,9 +177,9 @@
                 <div class="card-body">
                     <div class="custom-control custom-checkbox custom-control-inline"  *ngFor="let Tienda of ObjTiendas">
                         <label><input name="grupoTiendas" type="checkbox" [value]="Tienda.id"  (change)='seleccionarTienda($event)'>{{Tienda.nombre}}</label></div>
-                </div>
             </div>
         </div>
+    </div>
     </div>
     <div class="form-group">
         <button class="btn btn-primary">Guardar actividad</button>

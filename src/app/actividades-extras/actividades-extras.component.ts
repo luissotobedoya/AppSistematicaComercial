@@ -46,6 +46,9 @@ export class ActividadesExtrasComponent implements OnInit {
   mostrarDivObservaciones = false;
   fechaGuardar: Date;
   usuarioActual: Usuario;
+  ModelPeriodicidad: any = "1";
+  ValidatorOpc1: boolean = false;
+  ValidatorOpc2: boolean = false;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router:Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
@@ -75,7 +78,14 @@ export class ActividadesExtrasComponent implements OnInit {
       Proceso: ['', Validators.required],
       prioridad: ['', Validators.required],
       observaciones: [''],
-      NombreActividad: ['', Validators.required]
+      NombreActividad: ['', Validators.required],
+      Periodicidad: [1, Validators.required],
+      PeriodicidadMensual: ['', Validators.required],
+      diaNumero: [''],
+      mesNumero: [''],
+      stringNumDia: [0],
+      stringDia: [1],
+      stringMes: ['']
     });
     this.obtenerClasificacionExtra();
   }
@@ -165,6 +175,11 @@ export class ActividadesExtrasComponent implements OnInit {
     );
   }
 
+  CambioPeriodicidad(event){
+    this.ModelPeriodicidad = event.target.value;
+    let pp = this.ModelPeriodicidad;
+  }
+
   seleccionarTienda(TiendasChk) {
     let isChk = TiendasChk.target.checked;
     if (isChk === true) {
@@ -180,47 +195,255 @@ export class ActividadesExtrasComponent implements OnInit {
 
   onSubmit(template: TemplateRef<any>) {
     this.submitted = true;
-    if (this.registerForm.invalid) {
-      if (this.diasSeleccionados.length === 0) {
-        this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un dia en el que desea la actividad");
-        return;
+    let Periodicidad = "";
+    let PeriodicidadMensual= "";
+    if (this.registerForm.invalid) {   
+      Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
+      if (Periodicidad === "1") {
+          if (this.diasSeleccionados.length === 0) {
+            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un dia en el que desea la actividad");
+            return;
+          }
       }
-
+      else if (Periodicidad === "2") {
+         PeriodicidadMensual = this.registerForm.controls['PeriodicidadMensual'].value.toString();
+         if (PeriodicidadMensual ==="Opcion1") {
+             let diaNumero = this.registerForm.controls['diaNumero'].value;
+             let mesNumero = this.registerForm.controls['mesNumero'].value;
+             if (diaNumero ==="" || mesNumero==="") {
+                this.mostrarAlerta(template, "Alerta", "Por favor indique el dia o cada cuantos meses desea hacer la actividad");
+                this.ValidatorOpc1 = true;
+                return;
+             }
+             else{ 
+                this.ValidatorOpc1 = false;                
+             }
+         }
+         else if(PeriodicidadMensual ==="Opcion2"){
+          let stringMes = this.registerForm.controls['stringMes'].value;
+            if (stringMes ==="") {
+                this.mostrarAlerta(template, "Alerta", "Por favor indique la periocidad del dia y cada cuantos meses desea hacer la actividad");
+                this.ValidatorOpc2 = true;
+                return;
+             }
+             else{ 
+              this.ValidatorOpc2 = false;
+              
+             }
+         }
+         else if(PeriodicidadMensual ===""){
+          this.mostrarAlerta(template, "Alerta", "Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
+          return;
+        }
+      }
+      
       if (this.tiendasSeleccionadas.length === 0) {
         this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos una tienda");
         return;
       }
-      return;
+      
     }
 
-    if (this.diasSeleccionados.length === 0) {
-      this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
-      return;
-    }
+    Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
+      if (Periodicidad === "1") {
+          if (this.diasSeleccionados.length === 0) {
+            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un dia en el que desea la actividad");
+            return;
+          }
+      }
+      else if (Periodicidad === "2") {
+         PeriodicidadMensual = this.registerForm.controls['PeriodicidadMensual'].value;
+         if (PeriodicidadMensual ==="Opcion1") {
+             let diaNumero = this.registerForm.controls['diaNumero'].value;
+             let mesNumero = this.registerForm.controls['mesNumero'].value;
+             if (diaNumero ==="" || mesNumero==="") {
+                this.mostrarAlerta(template, "Alerta", "Por favor indique el dia o cada cuantos meses desea hacer la actividad");
+                this.ValidatorOpc1 = true;
+                return;
+             }
+             else{ 
+                this.ValidatorOpc1 = false;                
+             }
+         }
+         else if(PeriodicidadMensual ==="Opcion2"){
+          let stringMes = this.registerForm.controls['stringMes'].value;
+            if (stringMes ==="") {
+                this.mostrarAlerta(template, "Alerta", "Por favor indique la periocidad del dia y cada cuantos meses desea hacer la actividad");
+                this.ValidatorOpc2 = true;
+                return;
+             }
+             else{ 
+              this.ValidatorOpc2 = false;
+              
+             }
+         }
+         else if(PeriodicidadMensual ===""){
+          this.mostrarAlerta(template, "Alerta", "Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
+          return;
+        }
+      }
+
+    // if (this.diasSeleccionados.length === 0) {
+    //   this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
+    //   return;
+    // }
 
     if (this.tiendasSeleccionadas.length === 0) {
       this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos una tienda");
       return;
     }
-
-    this.loading = true;
-    let ArrayFecha = this.registerForm.controls['Fecha'].value;
-    let inicio = new Date(ArrayFecha[0]);
-    let fin = new Date(ArrayFecha[1]);
-    let tiempoDif = Math.abs(fin.getTime() - inicio.getTime());
-    let diasDif = Math.ceil(tiempoDif / (1000 * 3600 * 24));
-    for (let i = 0; i < diasDif + 1; i++) {
-      let dt = inicio.getDay();
-      const index = this.diasSeleccionados.indexOf(dt.toString(), 0);
-      if (index > -1) {
-        let FechaActividad = this.AsignarFormatoFecha(inicio);
-        this.contadorEntradas++;
-        this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(FechaActividad));
-        this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+    
+    if (Periodicidad === "1") {
+      this.loading = true;
+      let ArrayFecha = this.registerForm.controls['Fecha'].value;
+      let inicio = new Date(ArrayFecha[0]);
+      let fin = new Date(ArrayFecha[1]);
+      let tiempoDif = Math.abs(fin.getTime() - inicio.getTime());
+      let diasDif = Math.ceil(tiempoDif / (1000 * 3600 * 24));
+      for (let i = 0; i < diasDif + 1; i++) {
+        let dt = inicio.getDay();
+        const index = this.diasSeleccionados.indexOf(dt.toString(), 0);
+        if (index > -1) {
+          let FechaActividad = this.AsignarFormatoFecha(inicio);
+          this.contadorEntradas++;
+          this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(FechaActividad));
+          this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+        }
+        inicio.setDate(inicio.getDate() + 1);
       }
-      inicio.setDate(inicio.getDate() + 1);
     }
+    else if (Periodicidad === "2"){
+      if (PeriodicidadMensual ==="Opcion1") {
+        let diaNumero = this.registerForm.controls['diaNumero'].value;
+        let mesNumero = this.registerForm.controls['mesNumero'].value;
+        let FechaActividad = this.GenerarActividadesOpc1(diaNumero, mesNumero);
+        if (FechaActividad.length >0) {
+          FechaActividad.forEach(element => {
+            this.contadorEntradas++;
+            this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(element));
+            this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+          });
+        }
+      }
+      else if(PeriodicidadMensual ==="Opcion2"){
+        let stringNumDia = this.registerForm.controls['stringNumDia'].value;
+        let stringDia = this.registerForm.controls['stringDia'].value;
+        let stringMes = this.registerForm.controls['stringMes'].value;
+        let ObjFechaActividad = this.GenerarActividadesOpc2(stringNumDia, stringDia, stringMes);
+        if (ObjFechaActividad.length >0) {
+          ObjFechaActividad.forEach(element => {
+            this.contadorEntradas++;
+            this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(element));
+            this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+          });
+        }
+      }
+    }    
   }
+  
+  GenerarActividadesOpc1(diaNumero, mesNumero) {
+    let ArrayFecha = this.registerForm.controls['Fecha'].value;    
+    let dates = this.dateRangeOpc1(ArrayFecha[0], ArrayFecha[1], mesNumero, diaNumero);
+    return dates;   
+  }
+
+  dateRangeOpc1(startDate, endDate, NumeroMeses, DiaActividad) {
+
+      DiaActividad = DiaActividad.toString();
+      // let startYear = startDate.getFullYear();
+      // let endYear = endDate.getFullYear();
+      let stratDate = new Date(startDate);
+      let EndDate = new Date(endDate);
+      let dates = [];
+      let hoy = new Date();
+      var M = '' + (hoy.getMonth() + 1),
+              d = '' + hoy.getDate(),
+              Y = hoy.getFullYear();
+      if (M.length < 2) M = '0' + M;
+      if (d.length < 2) d = '0' + d;
+      let fechaHoy = new Date([Y, M, d].join('/'));
+      stratDate.setDate(1);
+      for (var index = stratDate; index < EndDate; index.setMonth(index.getMonth() + NumeroMeses)) {
+          var month = '' + (index.getMonth() + 1),
+              day = '' + index.getDate(),
+              year = index.getFullYear();
+  
+          if (month.length < 2) month = '0' + month;
+          if (DiaActividad.length < 2) DiaActividad = '0' + DiaActividad;
+          let fecha = new Date([year, month, DiaActividad].join('/'));
+          
+          if ( fecha >= fechaHoy) {
+            dates.push(fecha);
+          }        
+      }
+      return dates; 
+}
+
+GenerarActividadesOpc2(stringNumDia, stringDia, stringMes){
+  let ArrayFecha = this.registerForm.controls['Fecha'].value;
+  let inicio = new Date(ArrayFecha[0]);
+  let fin = new Date(ArrayFecha[1]);
+  let RangoMeses = this.dateRange(inicio, fin, stringMes);
+  let dates = [];
+  RangoMeses.forEach(element => {
+    let Fecha = this.FechasMesAMes(element, stringDia, stringNumDia);
+    if (Fecha !== "") {
+      dates.push(Fecha);
+    }    
+  });
+  return dates;
+}
+
+dateRange(startDate, endDate, NumeroMes) {
+    
+  let stratDate = new Date(startDate);
+  let EndDate = new Date(endDate);  
+  let dates = [];
+
+  stratDate.setDate(1);
+  for (let index = stratDate; index < EndDate; index.setMonth(index.getMonth() + NumeroMes)) {
+    let month = '' + (index.getMonth() + 1),
+          day = '' + index.getDate(),
+          year = index.getFullYear();
+
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
+
+      dates.push([year, month, day].join('/'));
+  }
+  return dates;
+}
+
+FechasMesAMes(fecha, stringDia, stringNumDia) {
+  let FechaReturn = "";
+  let Dia = stringDia;
+  let NumeroDia = stringNumDia;
+  let date = new Date(fecha);
+  let d = date || new Date(),
+      month = d.getMonth(),
+      mondays = [];
+
+  let fehcaHoy = new Date();
+  let mesHoy = fehcaHoy.getMonth();
+
+  d.setDate(1);
+  // Get the first Monday in the month
+  while (d.getDay() !== parseInt(Dia)) {
+      d.setDate(d.getDate() + 1);
+  }
+  // Get all the other Mondays in the month
+  while (d.getMonth() === month) {
+      mondays.push(new Date(d.getTime()));
+      d.setDate(d.getDate() + 7);
+  }
+
+  if (fehcaHoy <= mondays[parseInt(NumeroDia)]) {
+      FechaReturn = mondays[parseInt(NumeroDia)];
+  }
+
+  return FechaReturn;
+
+}
 
   private AsignarFormatoFecha(FechaActividad: Date) {
     let diaActividadExtraordinaria = FechaActividad.getDate();
