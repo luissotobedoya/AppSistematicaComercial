@@ -79,7 +79,7 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(new Date()) + "T08:00:00Z";
+    let fechaActual = this.ObtenerFormatoFecha(new Date());
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
