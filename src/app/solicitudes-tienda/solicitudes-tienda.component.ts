@@ -29,6 +29,7 @@ export class SolicitudesTiendaComponent implements OnInit {
   dataTable: any;
   mostrarTabla: boolean;
   usuarioActual: Usuario;
+  UsuarioActualId: any;
 
   constructor(private servicio: SPServicio, private chRef: ChangeDetectorRef, private _localeService: BsLocaleService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
@@ -82,9 +83,17 @@ export class SolicitudesTiendaComponent implements OnInit {
     this.servicio.ObtenerTiposolicitud().subscribe(
       (respuestaTipoSolicitud) => {
         this.ObjTipoSolicitud = respuestaTipoSolicitud;
+        this.ObtenerUsuarioActual();
         this.loading = false;
       }
     );
+  }
+  ObtenerUsuarioActual() {
+    this.servicio.ObtenerUsuarioActual().subscribe(
+      (respuesta)=>{        
+        this.UsuarioActualId = respuesta.Id;
+      }
+    )
   }
 
   buscarSolicitudes() {
@@ -96,28 +105,29 @@ export class SolicitudesTiendaComponent implements OnInit {
       this.dataTable.destroy();
     }
 
-    if (this.Tienda !== "" && this.Tienda !== undefined) {
-      StringConsulta = "Tienda eq '" + this.Tienda + "'";
-      siwtch = 1;
-    }
-    if (this.TipoSolicitud !== "" && this.TipoSolicitud !== undefined) {
-      if (siwtch === 1) {
-        StringConsulta = StringConsulta + " and TipoSolicitud eq '" + this.TipoSolicitud + "'";
-      } else {
-        StringConsulta = "TipoSolicitud eq '" + this.TipoSolicitud + "'";
-        siwtch = 1;
-      }
+    StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' ";
+
+    // if (this.Tienda !== "" && this.Tienda !== undefined) {
+    //   StringConsulta = "Tienda eq '" + this.Tienda + "'";
+    //   siwtch = 1;
+    // }
+    if (this.TipoSolicitud !== "" && this.TipoSolicitud !== undefined) {      
+        StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' and TipoSolicitud eq '" + this.TipoSolicitud + "'";
+        siwtch = 1;      
     }
     if (this.FechaSolicitud !== "" && this.FechaSolicitud !== undefined) {
       let fechaInicioString = this.formatDate(this.FechaSolicitud[0]);
       let fecha2String = this.formatDate(this.FechaSolicitud[1]);
       if (siwtch === 1) {
-        StringConsulta = StringConsulta + " and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
+        StringConsulta = StringConsulta + " and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
       } else {
-        StringConsulta = "Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
+        StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
         siwtch = 1;
       }
     }
+    // if(siwtch == 0){
+    //   StringConsulta = "Tienda eq '"+this.UsuarioActualId+"'";
+    // }
 
     this.servicio.ObtenerSolicitudes(StringConsulta).subscribe(
       (respuestaConsulta) => {

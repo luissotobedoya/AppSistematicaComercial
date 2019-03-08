@@ -3,7 +3,7 @@ import { SPServicio } from '../servicios/sp.servicio';
 import { Novedad } from '../dominio/novedad';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TiendaXJefe } from '../dominio/TiendaXJefe';
-import { ItemAddResult } from 'sp-pnp-js';
+import { ItemAddResult, Field } from 'sp-pnp-js';
 import { BsModalService, BsLocaleService } from 'ngx-bootstrap';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Usuario } from '../dominio/usuario';
@@ -27,6 +27,8 @@ export class NovedadesComponent implements OnInit {
   public modalRef: BsModalRef;
   timer: any;
   usuarioActual: Usuario;
+  IdResponsableSolicitud: any;
+  ArchivoAdjunto: File = null;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
@@ -64,9 +66,9 @@ export class NovedadesComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.NovedadForm = this.formBuilder.group({
-      txtTienda: ["", Validators.required],
+      //txtTienda: ["", Validators.required],
       txtFecha: ["", Validators.required],
-      txtTipoSolicitud: ["", Validators.required],
+      txtTipoSolicitud: [Validators.required],
       txtCantidad: ["", Validators.required],
       txtDescripcion: ["", Validators.required]
     });
@@ -99,19 +101,46 @@ export class NovedadesComponent implements OnInit {
     return this.NovedadForm.controls;
   }
 
+  adjuntarArchivo(event) {
+    let archivoAdjunto = event.target.files[0];
+    if (archivoAdjunto != null) {
+      this.ArchivoAdjunto = archivoAdjunto;
+    } else {
+      this.ArchivoAdjunto = null;
+    }
+  }
+ 
   onSubmit(template: TemplateRef<any>) {
     this.submitted = true;
     if (this.NovedadForm.invalid) {
       return;
     }
     this.loading = true;
+    this.retornarNovedades();
     this.servicio.agregarNovedad(this.retornarNovedades()).then(
       (iar: ItemAddResult) => {
-        this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
-        this.timer = setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-        this.loading = false;
+        if (this.ArchivoAdjunto !== null) {
+          let nombreArchivo = "Novedad-" + this.ArchivoAdjunto.name;
+          this.servicio.agregarAdjuntoNovedad(iar.data.Id, nombreArchivo, this.ArchivoAdjunto).then(respuesta=>{
+            this.loading = false;
+            this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
+            this.timer = setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+            this.loading = false;
+            }).catch(
+              (error)=>{
+    
+              }
+          ); 
+        }
+        else{
+          this.loading = false;
+          this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
+            this.timer = setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+        }               
       }, err => {
         alert('Error al crear una novedad');
       }
@@ -119,9 +148,11 @@ export class NovedadesComponent implements OnInit {
   }
 
   retornarNovedades(): Novedad {
-    this.NovedadGuardar.tienda = this.NovedadForm.controls['txtTienda'].value;
+    //this.NovedadGuardar.tienda = this.NovedadForm.controls['txtTienda'].value;
     this.NovedadGuardar.fecha = this.NovedadForm.controls['txtFecha'].value;
     this.NovedadGuardar.tipoSolicitud = this.NovedadForm.controls['txtTipoSolicitud'].value;
+    let IdResponsable = this.ObjTipoSolicitud.find(x=> x.Id === parseInt(this.NovedadForm.controls['txtTipoSolicitud'].value));
+    this.NovedadGuardar.tienda = IdResponsable !== undefined ? IdResponsable.UsuarioResponsableId : null;
     this.NovedadGuardar.cantidad = this.NovedadForm.controls['txtCantidad'].value;
     this.NovedadGuardar.descripcion = this.NovedadForm.controls['txtDescripcion'].value;
     return this.NovedadGuardar;

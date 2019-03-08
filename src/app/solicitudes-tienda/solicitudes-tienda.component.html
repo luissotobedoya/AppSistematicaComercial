@@ -6,15 +6,15 @@
 </div>
 
 <div class="row">
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
         <div class="form-group">
-            <label for="InputTienda">Tienda</label>
+            <label for="InputTienda">Responsable</label>
             <select name=" " id=" " class="form-control" [(ngModel)]="Tienda">   
                   <option value=""></option>                     
                   <option *ngFor="let itemTienda of ObjTiendas" [value]="itemTienda.id " [text]="itemTienda.nombre">{{itemTienda.nombre}}</option>
             </select>
         </div>
-    </div>
+    </div> -->
     <div class="col-md-3">
         <div class="form-group">
             <label for="lblFechas">Fecha de la solicitud</label>
@@ -51,6 +51,7 @@
             <th>Tipo solicitud</th>
             <th>Cantidad</th>
             <th>Descripción</th>
+            <th>Adjunto</th>
         </tr>
     </thead>
     <tbody>
@@ -59,6 +60,11 @@
             <td>{{itemsSolicitud.TipoSolicitud.Title}}</td>
             <td>{{itemsSolicitud.Cantidad}}</td>
             <td>{{itemsSolicitud.Descripcion}}</td>
+            <td>
+                <a href="{{itemsSolicitud.AttachmentFiles[0].ServerRelativeUrl}}" *ngIf="itemsSolicitud.Attachments === true">
+                    <button type="button" class="btn btn-primary">Ver adjunto</button>
+                </a>
+            </td>
         </tr>
     </tbody>
     <br>

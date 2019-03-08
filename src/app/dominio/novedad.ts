@@ -12,6 +12,7 @@ export class Novedad{
         this.tipoSolicitud=tipoSolicitud;
         this.descripcion=descripcion;
         this.cantidad=cantidad;
+        
      }    
 
 }
