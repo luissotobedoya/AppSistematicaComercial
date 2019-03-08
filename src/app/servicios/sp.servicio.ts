@@ -232,7 +232,7 @@ export class SPServicio {
     }
 
     agregarAdjuntoNovedad(IdSolicitud: number, nombreArchivo: string, archivo: File) {
-        let item = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.Novedades).items.getById(IdSolicitud);
+        let item = this.obtenerConfiguracion().web.lists.getByTitle(environment.Novedades).items.getById(IdSolicitud);
         return item.attachmentFiles.add(nombreArchivo, archivo);
     }
 
