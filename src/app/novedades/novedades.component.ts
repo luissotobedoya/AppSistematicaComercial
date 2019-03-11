@@ -68,7 +68,7 @@ export class NovedadesComponent implements OnInit {
     this.NovedadForm = this.formBuilder.group({
       //txtTienda: ["", Validators.required],
       txtFecha: ["", Validators.required],
-      txtTipoSolicitud: [Validators.required],
+      txtTipoSolicitud: ["", Validators.required],
       txtCantidad: ["", Validators.required],
       txtDescripcion: ["", Validators.required]
     });
