@@ -169,7 +169,7 @@ export class SPServicio {
 
     actualizarActividad(nombreLista: string, idRegistroActividad, ObjGuardar): any {
         
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(idRegistroActividad).update(ObjGuardar);
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(idRegistroActividad).update(ObjGuardar);
         // {
         //     Json: respuesta
         //     // Respuesta: respuesta.respuesta,
@@ -180,7 +180,7 @@ export class SPServicio {
     agregarAdjuntoActividad(nombreLista: string, idRegistroActividad, nombreArchivo: string, archivo: File, id) {
         // let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(idRegistroActividad);
         // return elemento.attachmentFiles.add(nombreArchivo, archivo);
-        let elemento = this.ObtenerConfiguracionConPost().web.folders.getByName(nombreLista).files.add(nombreArchivo,archivo);
+        let elemento = this.obtenerConfiguracion().web.folders.getByName(nombreLista).files.add(nombreArchivo,archivo);
         return elemento;
         
     }
@@ -190,7 +190,7 @@ export class SPServicio {
         //     IdActividad: IdActividad,
         //     IdRegistro: IdRegistro,
         // })
-        let elemeto = this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(idDoc.Id).update({
+        let elemeto = this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(idDoc.Id).update({
             IdActividad: IdActividad,
             IdRegistro: IdRegistro,
         });
@@ -199,16 +199,16 @@ export class SPServicio {
 
     obtenerAdjuntosRegistroxUsuario(nombreLista: string, IdRegistroActividad) {
         // return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(IdRegistroActividad).attachmentFiles.get();
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.filter("IdRegistro eq '"+IdRegistroActividad+"'").getAll();
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter("IdRegistro eq '"+IdRegistroActividad+"'").getAll();
     }
 
     obtenerAdjuntos(nombreLista: string, IdRegistroActividad, actividadRespuestaActualizar) {
         // return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(IdRegistroActividad).attachmentFiles.get();
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.filter("IdActividad eq '"+actividadRespuestaActualizar.id+"' and IdRegistro eq '"+IdRegistroActividad+"'").getAll();
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.filter("IdActividad eq '"+actividadRespuestaActualizar.id+"' and IdRegistro eq '"+IdRegistroActividad+"'").getAll();
     }
 
     borrarAdjunto(nombreLista,id) {
-        return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(id).delete();
+        return this.obtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(id).delete();
         // return this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.getById(respuesta.id).attachmentFiles.getByName(nombreAdjunto).delete();
     }
 
