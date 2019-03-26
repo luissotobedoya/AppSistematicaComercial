@@ -88,11 +88,13 @@ export class AppComponent implements OnInit {
       case "administrador de tienda":
         this.VerMisActividades = true;
         this.VerDocumentacion = true;
+        this.VerInformes = true;
         break;
       case "jefe de zonas":
         this.VerMisActividades = true;
         this.VerActividadesExtras = true;
-        this.VerInformesTiendas = true;
+        // this.VerInformesTiendas = true;
+        this.VerInformes = true;
         this.VerNovedades = true;
         this.VerRevisarNovedades = true;
         this.VerDocumentacion = true;
