@@ -13,14 +13,13 @@
                 <div class="col-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Fecha</label>
-                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" [bsConfig]="bsConfig"
-                            bsDaterangepicker [minDate]="minDate" [maxDate]="maxDate" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
+                        <input type="text" placeholder="Fecha" formControlName="txtFecha" class="form-control" [bsConfig]="bsConfig" bsDaterangepicker [minDate]="minDate" [maxDate]="maxDate" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }">
                         <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
                             <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
                         </div>
                     </div>
                 </div>
-                <div class="col-4">
+                <!-- <div class="col-4">
                     <div class="form-group">
                         <label for="exampleInputEmail1">Responsable</label>
                         <select name="" id="" class="form-control" [(ngModel)]="slctResponsableModel" (change)="SeleccionarResponsable($event.target.value)"
@@ -31,8 +30,8 @@
                             <div *ngIf="f.slcResponsable.errors.required">Este campo es requerido</div>
                         </div>
                     </div>
-                </div>
-                <div class="col-4">
+                </div> -->
+                <!-- <div class="col-4">
                     <div class="form-group">
                         <label for=" exampleInputEmail1 ">{{NombreCampo}}</label>
                         <select name=" " id=" " class="form-control" [disabled]="DisalbeTienda" formControlName="slcTienda"
@@ -43,7 +42,7 @@
                             <div *ngIf="f.slcTienda.errors.required">Este campo es requerido</div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="row ">
                 <div class="col-md-2 ">
@@ -96,6 +95,7 @@
         <table class="table  table-sm" [hidden]="!(maxPrioridad > 0)">
             <thead>
                 <tr>
+                    <th>Tienda</th>
                     <th>Actividad</th>
                     <th>Fecha</th>
                     <th>Prioridad</th>
@@ -104,7 +104,8 @@
             </thead>
             <tbody>
                 <tr *ngFor="let itemsActividad of objActividad">
-                    <td>{{itemsActividad.nombreAcitvidad}}</td>
+                    <td>{{itemsActividad.Tienda}}</td>
+                    <td>{{itemsActividad.actividad}}</td>
                     <td>{{itemsActividad.fecha | date:'dd-MM-yyyy'}}</td>
                     <td>{{itemsActividad.prioridad}}</td>
                     <td>

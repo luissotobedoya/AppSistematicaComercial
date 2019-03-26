@@ -4,8 +4,13 @@ import { Usuario } from '../dominio/usuario';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Respuesta } from '../dominio/respuesta';
+import { Actividades} from '../mis-actividades/Actividades';
 import { environment } from 'src/environments/environment.prod';
 import { Router } from '@angular/router';
+// import { Actividad } from '../dominio/actividad';
+// import { error } from '@angular/compiler/src/util';
+// import { find } from 'cfb/types';
+
 
 @Component({
   selector: 'app-mis-actividades',
@@ -17,13 +22,13 @@ export class MisActividadesComponent implements OnInit {
   usuarioActual: Usuario;
   coleccionRespuestasActividadesUsuario: Respuesta[] = [];
   totalActividades: number;
-  actividadesGestionadas: number;
+  actividadesGestionadas: number; 
   clasificacionesRespuestas: string[] = [];
   clasificacionSeleccionada: string;
-  procesosRespuestas: Respuesta[] = [];
+  procesosRespuestas: Actividades[] = [];
   procesosRespuestasUnicos: string[] = [];
   actividadesRespuestas: Respuesta[] = [];
-  actividadRespuestaActualizar: Respuesta;
+  actividadRespuestaActualizar;
   valorRespuesta: boolean;
   mostrarProcesos = false;
   mostrarActividades = false;
@@ -37,11 +42,16 @@ export class MisActividadesComponent implements OnInit {
   loading: boolean;
   tieneActividades: boolean;
   textoNoActividades: string;
+  ActividadesGenerales: any;
+  IdRegistroActividad: number;
+  ActividadesExtras: any;
+  ActividadesGeneralesyExtras: any;
+  bibliotecaRespuestas: string;
 
   constructor(private servicio: SPServicio, private servicioModal: BsModalService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
     this.ValidarPerfilacion();
-    this.listaRespuestas = this.ObtenerNombreListaActual();
+    this.listaRespuestas = this.ObtenerNombreListaActual();   
     this.tieneActividades = false;
     this.textoNoActividades = '';
     this.loading = false;
@@ -83,23 +93,53 @@ export class MisActividadesComponent implements OnInit {
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
-        this.totalActividades = this.coleccionRespuestasActividadesUsuario.length;
-        if (this.totalActividades > 0) {
-          this.tieneActividades = true;
-          this.textoNoActividades = '';
-          this.actividadesGestionadas = this.coleccionRespuestasActividadesUsuario.filter(item => { return item.respuesta === true }).length;
-          this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.coleccionRespuestasActividadesUsuario);
-        } else {
-          this.tieneActividades = false;
-          this.actividadesGestionadas = 0;
-          this.textoNoActividades = "No hay actividades para este usuario y este rol";
-        }
-        this.loading = false;
+        if (this.coleccionRespuestasActividadesUsuario.length > 0) {
+          this.ActividadesGenerales = this.coleccionRespuestasActividadesUsuario[0].jsonActividad;
+          this.ActividadesExtras = this.coleccionRespuestasActividadesUsuario[0].jsonActividadExtra;          
+          this.ActividadesGeneralesyExtras = this.ActividadesExtras !== ""? this.ActividadesGenerales.concat(this.ActividadesExtras): this.ActividadesGenerales;
+          this.totalActividades = this.ActividadesGenerales.length + this.ActividadesExtras.length;
+          this.IdRegistroActividad = this.coleccionRespuestasActividadesUsuario[0].id;
+          if(this.totalActividades > 0){
+            this.tieneActividades = true;
+            this.textoNoActividades = '';
+            this.actividadesGestionadas = this.ActividadesGeneralesyExtras.filter(item=> {return item.respuesta === true}).length;
+            this.clasificacionesRespuestas = this.ObtenerClasificacionesUnicas(this.ActividadesGeneralesyExtras);
+          }
+          else{
+            this.tieneActividades = false;
+            this.actividadesGestionadas = 0;
+            this.textoNoActividades = "No hay actividades para este usuario y este rol";
+          }
+          
+         this.servicio.obtenerAdjuntosRegistroxUsuario(this.bibliotecaRespuestas, this.IdRegistroActividad).then(
+           (respuesta)=>{
+              this.AnexarRutaAdjunto(respuesta);
+           }
+         ).catch(
+           (error)=>{
+             console.error(error);
+           }
+         )        
+        } 
+        this.loading = false; 
+              
       },
       error => {
         console.log('Error obteniendo las actividades del usuario: ' + error);
       }
     );
+  }
+  AnexarRutaAdjunto(respuesta): any {    
+    respuesta.map(x=> {
+      this.ActividadesGeneralesyExtras.find((j)=>{
+        parseInt(j.id) === x.IdActividad ? this.AgregarRuta(j.id, x.ServerRedirectedEmbedUri): null
+      });
+    });      
+  }
+
+  AgregarRuta(id, ruta){
+    let index = this.ActividadesGeneralesyExtras.findIndex(x=> x.id=== id);
+    this.ActividadesGeneralesyExtras[index]["RutaAdjunto"] = ruta;
   }
 
   ObtenerFormatoFecha(date) {
@@ -115,9 +155,11 @@ export class MisActividadesComponent implements OnInit {
 
   ObtenerNombreListaActual(): string {
     const nombrelista = 'RespuestasActividades';
+    const nombreBiblioteca = 'AdjuntoActividades';
     let añoActual = new Date().getFullYear();
     let mesActual = ("0" + (new Date().getMonth() + 1)).slice(-2);
     let listaRespuestas = nombrelista + añoActual + mesActual;
+    this.bibliotecaRespuestas  = nombreBiblioteca + añoActual + mesActual;
     return listaRespuestas;
   }
 
@@ -128,9 +170,9 @@ export class MisActividadesComponent implements OnInit {
     this.LimpiarActividades();
     this.mostrarProcesos = true;
     this.mostrarActividades = false;
-    for (var i = 0; i < this.coleccionRespuestasActividadesUsuario.length; i++) {
-      if (this.coleccionRespuestasActividadesUsuario[i].clasificacion == clasificacion) {
-        this.procesosRespuestas.push(this.coleccionRespuestasActividadesUsuario[i]);
+    for (var i = 0; i < this.ActividadesGeneralesyExtras.length; i++) {
+      if (this.ActividadesGeneralesyExtras[i].clasificacion == clasificacion) {
+        this.procesosRespuestas.push(this.ActividadesGeneralesyExtras[i]);
       }
     }
     this.procesosRespuestasUnicos = this.ObtenerProcesosUnicos(this.procesosRespuestas);
@@ -142,15 +184,15 @@ export class MisActividadesComponent implements OnInit {
   }
 
   LimpiarProcesos(): any {
-    this.procesosRespuestas = [];
+    this.procesosRespuestas = []; 
   }
 
-  ObtenerClasificacionesUnicas(coleccionRespuestasActividadesUsuario: Respuesta[]): any {
-    return coleccionRespuestasActividadesUsuario.map(item => item.clasificacion).filter((value, index, self) => self.indexOf(value) === index);
+  ObtenerClasificacionesUnicas(procesosRespuestas): any {
+    return procesosRespuestas.map(item => item.clasificacion).filter((value, index, self) => self.indexOf(value) === index);
   }
 
-  ObtenerProcesosUnicos(procesosRespuestas: Respuesta[]): any {
-    return procesosRespuestas.map(item => item.proceso).filter((value, index, self) => self.indexOf(value) === index);
+  ObtenerProcesosUnicos(ActividadesGenerales): any {
+    return ActividadesGenerales.map(item => item.proceso).filter((value, index, self) => self.indexOf(value) === index);
   }
 
   obtenerActividades(proceso) {
@@ -181,7 +223,7 @@ export class MisActividadesComponent implements OnInit {
     }
   }
 
-  actualizarActividadCheckboxAprobacion(event: any, switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
+  actualizarActividadCheckboxAprobacion(event: any, switcheActividad, actividadRespuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
     if (event.target.checked == false) {
       this.mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, templateConfirmacion);
     } else {
@@ -190,35 +232,108 @@ export class MisActividadesComponent implements OnInit {
           this.mostrarAlertaValidacionAdjunto(switcheActividad, template);
         }
         else {
-          actividadRespuesta.respuesta = true;
-          actividadRespuesta.aprobacionActividad = "Sin aprobar";
-          this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
-            (respuesta) => {
-              this.AgregarAdjuntoActividad(actividadRespuesta);
-            }, error => {
-              console.log(error);
-              alert('Ha ocurrido un error al actualizar la actividad');
+          //actividadRespuesta.respuesta = true;
+          //actividadRespuesta.aprobacionActividad = "Sin aprobar";
+          if (actividadRespuesta.TipoActividad === "General") {
+            let ObjAdjunto;
+            let id = this.ActividadesGenerales.findIndex(x => x.id === actividadRespuesta.id)
+            this.ActividadesGenerales[id].respuesta = true;
+            this.ActividadesGenerales[id].aprobacionActividad = "Sin aprobar";
+            ObjAdjunto = this.ActividadesGenerales[id].adjunto;
+            this.ActividadesGenerales[id].adjunto = true; 
+            this.ActividadesGenerales[id].adjuntoOk = true;
+            let respuesta = JSON.stringify(this.ActividadesGenerales);
+            let ObjGuardar = {
+              Json: respuesta
             }
-          );
+            this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
+              (respuesta) => {
+                this.AgregarAdjuntoActividad(ObjAdjunto, actividadRespuesta.id);
+              }, error => {
+                console.log(error);
+                alert('Ha ocurrido un error al actualizar la actividad');
+              }
+            );
+          }
+          else if(actividadRespuesta.TipoActividad === "Extra"){
+            let ObjAdjuntoExtra: File;
+            let id = this.ActividadesExtras.findIndex(x => x.id === actividadRespuesta.id)
+            this.ActividadesExtras[id].respuesta = true;
+            this.ActividadesExtras[id].aprobacionActividad = "Sin aprobar";
+            ObjAdjuntoExtra = this.ActividadesExtras[id].adjunto;
+            this.ActividadesExtras[id].adjunto = true; 
+            this.ActividadesExtras[id].adjuntoOk = true;
+            let respuesta = JSON.stringify(this.ActividadesExtras);
+            let ObjGuardar = {
+              JsonExtraordinario: respuesta
+            }
+            this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
+              (respuesta) => {
+                this.AgregarAdjuntoActividad(ObjAdjuntoExtra, actividadRespuesta.id);
+              }, error => {
+                console.log(error);
+                alert('Ha ocurrido un error al actualizar la actividad');
+              }
+            );
+          }         
+          
         }
       }
     }
   }
 
-  actualizarActividadCheckbox(event: any, actividadRespuesta: Respuesta): any {
+  actualizarActividadCheckbox(event: any, actividadRespuesta): any {
+    let id;
+    let JsonaEnviar;
+    let ObjGuardar;
     if (event.target.checked == false) {
-      actividadRespuesta.respuesta = false;
+      if (actividadRespuesta.TipoActividad === "General") {
+        id = this.ActividadesGenerales.findIndex(x => x.id === actividadRespuesta.id)
+        this.ActividadesGenerales[id].respuesta = false;
+        // actividadRespuesta.respuesta = "false";
+        let respuesta = JSON.stringify(this.ActividadesGenerales);
+        let ObjGuardar = {
+          Json: respuesta
+        }
+      }
+      else if (actividadRespuesta.TipoActividad === "Extra") {
+        id = this.ActividadesExtras.findIndex(x => x.id === actividadRespuesta.id)
+        this.ActividadesExtras[id].respuesta = false;
+        // actividadRespuesta.respuesta = "false";
+        let respuesta = JSON.stringify(this.ActividadesExtras);
+        let ObjGuardar = {
+          JsonExtraordinario: respuesta
+        }
+      }      
+      
     } else {
       if (event.target.checked == true) {
-        actividadRespuesta.respuesta = true;
+        if (actividadRespuesta.TipoActividad === "General") {
+          id = this.ActividadesGenerales.findIndex(x => x.id === actividadRespuesta.id)
+          this.ActividadesGenerales[id].respuesta = true;
+          // actividadRespuesta.respuesta = "true";
+          let respuesta = JSON.stringify(this.ActividadesGenerales);
+          ObjGuardar = {
+            Json: respuesta
+          }
+        }
+        else if (actividadRespuesta.TipoActividad === "Extra") {
+          id = this.ActividadesExtras.findIndex(x => x.id === actividadRespuesta.id)
+          this.ActividadesExtras[id].respuesta = true;
+          // actividadRespuesta.respuesta = "false";
+          let respuesta = JSON.stringify(this.ActividadesExtras);
+          ObjGuardar = {
+            JsonExtraordinario: respuesta
+          }
+        }        
       }
-    }
-    this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
+    }    
+    this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
       (respuesta) => {
         if (actividadRespuesta.respuesta == false) {
           this.actividadesGestionadas--;
         }
-        if (actividadRespuesta.respuesta == true) {
+        if (actividadRespuesta.respuesta == true) { 
           this.actividadesGestionadas++;
         }
         this.loading = false;
@@ -230,7 +345,7 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
-  actualizarActividadAdjuntos(event: any, switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
+  actualizarActividadAdjuntos(event: any, switcheActividad, actividadRespuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
     if (event.target.checked == false) {
       this.mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, templateConfirmacion);
     } else {
@@ -240,9 +355,34 @@ export class MisActividadesComponent implements OnInit {
         }
         else {
           actividadRespuesta.respuesta = true;
-          this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
+          let JsonaEnviar;
+          let ObjAdjunto;
+          let ObjGuardar;
+          if (actividadRespuesta.TipoActividad === "General") {
+            let id = this.ActividadesGenerales.findIndex(x => x.id === actividadRespuesta.id);
+            this.ActividadesGenerales[id].respuesta = true;
+            ObjAdjunto = this.ActividadesGenerales[id].adjunto;
+            this.ActividadesGenerales[id].adjunto = true;
+            this.ActividadesGenerales[id].adjuntoOk = true;
+            let respuesta = JSON.stringify(this.ActividadesGenerales);
+            ObjGuardar = {
+              Json: respuesta
+            }
+          }
+          else if (actividadRespuesta.TipoActividad === "Extra") {
+            let id = this.ActividadesExtras.findIndex(x => x.id === actividadRespuesta.id);
+            this.ActividadesExtras[id].respuesta = true;
+            ObjAdjunto = this.ActividadesExtras[id].adjunto;
+            this.ActividadesExtras[id].adjunto = true;
+            this.ActividadesExtras[id].adjuntoOk = true;
+            let respuesta = JSON.stringify(this.ActividadesExtras);
+            ObjGuardar = {
+              JsonExtraordinario: respuesta
+            }
+          }                   
+          this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
             (respuesta) => {
-              this.AgregarAdjuntoActividad(actividadRespuesta);
+              this.AgregarAdjuntoActividad(ObjAdjunto, actividadRespuesta.id);
             }, error => {
               console.log(error);
               this.loading = false;
@@ -254,7 +394,7 @@ export class MisActividadesComponent implements OnInit {
     }
   }
 
-  mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta: Respuesta, template: TemplateRef<any>): any {
+  mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, template: TemplateRef<any>): any {
     this.loading = false;
     switcheActividad.checked = true;
     this.actividadRespuestaActualizar = actividadRespuesta;
@@ -271,13 +411,26 @@ export class MisActividadesComponent implements OnInit {
     this.modalRef = this.servicioModal.show(template);
   }
 
-  AgregarAdjuntoActividad(actividadRespuestaActualizar: Respuesta): any {
-    let nombreArchivo = "SC-" + this.generarllaveSoporte() + "-" + actividadRespuestaActualizar.adjunto.name;
-    this.servicio.agregarAdjuntoActividad(this.listaRespuestas, actividadRespuestaActualizar, nombreArchivo, actividadRespuestaActualizar.adjunto).then(
-      (respuesta) => {
-        actividadRespuestaActualizar.adjunto = null;
-        this.actividadesGestionadas++;
-        this.loading = false;
+  AgregarAdjuntoActividad(actividadRespuestaActualizar, id): any {
+    let nombreArchivo = id + "-AG-" + this.generarllaveSoporte() + "-" + actividadRespuestaActualizar.name;
+    this.servicio.agregarAdjuntoActividad(this.bibliotecaRespuestas, this.IdRegistroActividad, nombreArchivo, actividadRespuestaActualizar, id).then(
+      (respuesta) => {          
+        respuesta.file.getItem().then(item => { 
+          let items: any = {
+            ServerRedirectedEmbedUri: ""
+          };
+          items = item;
+          let index = this.ActividadesGeneralesyExtras.findIndex(x=> x.id === id);          
+          this.ActividadesGeneralesyExtras[index]["RutaAdjunto"] = items.ServerRedirectedEmbedUri;           
+          this.servicio.actualizarPropiedadesAdjuntoActividad(this.bibliotecaRespuestas,item,id,this.IdRegistroActividad).then(
+            (resultado)=>{
+              
+              actividadRespuestaActualizar = null;
+              this.actividadesGestionadas++;
+              this.loading = false;
+            }
+          );                  
+        });        
       }, error => {
         console.log(error);
         this.loading = false;
@@ -292,7 +445,7 @@ export class MisActividadesComponent implements OnInit {
     return valorprimitivo;
   }
 
-  subirAdjuntoActividad(fileInput: any, actividad) {
+  subirAdjuntoActividad(fileInput: any, actividad: Actividades) {
     if (fileInput.target.files && fileInput.target.files[0]) {
       actividad.adjunto = fileInput.target.files[0];
       this.fileuploadActual = fileInput.srcElement.value;
@@ -303,37 +456,70 @@ export class MisActividadesComponent implements OnInit {
   }
 
   confirmar(): void {
-    let adjuntoBorrar: string;
-    this.servicio.obtenerAdjuntos(this.listaRespuestas, this.actividadRespuestaActualizar).then(
+    let IdAdjuntoBorrar: number;
+    this.servicio.obtenerAdjuntos(this.bibliotecaRespuestas, this.IdRegistroActividad, this.actividadRespuestaActualizar).then(
       (respuesta) => {
-        adjuntoBorrar = respuesta[0].FileName;
-        this.actividadRespuestaActualizar.respuesta = false;
-        this.actividadRespuestaActualizar.aprobacionActividad = "";
-        this.ActualizarActividadyBorrarAdjuntos(this.actividadRespuestaActualizar, adjuntoBorrar);
+        IdAdjuntoBorrar = respuesta[0].Id;
+        // this.actividadRespuestaActualizar.respuesta = false;
+        // this.actividadRespuestaActualizar.aprobacionActividad = "";
+        let ObjGuardar;
+        if (this.actividadRespuestaActualizar.TipoActividad === "General") {
+          let index = this.ActividadesGenerales.findIndex(x => x.id === this.actividadRespuestaActualizar.id)
+          this.ActividadesGenerales[index].respuesta = false;
+          this.ActividadesGenerales[index].aprobacionActividad = "";
+          this.ActividadesGenerales[index].adjunto = false;
+          this.ActividadesGenerales[index].adjuntoOk = false;
+          let respuesta = JSON.stringify(this.ActividadesGenerales);
+          ObjGuardar = {
+            Json: respuesta
+          }
+        }
+        else if (this.actividadRespuestaActualizar.TipoActividad === "Extra") {
+          let index = this.ActividadesExtras.findIndex(x => x.id === this.actividadRespuestaActualizar.id)
+          this.ActividadesExtras[index].respuesta = false;
+          this.ActividadesExtras[index].aprobacionActividad = "";
+          this.ActividadesExtras[index].adjunto = false;
+          this.ActividadesExtras[index].adjuntoOk = false;
+          let respuesta = JSON.stringify(this.ActividadesExtras);
+          ObjGuardar = {
+            JsonExtraordinario: respuesta
+          }
+        }
+
+        this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
+          (respuesta)=>{
+            this.borrarAdjuntosActividad(IdAdjuntoBorrar);
+          },
+          (error)=>{
+            console.log(error);
+            alert('Ha ocurrido un error al actualizar la actividad');
+          }
+        );
+        // this.ActualizarActividadyBorrarAdjuntos(this.ActividadesGenerales, respuesta);
       }, error => {
         console.log(error);
       }
     );
   }
 
-  ActualizarActividadyBorrarAdjuntos(actividadRespuesta: Respuesta, adjuntoBorrar): any {
-    this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta).then(
-      (respuesta) => {
-        this.borrarAdjuntosActividad(actividadRespuesta, adjuntoBorrar);
-      }, error => {
-        console.log(error);
-        alert('Ha ocurrido un error al actualizar la actividad');
-      }
-    );
-  }
+  // ActualizarActividadyBorrarAdjuntos(actividadRespuesta: Respuesta, adjuntoBorrar): any {
+  //   this.servicio.actualizarActividad(this.listaRespuestas, actividadRespuesta, this.IdRegistroActividad).then(
+  //     (respuesta) => {
+  //       this.borrarAdjuntosActividad(adjuntoBorrar[0].Id);
+  //     }, error => {
+  //       console.log(error);
+  //       alert('Ha ocurrido un error al actualizar la actividad');
+  //     }
+  //   );
+  // }
 
-  borrarAdjuntosActividad(actividadRespuesta: Respuesta, adjuntoBorrar: string): any {
-    this.servicio.borrarAdjunto(this.listaRespuestas, actividadRespuesta, adjuntoBorrar).then(
+  borrarAdjuntosActividad(adjuntoBorrar): any {
+    this.servicio.borrarAdjunto(this.bibliotecaRespuestas,adjuntoBorrar).then(
       (respuesta) => {
         this.actividadesGestionadas--;
         this.modalRef.hide();
         this.switcheActividadSeleccionada.checked = false;
-        this.LimpiarControlAdjunto(actividadRespuesta.id);
+        // this.LimpiarControlAdjunto(actividadRespuesta.id);
       }, error => {
         console.log(error);
       }

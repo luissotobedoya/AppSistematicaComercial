@@ -14,6 +14,7 @@ import { ExcelService } from "../servicios/excel.service";
 import { BsDatepickerConfig, BsLocaleService } from "ngx-bootstrap";
 import { Usuario } from "../dominio/usuario";
 import { Router } from "@angular/router";
+import { Respuesta } from "../dominio/respuesta";
 
 @Component({
   selector: "app-informes",
@@ -37,7 +38,7 @@ export class InformesComponent implements OnInit {
   slctClasificacion: string;
   slctProceso: string;
   stringConsulta: string;
-  objRespuestaActividad: RespuestaActividad[] = [];
+  objRespuestaActividad;
   objActividad = [];
   informeForm: FormGroup;
   submitted = false;
@@ -95,9 +96,7 @@ export class InformesComponent implements OnInit {
     this.loading = true;
     this.aplicarTema();
     this.informeForm = this.formBuilder.group({
-      txtFecha: ["", Validators.required],
-      slcResponsable: ["", Validators.required],
-      slcTienda: ["", Validators.required]
+      txtFecha: ["", Validators.required]      
     });
     this.ObtenerMaestroResponsables();
   }
@@ -114,10 +113,10 @@ export class InformesComponent implements OnInit {
       if (this.usuarioActual.rol != null) {
         switch (this.usuarioActual.rol.toLowerCase()) {
           case "administrador de tienda":
-            this.router.navigate(['/acceso-denegado']);
+            this.router.navigate(['/informes']);
             break;
           case "jefe de zonas":
-            this.router.navigate(['/acceso-denegado']);
+            this.router.navigate(['/informes']);
             break;
           case "administrador sistemática comercial":
             console.log("perfilación correcta");
@@ -181,9 +180,9 @@ export class InformesComponent implements OnInit {
     let fecha1String = this.formatDate(fecha1);
     let fecha2 = new Date(ArrayFecha[1]);
     let fecha2String = this.formatDate(fecha2);
-    let slctResponsable = this.informeForm.controls['slcResponsable'].value;
-    const nombreResponsable = this.ObjResponsable.find(x => x.id === +slctResponsable).nombre;
-    let slcTienda = this.informeForm.controls['slcTienda'].value;
+    // let slctResponsable = this.informeForm.controls['slcResponsable'].value;
+    // const nombreResponsable = this.ObjResponsable.find(x => x.id === +slctResponsable).nombre;
+    // let slcTienda = this.informeForm.controls['slcTienda'].value;
     let arrayMEses = [];
     this.objActividad = [];
     this.contadorConsultas = 0;
@@ -192,48 +191,60 @@ export class InformesComponent implements OnInit {
     if ($.fn.dataTable.isDataTable('table')) {
       this.dataTable.destroy();
     }
-
-    for (const FechaMes of arrayMEses) {
-      let date = new Date(FechaMes);
-      let mes = date.getMonth();
-      let firstDay = new Date(date.getFullYear(), mes, 1);
-      let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      if (fecha1.getMonth() === mes) {
-        this.contadorConsultas++;
-        let fechafinString = this.formatDate(lastDay);
-        if (nombreResponsable === "Administrador de tienda") {
-          this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
+    if (arrayMEses.length > 1) {
+        for (const FechaMes of arrayMEses) {
+        let date = new Date(FechaMes);
+        let mes = date.getMonth();
+        let firstDay = new Date(date.getFullYear(), mes, 1);
+        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        if (fecha1.getMonth() === mes) {
+          this.contadorConsultas++;
+          let fechafinString = this.formatDate(lastDay);
+          if (this.usuarioActual.rol === "Administrador de tienda") {
+            this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+          }
+          else if (this.usuarioActual.rol === "Jefe de zonas") {
+            this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+          }
+  
+          this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
         }
-        else if (nombreResponsable === "Jefe de zonas") {
-          this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fecha1String + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
+        else if (fecha2.getMonth() === mes) {
+          this.contadorConsultas++;
+          let fechaInicioString = this.formatDate(firstDay);
+          if (this.usuarioActual.rol === "Administrador de tienda") {
+            this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+          }
+          else if (this.usuarioActual.rol === "Jefe de zonas") {
+            this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+          }
+          this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
         }
-
-        this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
-      }
-      else if (fecha2.getMonth() === mes) {
-        this.contadorConsultas++;
-        let fechaInicioString = this.formatDate(firstDay);
-        if (nombreResponsable === "Administrador de tienda") {
-          this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
+        else {
+          this.contadorConsultas++;
+          let fechaInicioString = this.formatDate(firstDay);
+          let fechafinString = this.formatDate(lastDay);
+          if (this.usuarioActual.rol === "Administrador de tienda") {
+            this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+          }
+          else if (this.usuarioActual.rol === "Jefe de zonas") {
+            this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+          }
+          this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
         }
-        else if (nombreResponsable === "Jefe de zonas") {
-          this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T08:00:00.000Z'";
-        }
-        this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
-      }
-      else {
-        this.contadorConsultas++;
-        let fechaInicioString = this.formatDate(firstDay);
-        let fechafinString = this.formatDate(lastDay);
-        if (nombreResponsable === "Administrador de tienda") {
-          this.stringConsulta = "Usuario eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
-        }
-        else if (nombreResponsable === "Jefe de zonas") {
-          this.stringConsulta = "Jefe eq '" + slcTienda + "' and Responsable eq '" + nombreResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T08:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T08:00:00.000Z'";
-        }
-        this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
       }
     }
+    else{
+      if (this.usuarioActual.rol === "Administrador de tienda") {
+        this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+      }
+      else if (this.usuarioActual.rol === "Jefe de zonas") {
+        this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+      }
+      this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
+    }
+
+    
   }
 
   ObtenerNombreListaActual(): string {
@@ -264,6 +275,10 @@ export class InformesComponent implements OnInit {
 
   private AgregarDataTable() {
     this.chRef.detectChanges();
+    if ($.fn.dataTable.isDataTable('table')) {
+      this.dataTable.destroy();
+    }
+    
     const table: any = $('table');
     this.dataTable = table.DataTable({
       "language": {
@@ -293,16 +308,37 @@ export class InformesComponent implements OnInit {
   CrearObjetoInforme(NombreLista, stringConsulta) {
     this.loading = true;
     this.servicio.ObtenerRespuestaActividades(NombreLista, stringConsulta)
-      .subscribe(respuestaActividad => {
-        this.objRespuestaActividad = RespuestaActividad.fromJsonList(respuestaActividad);
-        for (const iterator of this.objRespuestaActividad) {
-          this.objActividad.push(iterator);
-        }
-        this.contadorEntradas++;
-
-        if (this.contadorConsultas === this.contadorEntradas) {
+      .subscribe(respuestaActividad => { 
+        if (respuestaActividad.length > 0) {
+          this.objRespuestaActividad = respuestaActividad
+          let ObjActividad;
+          let ActividadesGeneralesyExtras;
+          let ActividadesExtras;
+          let ActividadesGenerales;
+          let ObjActividades;
+          this.objRespuestaActividad.forEach(element => {
+            let elemento = element;
+              ObjActividad = Respuesta.fromJson(elemento);
+              ActividadesGenerales = ObjActividad.jsonActividad;
+              ActividadesExtras = ObjActividad.jsonActividadExtra;            
+              ActividadesGeneralesyExtras = ActividadesExtras !== ""? ActividadesGenerales.concat(ActividadesExtras): ActividadesGenerales;
+              ActividadesGeneralesyExtras.map((x,i) => {
+                ActividadesGeneralesyExtras[i]["Tienda"]= elemento.UsuarioResponsable.Title;
+                ActividadesGeneralesyExtras[i]["fecha"]= elemento.Fecha;
+              });
+              ObjActividades = ObjActividades === undefined? ActividadesGeneralesyExtras : ObjActividades.concat(ActividadesGeneralesyExtras);
+          });
+  
+          this.objActividad = ObjActividades;
           this.ObtenerValoresInforme();
+          this.AgregarDataTable();
+          this.loading = false;  
         }
+        else {
+          this.cantidadRegistros=false;
+          this.loading = false;
+        }     
+              
       });
   }
 

@@ -25,9 +25,7 @@
     <div *ngIf="tieneActividades" class="row">
         <div class="col-md-12">
             <div class="botones-clasificacion">
-                <button *ngFor="let clasificacion of clasificacionesRespuestas" [class.selected]="clasificacion === clasificacionSeleccionada"
-                    [(ngModel)]="clasificacion" name="{{clasificacion}}" ngDefaultControl type="button" class="btn btn-outline-info"
-                    (click)="ObtenerProcesosPorClasificacion(clasificacion)">{{clasificacion}}</button>
+                <button *ngFor="let clasificacion of clasificacionesRespuestas" [class.selected]="clasificacion === clasificacionSeleccionada" [(ngModel)]="clasificacion" name="{{clasificacion}}" ngDefaultControl type="button" class="btn btn-outline-info" (click)="ObtenerProcesosPorClasificacion(clasificacion)">{{clasificacion}}</button>
             </div>
         </div>
     </div>
@@ -37,8 +35,8 @@
             <div class="procesos" [hidden]="!mostrarProcesos">
                 <h3 class="titulo-procesos">Procesos</h3>
                 <div>
-                    <div class="btn btn-secondary btn-lg btn-block" *ngFor="let proceso of procesosRespuestasUnicos"
-                        (click)="obtenerActividades(proceso)">{{proceso}}</div>
+                    <div class="btn btn-secondary btn-lg btn-block" *ngFor="let proceso of procesosRespuestasUnicos" (click)="obtenerActividades(proceso)">{{proceso}}</div>
+
                 </div>
             </div>
         </div>
@@ -48,16 +46,27 @@
                 <h3 class="titulo-actividades">Actividades</h3>
                 <div *ngFor="let actividad of actividadesRespuestas" class="actividad">
                     <label class="switch">
-                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta"
+                        <input #switcheActividad id="switche-{{actividad.id}}" type="checkbox" [checked]="actividad.respuesta === true"
                             (change)="actualizarActividad($event, switcheActividad, actividad, template, templateConfirmation)">
                         <span class="slider"></span>
                     </label>
                     <span class="label-actividad">{{actividad.actividad}}</span>
                     <span *ngIf="(actividad.tipoValidacion|lowercase) == 'checkbox y aprobación' && actividad.aprobacionActividad != ''" class="aprobacion-actividad">{{actividad.aprobacionActividad}}</span>
-                    <div *ngIf="(actividad.tipoValidacion|lowercase) == 'adjunto' || 
-                    (actividad.tipoValidacion|lowercase) == 'checkbox y aprobación'">
-                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad"
-                            tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
+                    <div *ngIf="((actividad.tipoValidacion|lowercase) == 'adjunto' || 
+                    (actividad.tipoValidacion|lowercase) == 'checkbox y aprobación') && (actividad.adjuntoOk === false)">
+                        <input #adjuntoActividad id="adjunto-{{actividad.id}}" type="file" class="adjunto-actividad" tooltip="{{actividad.observaciones}}" title="" placement="bottom" (change)="subirAdjuntoActividad($event, actividad)">
+                    </div>
+                    <div *ngIf="((actividad.tipoValidacion|lowercase) == 'adjunto' || 
+                    (actividad.tipoValidacion|lowercase) == 'checkbox y aprobación') && actividad.adjuntoOk === true">
+                        <br>
+                        <div class="row">
+                            <div class="col-3">
+                                <a href="{{actividad.RutaAdjunto}}" target="_blank">
+                                    <button class="btn btn-primary">ver adjunto</button>
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
