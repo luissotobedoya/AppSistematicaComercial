@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   urlWeb:'https://estudiodemoda.sharepoint.com/sites/EM/sc',
   urlReltativa: '/sites/EM/sc',
   maestroClasificacion: 'MaestroClasificacion',
