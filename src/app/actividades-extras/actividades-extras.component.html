@@ -35,31 +35,31 @@
                 <div class="card-body">
                     <div class="col-xs-12 col-md-12" *ngIf="ModelPeriodicidad === '1'">
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline1" name="DiasHabiles" value="1" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline1" name="DiasHabiles" value="1" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline1">Lunes</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline2" name="DiasHabiles" value="2" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline2" name="DiasHabiles" value="2" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline2">Martes</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline3" name="DiasHabiles" value="3" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline3" name="DiasHabiles" value="3" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline3">Miércoles</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline4" name="DiasHabiles" value="4" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline4" name="DiasHabiles" value="4" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline4">Jueves</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline5" name="DiasHabiles" value="5" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline5" name="DiasHabiles" value="5" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline5">Viernes</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline6" name="DiasHabiles" value="6" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline6" name="DiasHabiles" value="6" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline6">Sábado</label>
                         </div>
                         <div class="custom-control custom-checkbox custom-control-inline">
-                            <input type="checkbox" id="customCheckboxInline7" name="DiasHabiles" value="0" (ngModelChange)="checkValueDias($event)" class="custom-control-input">
+                            <input type="checkbox" id="customCheckboxInline7" name="DiasHabiles" value="0" (change)="checkValueDias($event)" class="custom-control-input">
                             <label class="custom-control-label" for="customCheckboxInline7">Domingo</label>
                         </div>
                     </div>
@@ -175,11 +175,15 @@
                     Tiendas
                 </div>
                 <div class="card-body">
-                    <div class="custom-control custom-checkbox custom-control-inline"  *ngFor="let Tienda of ObjTiendas">
-                        <label><input name="grupoTiendas" type="checkbox" [value]="Tienda.id"  (ngModelChange)='seleccionarTienda($event)'>{{Tienda.nombre}}</label></div>
+                    <div class="custom-control custom-checkbox custom-control-inline" *ngFor="let Tienda of ObjTiendas">
+                        <input type="checkbox" id="customCheckboxInline{{Tienda.id}}" name="grupoTiendas" [value]="Tienda.id" (change)="seleccionarTienda($event)" class="custom-control-input">
+                        <label class="custom-control-label" for="customCheckboxInline{{Tienda.id}}">{{Tienda.nombre}}</label>
+                    </div>
+                    <!-- <div class="custom-control custom-checkbox custom-control-inline"  *ngFor="let Tienda of ObjTiendas">
+                        <label><input name="grupoTiendas" type="checkbox" [value]="Tienda.id"  (ngModelChange)='seleccionarTienda($event)'>{{Tienda.nombre}}</label></div> -->
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <div class="form-group">
         <button class="btn btn-primary">Guardar actividad</button>

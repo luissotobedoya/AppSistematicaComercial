@@ -176,8 +176,7 @@ export class ActividadesExtrasComponent implements OnInit {
   }
 
   CambioPeriodicidad(event){
-    this.ModelPeriodicidad = event.target.value;
-    let pp = this.ModelPeriodicidad;
+    this.ModelPeriodicidad = event;    
   }
 
   seleccionarTienda(TiendasChk) {
@@ -502,7 +501,7 @@ FechasMesAMes(fecha, stringDia, stringNumDia) {
   }
 
   mostrarObservaciones(event) {
-    let valor = event.target.value;
+    let valor = event;
     if (valor == "Adjunto" || valor == "Checkbox y Aprobación") {
       this.mostrarDivObservaciones = true;
     } else {
