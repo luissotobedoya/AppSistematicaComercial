@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
         this.VerDocumentacion = true;
         break;
       case "administrador sistemática comercial":
-        this.VerMisActividades = true;
+        this.VerMisActividades = false;
         this.VerInformes = true;
         this.VerDocumentacion = true;
         this.VerParametrizacion = true;

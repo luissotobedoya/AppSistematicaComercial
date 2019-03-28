@@ -13,6 +13,7 @@ import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { Usuario } from '../dominio/usuario';
 import { Router } from '@angular/router';
+import { ToastrManager } from "ng6-toastr-notifications";
 
 @Component({
   selector: 'app-actividades-extras',
@@ -50,7 +51,7 @@ export class ActividadesExtrasComponent implements OnInit {
   ValidatorOpc1: boolean = false;
   ValidatorOpc2: boolean = false;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router:Router) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, public toastr: ToastrManager, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router:Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
     this.ValidarPerfilacion();
     this.actividadExtraordinariaGuardar = new ActividadExtraordinaria(null, this.tiendasSeleccionadas, "", "", "", "", "", "");
@@ -192,15 +193,49 @@ export class ActividadesExtrasComponent implements OnInit {
     }
   }
 
-  onSubmit(template: TemplateRef<any>) {
+  ValidardiaNumero(){
+    let numeroDia = parseInt(this.registerForm.controls['diaNumero'].value);
+    if (numeroDia === 0) {
+        this.mostrarAdvertencia("El número cero no es permitido para esta caso");
+        this.registerForm.controls['diaNumero'].setValue("");
+    }
+  }
+
+  validarCeroMes(){
+    let numeroDia = parseInt(this.registerForm.controls['stringMes'].value);
+    if (numeroDia === 0) {
+        this.mostrarAdvertencia("El número cero no es permitido para esta caso");
+        this.registerForm.controls['stringMes'].setValue("");
+    }
+  }
+
+  ValidarmesNumero(){
+    let numeroDia = parseInt(this.registerForm.controls['mesNumero'].value);
+    if (numeroDia === 0) {
+        this.mostrarAdvertencia("El número cero no es permitido para esta caso");
+        this.registerForm.controls['mesNumero'].setValue("");
+    }
+  }
+
+  onSubmit() {
     this.submitted = true;
     let Periodicidad = "";
     let PeriodicidadMensual= "";
     if (this.registerForm.invalid) {   
+      let TipoActividad = this.registerForm.controls['TipoActividad'].value;
+      if (TipoActividad === "Checkbox y Aprobación") {
+        let Observacion = this.registerForm.controls['observaciones'].value;
+        if (Observacion === "") {
+          this.mostrarAdvertencia("Por favor ingrese una observación");
+          return;
+        }        
+      }
+
       Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
       if (Periodicidad === "1") {
           if (this.diasSeleccionados.length === 0) {
-            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
+            this.mostrarAdvertencia("Por favor seleccione al menos un día en el que desea la actividad");
+            // this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
             return;
           }
       }
@@ -210,7 +245,8 @@ export class ActividadesExtrasComponent implements OnInit {
              let diaNumero = this.registerForm.controls['diaNumero'].value;
              let mesNumero = this.registerForm.controls['mesNumero'].value;
              if (diaNumero ==="" || mesNumero==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique el día o cada cuantos meses desea hacer la actividad");
+              this.mostrarAdvertencia("Por favor indique el día o cada cuantos meses desea hacer la actividad");
+                // this.mostrarAlerta(template, "Alerta", "Por favor indique el día o cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc1 = true;
                 return;
              }
@@ -221,7 +257,8 @@ export class ActividadesExtrasComponent implements OnInit {
          else if(PeriodicidadMensual ==="Opcion2"){
           let stringMes = this.registerForm.controls['stringMes'].value;
             if (stringMes ==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
+                this.mostrarAdvertencia("Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
+                // this.mostrarAlerta(template, "Alerta", "Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc2 = true;
                 return;
              }
@@ -231,22 +268,30 @@ export class ActividadesExtrasComponent implements OnInit {
              }
          }
          else if(PeriodicidadMensual ===""){
-          this.mostrarAlerta(template, "Alerta", "Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
+          this.mostrarAdvertencia("Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
+          // this.mostrarAlerta(template, "Alerta", "Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
           return;
         }
       }
       
       if (this.tiendasSeleccionadas.length === 0) {
-        this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos una tienda");
+        this.mostrarAdvertencia("Por favor seleccione al menos una tienda");
+        // this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos una tienda");
         return;
-      }
-      
+      }      
+    }
+    
+    let TipoActividad = this.registerForm.controls['TipoActividad'].value;
+    if (TipoActividad === "Checkbox y Aprobación") {
+      this.mostrarAdvertencia("Por favor ingrese una observación");
+      return
     }
 
     Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
       if (Periodicidad === "1") {
           if (this.diasSeleccionados.length === 0) {
-            this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
+            this.mostrarAdvertencia("Por favor seleccione al menos un día en el que desea la actividad");
+            // this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos un día en el que desea la actividad");
             return;
           }
       }
@@ -256,7 +301,8 @@ export class ActividadesExtrasComponent implements OnInit {
              let diaNumero = this.registerForm.controls['diaNumero'].value;
              let mesNumero = this.registerForm.controls['mesNumero'].value;
              if (diaNumero ==="" || mesNumero==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique el día o cada cuantos meses desea hacer la actividad");
+                this.mostrarAdvertencia("Por favor indique el día o cada cuantos meses desea hacer la actividad");
+                // this.mostrarAlerta(template, "Alerta", "Por favor indique el día o cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc1 = true;
                 return;
              }
@@ -267,7 +313,8 @@ export class ActividadesExtrasComponent implements OnInit {
          else if(PeriodicidadMensual ==="Opcion2"){
           let stringMes = this.registerForm.controls['stringMes'].value;
             if (stringMes ==="") {
-                this.mostrarAlerta(template, "Alerta", "Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
+              this.mostrarAdvertencia("Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
+                // this.mostrarAlerta(template, "Alerta", "Por favor indique la periodicidad del día y cada cuantos meses desea hacer la actividad");
                 this.ValidatorOpc2 = true;
                 return;
              }
@@ -277,7 +324,8 @@ export class ActividadesExtrasComponent implements OnInit {
              }
          }
          else if(PeriodicidadMensual ===""){
-          this.mostrarAlerta(template, "Alerta", "Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
+          this.mostrarAdvertencia("Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
+          //this.mostrarAlerta(template, "Alerta", "Por favor seleccione alguna de las dos opciones de la periodicidad mensual");
           return;
         }
       }
@@ -288,7 +336,8 @@ export class ActividadesExtrasComponent implements OnInit {
     // }
 
     if (this.tiendasSeleccionadas.length === 0) {
-      this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos una tienda");
+      this.mostrarAdvertencia("Por favor seleccione al menos una tienda");
+      // this.mostrarAlerta(template, "Alerta", "Por favor seleccione al menos una tienda");
       return;
     }
     
@@ -306,7 +355,7 @@ export class ActividadesExtrasComponent implements OnInit {
           let FechaActividad = this.AsignarFormatoFecha(inicio);
           this.contadorEntradas++;
           this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(FechaActividad));
-          this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+          this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar);
         }
         inicio.setDate(inicio.getDate() + 1);
       }
@@ -321,7 +370,7 @@ export class ActividadesExtrasComponent implements OnInit {
             this.contadorEntradas++;
             let FechaActividad = this.AsignarFormatoFecha(element);
             this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(FechaActividad));
-            this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+            this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar);
           });
         }
       }
@@ -335,7 +384,7 @@ export class ActividadesExtrasComponent implements OnInit {
             this.contadorEntradas++;
             let FechaActividad = this.AsignarFormatoFecha(element);
             this.actividadExtraordinariaGuardar = this.retornarActividadExtra(new Date(FechaActividad));
-            this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar, template);
+            this.guardarAvtividadExtra(this.actividadExtraordinariaGuardar);
           });
         }
       }
@@ -458,13 +507,14 @@ FechasMesAMes(fecha, stringDia, stringNumDia) {
     return fechaRetornar;
   }
 
-  guardarAvtividadExtra(actividadExtraordinariaGuardar: ActividadExtraordinaria, template: TemplateRef<any>): any {
+  guardarAvtividadExtra(actividadExtraordinariaGuardar: ActividadExtraordinaria): any {
     this.servicio.agregarActividadExtraordinaria(actividadExtraordinariaGuardar).then(
       (iar: ItemAddResult) => {
         this.ContadorSucces++;
         if (this.contadorEntradas === this.ContadorSucces) {
           this.loading = false;
-          this.mostrarAlerta(template, "Guardado con éxito", "La actividad extraordinaria se ha guardado con éxito");
+          this.MostrarExitoso("La actividad extraordinaria se ha guardado con éxito");
+          // this.mostrarAlerta(template, "Guardado con éxito", "La actividad extraordinaria se ha guardado con éxito");
           this.timer = setTimeout(() => {
             window.location.reload();
           }, 3000);
@@ -507,5 +557,21 @@ FechasMesAMes(fecha, stringDia, stringNumDia) {
     } else {
       this.mostrarDivObservaciones = false;
     }
+  }
+
+  MostrarExitoso(mensaje: string) {
+    this.toastr.successToastr(mensaje, "Confirmación!");
+  }
+
+  mostrarError(mensaje: string) {
+    this.toastr.errorToastr(mensaje, "Oops!");
+  }
+
+  mostrarAdvertencia(mensaje: string) {
+    this.toastr.warningToastr(mensaje, "Validación");
+  }
+
+  mostrarInformacion(mensaje: string) {
+    this.toastr.infoToastr(mensaje, "Información importante");
   }
 }

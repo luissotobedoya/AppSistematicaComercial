@@ -26,6 +26,7 @@ import { ExcelService } from './servicios/excel.service';
 import { InformesAdministradorTiendasComponent } from './informes-administrador-tiendas/informes-administrador-tiendas.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { InicioComponent } from './inicio/inicio.component';
+import { ToastrModule } from 'ng6-toastr-notifications';
 
 defineLocale('engb', enGbLocale);
 
@@ -56,6 +57,7 @@ defineLocale('engb', enGbLocale);
     BsDatepickerModule.forRoot(),    
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
+    ToastrModule.forRoot(),
     DataTablesModule,
     RouterModule.forRoot([
       {path:'',redirectTo:'/inicio',pathMatch:'full'},

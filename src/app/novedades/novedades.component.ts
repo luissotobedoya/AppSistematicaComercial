@@ -8,6 +8,7 @@ import { BsModalService, BsLocaleService } from 'ngx-bootstrap';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Usuario } from '../dominio/usuario';
 import { Router } from '@angular/router';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
   selector: 'app-novedades',
@@ -31,7 +32,7 @@ export class NovedadesComponent implements OnInit {
   ArchivoAdjunto: File = null;
   usuarioResponsable: number;
 
-  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router: Router) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, public toastr: ToastrManager, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
     this.ValidarPerfilacion();
     this.NovedadGuardar = new Novedad(null, null, null, "", null);
@@ -124,7 +125,8 @@ export class NovedadesComponent implements OnInit {
           let nombreArchivo = "Novedad-" + this.ArchivoAdjunto.name;
           this.servicio.agregarAdjuntoNovedad(iar.data.Id, nombreArchivo, this.ArchivoAdjunto).then(respuesta=>{
             this.loading = false;
-            this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
+            this.MostrarExitoso("La actividad novedad se ha guardado con éxito");
+            // this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
             this.timer = setTimeout(() => {
               window.location.reload();
             }, 3000);
@@ -137,7 +139,8 @@ export class NovedadesComponent implements OnInit {
         }
         else{
           this.loading = false;
-          this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
+          this.MostrarExitoso("La actividad novedad se ha guardado con éxito");
+          // this.mostrarAlerta(template, "Guardado con éxito", "La actividad novedad se ha guardado con éxito");
             this.timer = setTimeout(() => {
               window.location.reload();
             }, 3000);
@@ -159,5 +162,21 @@ export class NovedadesComponent implements OnInit {
     this.NovedadGuardar.tienda = this.usuarioActual.id;
     this.NovedadGuardar.jefeTienda = this.usuarioActual.jefeId;
     return this.NovedadGuardar;
+  }
+
+  MostrarExitoso(mensaje: string) {
+    this.toastr.successToastr(mensaje, "Confirmación!");
+  }
+
+  mostrarError(mensaje: string) {
+    this.toastr.errorToastr(mensaje, "Oops!");
+  }
+
+  mostrarAdvertencia(mensaje: string) {
+    this.toastr.warningToastr(mensaje, "Validación");
+  }
+
+  mostrarInformacion(mensaje: string) {
+    this.toastr.infoToastr(mensaje, "Información importante");
   }
 }
