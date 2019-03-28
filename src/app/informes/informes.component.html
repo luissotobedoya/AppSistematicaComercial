@@ -19,30 +19,17 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div class="col-4">
+                <div class="col-4" *ngIf="Tipousuario === '2' || Tipousuario === '3'">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Responsable</label>
-                        <select name="" id="" class="form-control" [(ngModel)]="slctResponsableModel" (change)="SeleccionarResponsable($event.target.value)"
-                            formControlName="slcResponsable" [ngClass]="{ 'is-invalid': submitted && f.slcResponsable.errors }">
-                            <option *ngFor="let itemResponsable of ObjResponsable" [value]="itemResponsable.id" [text]="itemResponsable.nombre">{{itemResponsable.nombre}}</option>
-                        </select>
-                        <div *ngIf="submitted && f.slcResponsable.errors" class="invalid-feedback">
-                            <div *ngIf="f.slcResponsable.errors.required">Este campo es requerido</div>
-                        </div>
-                    </div>
-                </div> -->
-                <!-- <div class="col-4">
-                    <div class="form-group">
-                        <label for=" exampleInputEmail1 ">{{NombreCampo}}</label>
-                        <select name=" " id=" " class="form-control" [disabled]="DisalbeTienda" formControlName="slcTienda"
-                            [ngClass]="{ 'is-invalid': submitted && f.slcTienda.errors }">
+                        <label for=" exampleInputEmail1 ">Filtros</label>
+                        <select name=" " id=" " class="form-control" [disabled]="DisalbeTienda" formControlName="slcTienda" [ngClass]="{ 'is-invalid': submitted && f.slcTienda.errors }">
                             <option value=" " *ngFor="let itemZona of ObjZona " [value]="itemZona.id " [text]="itemZona.nombre">{{itemZona.nombre}}</option>
                         </select>
                         <div *ngIf="submitted && f.slcTienda.errors" class="invalid-feedback">
                             <div *ngIf="f.slcTienda.errors.required">Este campo es requerido</div>
                         </div>
                     </div>
-                </div> -->
+                </div>
             </div>
             <div class="row ">
                 <div class="col-md-2 ">
@@ -95,7 +82,7 @@
         <table class="table  table-sm" [hidden]="!(maxPrioridad > 0)">
             <thead>
                 <tr>
-                    <th>Tienda</th>
+                    <th>Responsable</th>
                     <th>Actividad</th>
                     <th>Fecha</th>
                     <th>Prioridad</th>

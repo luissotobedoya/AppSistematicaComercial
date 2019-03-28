@@ -61,6 +61,7 @@ export class InformesComponent implements OnInit {
   dataTable: any;
   NombreLista: string;
   usuarioActual: Usuario;
+  Tipousuario: string;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private servicioExcel: ExcelService, private _localeService: BsLocaleService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
@@ -95,10 +96,12 @@ export class InformesComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.aplicarTema();
+    this.Tipousuario === "1"? this.loading = false: null;
     this.informeForm = this.formBuilder.group({
-      txtFecha: ["", Validators.required]      
+      txtFecha: ["", Validators.required],
+      slcTienda: [""]    
     });
-    this.ObtenerMaestroResponsables();
+    // this.ObtenerMaestroResponsables();
   }
 
   private ObtenerMaestroResponsables() {
@@ -114,11 +117,16 @@ export class InformesComponent implements OnInit {
         switch (this.usuarioActual.rol.toLowerCase()) {
           case "administrador de tienda":
             this.router.navigate(['/informes']);
+            this.Tipousuario="1";
             break;
           case "jefe de zonas":
-            this.router.navigate(['/informes']);
+            this.router.navigate(['/informes']);             
+            this.Tipousuario="2";
+            this.ObtenerUsuariosXJefe(this.usuarioActual.id);            
             break;
           case "administrador sistemática comercial":
+            this.Tipousuario="3";
+            this.ObtenerTodoslosUsuarios();
             console.log("perfilación correcta");
             break;
           default:
@@ -133,28 +141,40 @@ export class InformesComponent implements OnInit {
       this.router.navigate(['/acceso-denegado']);
     }
   }
+  ObtenerTodoslosUsuarios(): any {
+    this.servicio.ObtenerUsuarios().subscribe(
+        (respuesta)=>{
+          this.ObjZona = JefeZona.fromJsonList(respuesta);
+          this.loading = false;
+        },
+        (error)=>{
+          console.error(error);
+        }
+    )
+  }
+  ObtenerUsuariosXJefe(id: number): any {
+    this.servicio.ObtenerUsuariosXJefe(this.usuarioActual.id).subscribe(
+      (respuesta)=>{
+        this.ObjZona = JefeZona.fromJsonList(respuesta);
+        this.ObjZona.push({id: this.usuarioActual.id, nombre: "Mis tareas"});
+        this.loading = false;
+      }
+    )
+  }
 
   get f() {
     return this.informeForm.controls;
   }
 
-  SeleccionarResponsable(IdResponsable) {
-    if (IdResponsable === "2") {
-      this.DisalbeTienda = false;
-      this.NombreCampo = "Zona";
-    } else if (IdResponsable === "1") {
-      this.NombreCampo = "Tienda";
-      this.DisalbeTienda = false;
-    } else if (IdResponsable === "") {
-      this.NombreCampo = "";
-      this.DisalbeTienda = true;
-    }
-    this.servicio
-      .obtenerJefeResponsable(IdResponsable)
-      .subscribe(UsuarioLoguin => {
-        this.ObjZona = JefeZona.fromJsonList(UsuarioLoguin);
-      });
-  }
+  // SeleccionarResponsable(IdResponsable) {   
+  //   if (this.Tipousuario === "3") {
+  //     this.servicio
+  //     .obtenerJefeResponsable(IdResponsable)
+  //     .subscribe(UsuarioLoguin => {
+  //       this.ObjZona = JefeZona.fromJsonList(UsuarioLoguin);
+  //     });
+  //   }     
+  // }
 
   obtenerClasificacion() {
     this.servicio.ObtenerClasificacionesExtras().subscribe(clasificacion => {
@@ -180,7 +200,7 @@ export class InformesComponent implements OnInit {
     let fecha1String = this.formatDate(fecha1);
     let fecha2 = new Date(ArrayFecha[1]);
     let fecha2String = this.formatDate(fecha2);
-    // let slctResponsable = this.informeForm.controls['slcResponsable'].value;
+    let slctResponsable = this.informeForm.controls['slcTienda'].value;
     // const nombreResponsable = this.ObjResponsable.find(x => x.id === +slctResponsable).nombre;
     // let slcTienda = this.informeForm.controls['slcTienda'].value;
     let arrayMEses = [];
@@ -200,11 +220,22 @@ export class InformesComponent implements OnInit {
         if (fecha1.getMonth() === mes) {
           this.contadorConsultas++;
           let fechafinString = this.formatDate(lastDay);
-          if (this.usuarioActual.rol === "Administrador de tienda") {
+          if (this.Tipousuario === "1") {
             this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
           }
-          else if (this.usuarioActual.rol === "Jefe de zonas") {
-            this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+          else if (this.Tipousuario === "2") {
+            if(slctResponsable === ""){
+              this.stringConsulta = "JefeId eq '"+this.usuarioActual.id+"' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }else {
+              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }            
+          }
+          else if(this.Tipousuario=== "3"){
+            if(slctResponsable === ""){
+              this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }else {
+              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            } 
           }
   
           this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
@@ -212,11 +243,24 @@ export class InformesComponent implements OnInit {
         else if (fecha2.getMonth() === mes) {
           this.contadorConsultas++;
           let fechaInicioString = this.formatDate(firstDay);
-          if (this.usuarioActual.rol === "Administrador de tienda") {
+          if (this.Tipousuario === "1") {
             this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
           }
-          else if (this.usuarioActual.rol === "Jefe de zonas") {
-            this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+          else if (this.Tipousuario === "2") {
+            if(slctResponsable === ""){
+              this.stringConsulta = "JefeId eq '"+this.usuarioActual.id+"' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+            }
+            else{
+              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable+ "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+            }            
+          }
+          else if(this.Tipousuario=== "3"){
+            if(slctResponsable === ""){
+              this.stringConsulta = "Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+            }
+            else{
+              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable+ "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+            } 
           }
           this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
         }
@@ -224,22 +268,46 @@ export class InformesComponent implements OnInit {
           this.contadorConsultas++;
           let fechaInicioString = this.formatDate(firstDay);
           let fechafinString = this.formatDate(lastDay);
-          if (this.usuarioActual.rol === "Administrador de tienda") {
+          if (this.Tipousuario === "1") {
             this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
           }
-          else if (this.usuarioActual.rol === "Jefe de zonas") {
-            this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+          else if (this.Tipousuario === "2") {
+            if(slctResponsable === ""){
+              this.stringConsulta = "JefeId eq '"+this.usuarioActual.id+"' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }else{
+              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }            
+          }
+          else if(this.Tipousuario=== "3"){
+            if(slctResponsable === ""){
+              this.stringConsulta = "Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }else{
+              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            } 
           }
           this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
         }
       }
     }
     else{
-      if (this.usuarioActual.rol === "Administrador de tienda") {
+      if (this.Tipousuario === "1") {
         this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
       }
-      else if (this.usuarioActual.rol === "Jefe de zonas") {
-        this.stringConsulta = "JefeId eq '" + this.usuarioActual.id + "' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+      else if (this.Tipousuario === "2") {
+        if(slctResponsable === ""){
+          this.stringConsulta = "JefeId eq '"+this.usuarioActual.id+"' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+        }
+        else {
+          this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+        }        
+      }
+      else if(this.Tipousuario=== "3"){
+        if(slctResponsable === ""){
+          this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+        }
+        else {
+          this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
+        }
       }
       this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
     }

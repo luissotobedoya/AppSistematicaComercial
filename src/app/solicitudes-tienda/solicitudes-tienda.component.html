@@ -5,38 +5,35 @@
     <h3>{{tituloPagina}}</h3>
 </div>
 
-<div class="row">
-    <!-- <div class="col-md-3">
-        <div class="form-group">
-            <label for="InputTienda">Responsable</label>
-            <select name=" " id=" " class="form-control" [(ngModel)]="Tienda">   
-                  <option value=""></option>                     
-                  <option *ngFor="let itemTienda of ObjTiendas" [value]="itemTienda.id " [text]="itemTienda.nombre">{{itemTienda.nombre}}</option>
-            </select>
+<form [formGroup]="NovedadForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="lblFechas">Fecha de la solicitud</label>
+                <input type="text" placeholder="Rango de fechas" [ngClass]="{ 'is-invalid': submitted && f.txtFecha.errors }" formControlName="txtFecha" class="form-control" [bsConfig]="bsConfig" bsDaterangepicker>
+                <div *ngIf="submitted && f.txtFecha.errors" class="invalid-feedback">
+                    <div *ngIf="f.txtFecha.errors.required">Este campo es requerido</div>
+                </div>
+            </div>
         </div>
-    </div> -->
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="lblFechas">Fecha de la solicitud</label>
-            <input type="text" placeholder="Rango de fechas" class="form-control" [(ngModel)]="FechaSolicitud" [bsConfig]="bsConfig" bsDaterangepicker>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="InputTienda">Tipo solicitud</label>
-            <select name=" " id=" " class="form-control" [(ngModel)]="TipoSolicitud">   
-              <option value=""></option>                     
-              <option value=" " *ngFor="let itemSolicitud of ObjTipoSolicitud" [value]="itemSolicitud.Id " [text]="itemSolicitud.Title">{{itemSolicitud.nombre}}</option>
-            </select>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="InputTienda">Tipo solicitud</label>
+                <select name=" " id=" " class="form-control" formControlName="txtTipoSolicitud">   
+                    <option value=""></option>                     
+                    <option value=" " *ngFor="let itemSolicitud of ObjTipoSolicitud" [value]="itemSolicitud.Id " [text]="itemSolicitud.Title">{{itemSolicitud.nombre}}</option>
+                </select>
+            </div>
         </div>
     </div>
-</div>
-<br>
-<div class="row ">
-    <div class="col-md-2 ">
-        <button type="button " class="btn btn-primary" (click)="buscarSolicitudes()">Buscar solicitudes</button>
+    <br>
+    <div class="row ">
+        <div class="col-md-2 ">
+            <button type="submit" class="btn btn-primary">Buscar solicitudes</button>
+        </div>
     </div>
-</div>
+</form>
+
 <br>
 <hr>
 <div class="row MensajeRegistros" [hidden]="cantidadRegistros">
@@ -48,6 +45,7 @@
     <thead>
         <tr>
             <th>Fecha</th>
+            <th>Tienda</th>
             <th>Tipo solicitud</th>
             <th>Cantidad</th>
             <th>Descripción</th>
@@ -57,6 +55,7 @@
     <tbody>
         <tr *ngFor="let itemsSolicitud of ObjRespuestaConsulta">
             <td>{{itemsSolicitud.Fecha | date:'dd-MM-yyyy'}}</td>
+            <td>{{itemsSolicitud.Tienda.Title}}</td>
             <td>{{itemsSolicitud.TipoSolicitud.Title}}</td>
             <td>{{itemsSolicitud.Cantidad}}</td>
             <td>{{itemsSolicitud.Descripcion}}</td>
