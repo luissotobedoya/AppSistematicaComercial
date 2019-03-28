@@ -370,6 +370,10 @@ export class InformesComponent implements OnInit {
   }
 
   ExportarExcel(): void {
+    this.objActividad.map((x,i)=> {
+      let fechaInicioString = this.formatDate(x.fecha);
+      this.objActividad[i]["fecha"]= fechaInicioString;
+    })
     this.servicioExcel.exportAsExcelFile(this.objActividad, 'Informe Actividades');
   }
 
