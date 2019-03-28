@@ -28,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik4tbEMwbi05REFMcXdodUhZbkhRNjNHZUNYYyIsImtpZCI6Ik4tbEMwbi05REFMcXdodUhZbkhRNjNHZUNYYyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTUzNzAyMzU2LCJuYmYiOjE1NTM3MDIzNTYsImV4cCI6MTU1MzczMTQ1NiwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.KLexZQnKgpI9GoTIsRZi2c9UreDwQAUaurB9JIoCdaT5ufkOD7Lu_mCqcoHagco_U65ZWAPzEGni7AAXay81Bf3m2j0VUhGZ_ywFykIfituo-ApNFNPjvyg6er4Oq8mGCiyRx-33aJztOszHW7s1q2L9va3iBUDEFW-0Lez0CEIJf5emW521v1GyWEcLpj9JTeq4TIOP1JG6xMoAYqOCksBmN1oXMOuXEM7tLJFjEM0ep1sjVVMWbPk5FFyxMv4uaUbBnfc9F_w4d_IJAHqybre1efJB288z_tn-nSPDuVFv5b8UTBrUbOXkYmzKiu29SfC5o5neN02vdtI3m5dvSw'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ik4tbEMwbi05REFMcXdodUhZbkhRNjNHZUNYYyIsImtpZCI6Ik4tbEMwbi05REFMcXdodUhZbkhRNjNHZUNYYyJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTUzNzMyMzU3LCJuYmYiOjE1NTM3MzIzNTcsImV4cCI6MTU1Mzc2MTQ1NywiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiI2MjRmZTkwZS04YWQyLTRjNzItOWRhNy00ZmE1ODg4OGNlMDdAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwic3ViIjoiZjNlZDU4YjUtYjc5OS00NmYwLTlkZGYtOGYwZjIwNmZmOGJlIiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.jD6qU3cg-r1cQxmSUH6VIFR6ENg73h739QBCcU9elNONCW8Qh0hpyE9WiDLp2O9l5XwCeRlNxQ22wppVtQwvXorz57mdiejDdx_JtKmiwUX5RiEd5p30GoiJhTCS6sm4CLwiZIF0zdD6JEP6em0llA43SW90H-3mRNOJlT3LM2PAet30rSvy9BbiqJZA-NwntC7-lqmc_18pKP5SsEB28EWDHS3PgABDk1g45jE3kjQdDws8dGeZJIqIec4C3xGfIYrkjZCBOO7iueWjAavyhsS4_K4OhKxzdRJYcHXnWOEfwOf--dywFP7WqE6NEGHWsKMZDSVYRmNNoiQThTrBeA'
             }
         }, environment.urlWeb);
 
@@ -49,8 +49,13 @@ export class SPServicio {
         return await from(this.ObtenerConfiguracion().web.currentUser.get()).toPromise();
     }    
 
-    ObtenerUsuariosXJefe(Jefe) {
+    ObtenerUsuariosXJefe(Jefe) { 
         let respuesta = from(this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.maestroUsuarios).items.filter("Jefe eq '" + Jefe + "'").select("Id", "Usuario/Title", "Usuario/Id").expand("Usuario").get());
+        return respuesta;
+    }
+
+    ObtenerUsuarios(){
+        let respuesta = from(this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.maestroUsuarios).items.filter("Responsable/Title ne '	Administrador Sistemática Comercial'").select("*","Responsable/Title","Id", "Usuario/Title", "Usuario/Id").expand("Responsable","Usuario").get());
         return respuesta;
     }
 
@@ -235,7 +240,9 @@ export class SPServicio {
             Fecha: agregarNovedad.fecha,
             TipoSolicitudId: agregarNovedad.tipoSolicitud,
             Descripcion: agregarNovedad.descripcion,
-            Cantidad: agregarNovedad.cantidad
+            Cantidad: agregarNovedad.cantidad,
+            JefeTiendaId: agregarNovedad.jefeTienda,
+            ResponsableId: agregarNovedad.responsable
         };
         let elemento = this.ObtenerConfiguracionConPost().web.lists.getByTitle(environment.Novedades).items.add(objNovedad);
         return elemento;

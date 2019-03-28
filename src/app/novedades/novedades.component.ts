@@ -29,6 +29,7 @@ export class NovedadesComponent implements OnInit {
   usuarioActual: Usuario;
   IdResponsableSolicitud: any;
   ArchivoAdjunto: File = null;
+  usuarioResponsable: number;
 
   constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private servicioModal: BsModalService, private _localeService: BsLocaleService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
@@ -67,12 +68,12 @@ export class NovedadesComponent implements OnInit {
     this.loading = true;
     this.NovedadForm = this.formBuilder.group({
       //txtTienda: ["", Validators.required],
-      txtFecha: ["", Validators.required],
+      txtFecha: [ new Date(), Validators.required],
       txtTipoSolicitud: ["", Validators.required],
       txtCantidad: ["", Validators.required],
       txtDescripcion: ["", Validators.required]
     });
-    this.obtenerUsuariosPorJefeInmediato();
+    this.ObtenerTipoSolicitud();
   }
 
   private obtenerUsuariosPorJefeInmediato() {
@@ -116,7 +117,7 @@ export class NovedadesComponent implements OnInit {
       return;
     }
     this.loading = true;
-    this.retornarNovedades();
+    // this.retornarNovedades();
     this.servicio.agregarNovedad(this.retornarNovedades()).then(
       (iar: ItemAddResult) => {
         if (this.ArchivoAdjunto !== null) {
@@ -152,9 +153,11 @@ export class NovedadesComponent implements OnInit {
     this.NovedadGuardar.fecha = this.NovedadForm.controls['txtFecha'].value;
     this.NovedadGuardar.tipoSolicitud = this.NovedadForm.controls['txtTipoSolicitud'].value;
     let IdResponsable = this.ObjTipoSolicitud.find(x=> x.Id === parseInt(this.NovedadForm.controls['txtTipoSolicitud'].value));
-    this.NovedadGuardar.tienda = IdResponsable !== undefined ? IdResponsable.UsuarioResponsableId : null;
+    this.NovedadGuardar.responsable = IdResponsable !== undefined ? IdResponsable.UsuarioResponsableId : null;
     this.NovedadGuardar.cantidad = this.NovedadForm.controls['txtCantidad'].value;
     this.NovedadGuardar.descripcion = this.NovedadForm.controls['txtDescripcion'].value;
+    this.NovedadGuardar.tienda = this.usuarioActual.id;
+    this.NovedadGuardar.jefeTienda = this.usuarioActual.jefeId;
     return this.NovedadGuardar;
   }
 }

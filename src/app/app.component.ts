@@ -78,6 +78,8 @@ export class AppComponent implements OnInit {
   async ObtenerRolUsuario() {
     const response = await this.servicio.obtenerRolUsuarioActualPromesa(this.usuarioActual.id);
     this.usuarioActual.rol = response[0].Responsable.Title;
+    this.usuarioActual.jefeId= response[0].Jefe.ID;
+    this.usuarioActual.nombreJefe= response[0].Jefe.Title;
     this.responsableUsuario = response[0].Responsable.Title;
     sessionStorage.setItem('usuario', JSON.stringify(this.usuarioActual));
     this.pintarMenuSegunRol();

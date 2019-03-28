@@ -8,6 +8,7 @@ import 'datatables.net-bs4';
 import 'datatables.net-buttons';
 import { Usuario } from "../dominio/usuario";
 import { Router } from "@angular/router";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-solicitudes-tienda',
@@ -17,6 +18,8 @@ import { Router } from "@angular/router";
 export class SolicitudesTiendaComponent implements OnInit {
   tituloPagina = "Revisar novedades";
   colorTheme = 'theme-blue';
+  NovedadForm: FormGroup;
+  submitted: boolean;
   bsConfig: Partial<BsDatepickerConfig>;
   ObjTiendas: any[];
   ObjTipoSolicitud: any;
@@ -31,18 +34,23 @@ export class SolicitudesTiendaComponent implements OnInit {
   usuarioActual: Usuario;
   UsuarioActualId: any;
 
-  constructor(private servicio: SPServicio, private chRef: ChangeDetectorRef, private _localeService: BsLocaleService, private router: Router) {
+  constructor(private servicio: SPServicio, private formBuilder: FormBuilder, private chRef: ChangeDetectorRef, private _localeService: BsLocaleService, private router: Router) {
     this.usuarioActual = JSON.parse(sessionStorage.getItem('usuario'));
     this.ValidarPerfilacion();
     this.loading = false;
     this.cantidadRegistros = true;
     this.mostrarTabla = true;
+    this.submitted = false;
     this._localeService.use('engb');
   }
 
   ngOnInit() {
     this.loading = true;
     this.bsConfig = Object.assign({}, { containerClass: this.colorTheme });
+    this.NovedadForm = this.formBuilder.group({      
+      txtFecha: [ "", Validators.required],
+      txtTipoSolicitud: [""]     
+    });    
     this.obtenerUsuariosPorJefeInmediato();
   }
 
@@ -96,7 +104,16 @@ export class SolicitudesTiendaComponent implements OnInit {
     )
   }
 
-  buscarSolicitudes() {
+  get f() {
+    return this.NovedadForm.controls;
+  }
+
+  onSubmit() {
+    this.submitted = true;
+    if (this.NovedadForm.invalid) {
+      return;
+    }
+    this.loading = true;
     let siwtch = 0;
     let StringConsulta = "";
     this.ObjRespuestaConsulta = [];
@@ -104,32 +121,20 @@ export class SolicitudesTiendaComponent implements OnInit {
     if ($.fn.dataTable.isDataTable('table')) {
       this.dataTable.destroy();
     }
-
-    StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' ";
-
-    // if (this.Tienda !== "" && this.Tienda !== undefined) {
-    //   StringConsulta = "Tienda eq '" + this.Tienda + "'";
-    //   siwtch = 1;
-    // }
-    if (this.TipoSolicitud !== "" && this.TipoSolicitud !== undefined) {      
-        StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' and TipoSolicitud eq '" + this.TipoSolicitud + "'";
-        siwtch = 1;      
+    
+    let stringConsulta;
+    let TipoSolicitud=this.NovedadForm.controls['txtTipoSolicitud'].value;
+    this.FechaSolicitud = this.NovedadForm.controls['txtFecha'].value;
+    let fechaInicioString = this.formatDate(this.FechaSolicitud[0]);
+    let fecha2String = this.formatDate(this.FechaSolicitud[1]);
+    if (TipoSolicitud === "") {
+      stringConsulta = "Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
     }
-    if (this.FechaSolicitud !== "" && this.FechaSolicitud !== undefined) {
-      let fechaInicioString = this.formatDate(this.FechaSolicitud[0]);
-      let fecha2String = this.formatDate(this.FechaSolicitud[1]);
-      if (siwtch === 1) {
-        StringConsulta = StringConsulta + " and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
-      } else {
-        StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
-        siwtch = 1;
-      }
+    else {
+      stringConsulta = "TipoSolicitudId eq '" + TipoSolicitud + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
     }
-    // if(siwtch == 0){
-    //   StringConsulta = "Tienda eq '"+this.UsuarioActualId+"'";
-    // }
-
-    this.servicio.ObtenerSolicitudes(StringConsulta).subscribe(
+    
+    this.servicio.ObtenerSolicitudes(stringConsulta).subscribe(
       (respuestaConsulta) => {
         this.ObjRespuestaConsulta = respuestaConsulta;
         if (respuestaConsulta.length === 0) {
@@ -145,6 +150,53 @@ export class SolicitudesTiendaComponent implements OnInit {
       }
     );
   }
+
+  // buscarSolicitudes() {
+  //   let siwtch = 0;
+  //   let StringConsulta = "";
+  //   this.ObjRespuestaConsulta = [];
+  //   if ($.fn.dataTable.isDataTable('table')) {
+  //     this.dataTable.destroy();
+  //   }
+  //   // StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' ";
+  //   // if (this.Tienda !== "" && this.Tienda !== undefined) {
+  //   //   StringConsulta = "Tienda eq '" + this.Tienda + "'";
+  //   //   siwtch = 1;
+  //   // }
+  //   if (this.TipoSolicitud !== "" && this.TipoSolicitud !== undefined) {      
+  //       StringConsulta = "TipoSolicitud eq '" + this.TipoSolicitud + "'";
+  //       siwtch = 1;      
+  //   }
+  //   if (this.FechaSolicitud !== "" && this.FechaSolicitud !== undefined) {
+  //     let fechaInicioString = this.formatDate(this.FechaSolicitud[0]);
+  //     let fecha2String = this.formatDate(this.FechaSolicitud[1]);
+  //     if (siwtch === 1) {
+  //       StringConsulta = StringConsulta + " and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
+  //     } else {
+  //       StringConsulta = "Tienda eq '"+this.UsuarioActualId+"' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.00Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.59Z'";
+  //       siwtch = 1;
+  //     }
+  //   }
+  //   // if(siwtch == 0){
+  //   //   StringConsulta = "Tienda eq '"+this.UsuarioActualId+"'";
+  //   // }
+
+  //   this.servicio.ObtenerSolicitudes(StringConsulta).subscribe(
+  //     (respuestaConsulta) => {
+  //       this.ObjRespuestaConsulta = respuestaConsulta;
+  //       if (respuestaConsulta.length === 0) {
+  //         this.cantidadRegistros = false;
+  //         this.mostrarTabla = true;
+  //       }
+  //       else {
+  //         this.cantidadRegistros = true;
+  //         this.mostrarTabla = false;
+  //         this.AgregarDataTable();
+  //       }
+  //       this.loading = false;
+  //     }
+  //   );
+  // }
 
   private AgregarDataTable() {
     this.chRef.detectChanges();
