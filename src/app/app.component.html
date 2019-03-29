@@ -1,10 +1,27 @@
+<header class="navbar navbar-dark fixed-top  bg-dark">
+    <a class="navbar-brand">
+        <img class="Img_logo" src="https://estudiodemoda.sharepoint.com/sites/Intranet/SiteAssets/logo-edm.png?ctag=190328 " alt="">
+        <a class="btn btn-default" id="menu-toggle"><span></span></a>
+    </a>
+    <div class="nav navbar-nav navbar-right">
+        <div class="zona-usuario-logueado">
+            <div class="usuario">
+                <span class="usuario-logueado">{{nombreUsuario}}</span>
+                <img src="{{imagenUsuario}}" class="imagen-usuario" alt="usuario">
+            </div>
+            <!-- <div class="roles">
+                <div class="rol">
+                    {{responsableUsuario}}
+                </div>
+            </div> -->
+        </div>
+    </div>
+</header>
 <div id="wrapper">
     <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
+        <ul class="sidebar-nav" id="sidebar-nav">
             <li class="sidebar-brand">
-                <a href="#">
-          Estudio Moda
-        </a>
+                <!-- <a href="#">   </a> -->
             </li>
             <li *ngIf="VerMisActividades">
                 <a routerLink="/mis-actividades" routerLinkActive="active">Mis actividades</a>
@@ -33,11 +50,12 @@
         </ul>
     </div>
     <div id="page-content-wrapper">
+        <br>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Ocultar menú</a>
-                    <div class="zona-usuario-logueado">
+                    <!-- <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Ocultar menú</a> -->
+                    <!-- <div class="zona-usuario-logueado">
                         <div class="usuario">
                             <img src="{{imagenUsuario}}" class="imagen-usuario" alt="usuario">
                             <span class="usuario-logueado">{{nombreUsuario}}</span>
@@ -47,7 +65,7 @@
                                 {{responsableUsuario}}
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="contenido-aplicacion">
                         <router-outlet></router-outlet>
                     </div>

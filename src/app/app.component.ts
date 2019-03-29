@@ -53,13 +53,14 @@ export class AppComponent implements OnInit {
         let nuevoTextoMenu = "";
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
-        if (textoMenu == "Ocultar menú") {
-          nuevoTextoMenu = "Mostrar menú";
-          e.target.innerText = nuevoTextoMenu;
-        } else {
-          nuevoTextoMenu = "Ocultar menú";
-          e.target.innerText = nuevoTextoMenu;
-        }
+        this.classList.toggle( "active" );
+        // if (textoMenu == "Ocultar menú") {
+        //   // nuevoTextoMenu = "Mostrar menú";
+        //   // e.target.innerText = nuevoTextoMenu;
+        // } else {
+        //   // nuevoTextoMenu = "Ocultar menú";
+        //   // e.target.innerText = nuevoTextoMenu;
+        // }
       });
     });
   }

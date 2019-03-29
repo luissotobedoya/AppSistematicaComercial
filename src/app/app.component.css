@@ -1,0 +1,46 @@
+.usuario-logueado {
+    color: white;
+}
+
+#page-content-wrapper {
+    padding-top: 6%;
+}
+
+#sidebar-wrapper {
+    margin-top: 2%;
+}
+
+.Img_logo {
+    width: 36%
+}
+
+#sidebar-wrapper {
+    background: #009cde;
+}
+
+.sidebar-nav li a {
+    color: white;
+    font-weight: 400;
+    font-size: 17px;
+}
+
+#menu-toggle span,
+#menu-toggle span:before,
+#menu-toggle span:after {
+    cursor: pointer;
+    border-radius: 1px;
+    height: 5px;
+    width: 35px;
+    background: white;
+    position: absolute;
+    display: block;
+    content: '';
+}
+
+#menu-toggle span:before {
+    top: -10px;
+}
+
+#menu-toggle span:after {
+    bottom: -10px;
+}
