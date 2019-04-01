@@ -213,32 +213,37 @@ export class InformesComponent implements OnInit {
     }
     if (arrayMEses.length > 1) {
         for (const FechaMes of arrayMEses) {
-        let date = new Date(FechaMes);
-        let mes = date.getMonth();
-        let firstDay = new Date(date.getFullYear(), mes, 1);
-        let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-        if (fecha1.getMonth() === mes) {
-          this.contadorConsultas++;
-          let fechafinString = this.formatDate(lastDay);
-          if (this.Tipousuario === "1") {
-            this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
-          }
-          else if (this.Tipousuario === "2") {
-            if(slctResponsable === ""){
-              this.stringConsulta = "JefeId eq '"+this.usuarioActual.id+"' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
-            }else {
-              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
-            }            
-          }
-          else if(this.Tipousuario=== "3"){
-            if(slctResponsable === ""){
-              this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
-            }else {
-              this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
-            } 
-          }
-  
-          this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
+          let fecha = new Date(FechaMes);
+          let mesString = (fecha.getMonth()+1).toString();
+          mesString = mesString.length == 1? "0"+mesString: mesString;
+          let anoString = fecha.getFullYear().toString();
+          let nombreLista = "RespuestasActividades"+anoString+mesString;
+          let date = new Date(FechaMes);
+          let mes = date.getMonth();
+          let firstDay = new Date(date.getFullYear(), mes, 1);
+          let lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+          if (fecha1.getMonth() === mes) {
+            this.contadorConsultas++;
+            let fechafinString = this.formatDate(lastDay);
+            if (this.Tipousuario === "1") {
+              this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+            }
+            else if (this.Tipousuario === "2") {
+              if(slctResponsable === ""){
+                this.stringConsulta = "JefeId eq '"+this.usuarioActual.id+"' or UsuarioResponsableId eq '" + this.usuarioActual.id  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+              }else {
+                this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+              }            
+            }
+            else if(this.Tipousuario=== "3"){
+              if(slctResponsable === ""){
+                this.stringConsulta = "Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+              }else {
+                this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
+              } 
+            }
+    
+            this.CrearObjetoInforme(nombreLista, this.stringConsulta);
         }
         else if (fecha2.getMonth() === mes) {
           this.contadorConsultas++;
@@ -262,7 +267,7 @@ export class InformesComponent implements OnInit {
               this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable+ "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
             } 
           }
-          this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
+          this.CrearObjetoInforme(nombreLista, this.stringConsulta);
         }
         else {
           this.contadorConsultas++;
@@ -285,11 +290,16 @@ export class InformesComponent implements OnInit {
               this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable + "' and Fecha ge datetime'" + fechaInicioString + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
             } 
           }
-          this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
+          this.CrearObjetoInforme(nombreLista, this.stringConsulta);
         }
       }
     }
     else{
+      let fecha = new Date(arrayMEses[0]);
+      let mesString = (fecha.getMonth()+1).toString();
+      mesString = mesString.length == 1? "0"+mesString: mesString;
+      let anoString = fecha.getFullYear().toString();
+      let nombreLista = "RespuestasActividades"+anoString+mesString;
       if (this.Tipousuario === "1") {
         this.stringConsulta = "UsuarioResponsableId eq '" + this.usuarioActual.id + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
       }
@@ -309,7 +319,7 @@ export class InformesComponent implements OnInit {
           this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fecha2String + "T23:59:59.000Z'";
         }
       }
-      this.CrearObjetoInforme(this.NombreLista, this.stringConsulta);
+      this.CrearObjetoInforme(nombreLista, this.stringConsulta);
     }
 
     
@@ -407,6 +417,13 @@ export class InformesComponent implements OnInit {
           this.loading = false;  
         }
         else {
+          this.maxPrioridad = 0;
+          this.dynamicPrioridadAlta = 0;
+          this.dynamicPrioridadMedia = 0;
+          this.dynamicPrioridadBaja = 0;
+          this.actividadesRealizadasAlta = 0;
+          this.actividadesRealizadasMedia = 0;
+          this.actividadesRealizadasBaja = 0;
           this.cantidadRegistros=false;
           this.loading = false;
         }     
