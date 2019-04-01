@@ -194,7 +194,7 @@ export class InformesComponent implements OnInit {
     if (this.informeForm.invalid) {
       return;
     }
-
+    
     let ArrayFecha = this.informeForm.controls['txtFecha'].value;
     let fecha1 = new Date(ArrayFecha[0]);
     let fecha1String = this.formatDate(fecha1);
@@ -242,7 +242,6 @@ export class InformesComponent implements OnInit {
                 this.stringConsulta = "UsuarioResponsableId eq '" + slctResponsable  + "' and Fecha ge datetime'" + fecha1String + "T00:00:00.000Z" + "' and Fecha le datetime'" + fechafinString + "T23:59:59.000Z'";
               } 
             }
-    
             this.CrearObjetoInforme(nombreLista, this.stringConsulta);
         }
         else if (fecha2.getMonth() === mes) {
@@ -295,6 +294,7 @@ export class InformesComponent implements OnInit {
       }
     }
     else{
+      this.contadorConsultas++;
       let fecha = new Date(arrayMEses[0]);
       let mesString = (fecha.getMonth()+1).toString();
       mesString = mesString.length == 1? "0"+mesString: mesString;
@@ -389,8 +389,10 @@ export class InformesComponent implements OnInit {
 
   CrearObjetoInforme(NombreLista, stringConsulta) {
     this.loading = true;
+    
     this.servicio.ObtenerRespuestaActividades(NombreLista, stringConsulta)
       .subscribe(respuestaActividad => { 
+        this.contadorEntradas++;
         if (respuestaActividad.length > 0) {
           this.objRespuestaActividad = respuestaActividad
           let ObjActividad;
@@ -412,9 +414,12 @@ export class InformesComponent implements OnInit {
           });
   
           this.objActividad = ObjActividades;
-          this.ObtenerValoresInforme();
-          this.AgregarDataTable();
-          this.loading = false;  
+          if (this.contadorEntradas === this.contadorConsultas) {
+              this.ObtenerValoresInforme();
+              this.AgregarDataTable();
+              this.cantidadRegistros=true;
+              this.loading = false; 
+          }           
         }
         else {
           this.maxPrioridad = 0;
