@@ -283,8 +283,11 @@ export class ActividadesExtrasComponent implements OnInit {
     
     let TipoActividad = this.registerForm.controls['TipoActividad'].value;
     if (TipoActividad === "Checkbox y Aprobación") {
-      this.mostrarAdvertencia("Por favor ingrese una observación");
-      return
+      let Observacion = this.registerForm.controls['observaciones'].value;
+      if (Observacion === "") {
+        this.mostrarAdvertencia("Por favor ingrese una observación");
+        return;
+      }
     }
 
     Periodicidad = this.registerForm.controls['Periodicidad'].value.toString();   
