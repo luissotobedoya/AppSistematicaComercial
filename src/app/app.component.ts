@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
     switch (this.responsableUsuario.toLowerCase()) {
       case "administrador de tienda":
         this.VerMisActividades = true;
-        this.VerDocumentacion = true;
+        this.VerDocumentacion = false;
         this.VerInformes = true;
         break;
       case "jefe de zonas":
