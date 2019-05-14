@@ -27,6 +27,7 @@ import { InformesAdministradorTiendasComponent } from './informes-administrador-
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { InicioComponent } from './inicio/inicio.component';
 import { ToastrModule } from 'ng6-toastr-notifications';
+import { InformeBIComponent } from './informe-bi/informe-bi.component';
 
 defineLocale('engb', enGbLocale);
 
@@ -43,7 +44,8 @@ defineLocale('engb', enGbLocale);
     NumberDirective,
     InformesAdministradorTiendasComponent,
     PageNotFoundComponent,
-    InicioComponent    
+    InicioComponent,
+    InformeBIComponent    
   ],
   imports: [
     BrowserModule,       
@@ -70,6 +72,7 @@ defineLocale('engb', enGbLocale);
       {path:'revisar-novedades', component:SolicitudesTiendaComponent},
       {path:'parametrizacion', component:ParametrizacionComponent},
       {path:'actividades-extras', component:ActividadesExtrasComponent},
+      {path:'informe-bi', component:InformeBIComponent},
       {path:'acceso-denegado', component:PageNotFoundComponent}
     ]),
     HttpModule
