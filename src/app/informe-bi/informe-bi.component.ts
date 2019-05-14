@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InformeBIComponent implements OnInit {
 
+  tituloPagina: string = "Informe Power BI";
   constructor() { }
 
   ngOnInit() {
