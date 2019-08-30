@@ -89,7 +89,8 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(new Date());
+    // let fechaActual = this.ObtenerFormatoFecha(new Date());
+    let fechaActual = "2019-08-27";
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
@@ -411,32 +412,69 @@ export class MisActividadesComponent implements OnInit {
     this.modalRef = this.servicioModal.show(template);
   }
 
-  AgregarAdjuntoActividad(actividadRespuestaActualizar, id): any {
+  // async agregarHV() {
+  //   let obj = {
+  //     TipoDocumento: "Hoja de vida",
+  //     EmpleadoId: this.empleado[0].id
+  //   }
+  //   await this.servicio.AgregarHojaDeVida(this.adjuntoHV.name, this.adjuntoHV).then(
+  //     f => {
+  //       f.file.getItem().then(item => {
+  //         let idDocumento = item.Id;
+  //         // this.actualizarMetadatosHV(obj, idDocumento);
+  //         // item.update(obj); 
+  //       })
+  //     }
+  //   ).catch(
+  //     (error) => {
+  //       //this.MensajeError('No se pudo cargar el archivo. Intente de nuevo')
+  //     }
+  //   );
+  // }; 
+
+  async AgregarAdjuntoActividad(actividadRespuestaActualizar, id): Promise<any> {
     let nombreArchivo = id + "-AG-" + this.generarllaveSoporte() + "-" + actividadRespuestaActualizar.name;
+    // nombreArchivo ="13-AG-1567005168708-1000words.pdf";
+    // let ObjDoc = await this.modificarMeta(nombreArchivo);
+    // let ttt = ObjDoc;
     this.servicio.agregarAdjuntoActividad(this.bibliotecaRespuestas, this.IdRegistroActividad, nombreArchivo, actividadRespuestaActualizar, id).then(
-      (respuesta) => {          
-        respuesta.file.getItem().then(item => { 
-          let items: any = {
-            ServerRedirectedEmbedUri: ""
-          };
-          items = item;
-          let index = this.ActividadesGeneralesyExtras.findIndex(x=> x.id === id);          
-          this.ActividadesGeneralesyExtras[index]["RutaAdjunto"] = items.ServerRedirectedEmbedUri;           
-          this.servicio.actualizarPropiedadesAdjuntoActividad(this.bibliotecaRespuestas,item,id,this.IdRegistroActividad).then(
-            (resultado)=>{
-              
-              actividadRespuestaActualizar = null;
-              this.actividadesGestionadas++;
-              this.loading = false;
-            }
-          );                  
-        });        
+      async (respuesta) => { 
+        let ObjDoc = await this.modificarMeta(nombreArchivo);
+        actividadRespuestaActualizar = null;
+        this.ActualizarPropiedadesAdjunto(this.bibliotecaRespuestas,ObjDoc[0].Id,id,this.IdRegistroActividad);
       }, error => {
         console.log(error);
         this.loading = false;
         alert('Ha ocurrido un error al actualizar la actividad');
       }
     );
+  }
+
+  ActualizarPropiedadesAdjunto(bibliotecaRespuestas: string, ObjDoc: any, id: any, IdRegistroActividad: number): any {
+    this.servicio.actualizarPropiedadesAdjuntoActividad(bibliotecaRespuestas,ObjDoc,id,IdRegistroActividad).then(
+      (resultado)=>{
+        this.actividadesGestionadas++;
+        this.loading = false;
+      }
+    );
+  }
+
+  async modificarMeta(nombreArchivo): Promise<any> {
+    let respuesta = [];
+    let fechahoy = this.ObtenerFormatoFecha(new Date());
+    await this.servicio.ObtenerArchivoAdjunto(this.bibliotecaRespuestas, nombreArchivo, fechahoy).then(
+      (res)=>{
+        respuesta = res;
+      }
+    ).catch(
+      (error)=> {
+        console.log(error);
+        this.loading = false;
+        alert('Ha ocurrido un error al actualizar la actividad');
+      }
+    ); 
+
+    return respuesta;
   }
 
   generarllaveSoporte(): string {
