@@ -89,9 +89,9 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(new Date());
-    // let fechaActual = "2019-08-31";
-    // this.listaRespuestas = "RespuestasActividades201908"
+    // let fechaActual = this.ObtenerFormatoFecha(new Date());
+    let fechaActual = "2019-09-12";
+    this.listaRespuestas = "RespuestasActividades201909"
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
@@ -461,15 +461,16 @@ export class MisActividadesComponent implements OnInit {
   }
 
   private AsignarFormatoFecha(FechaActividad: Date) {
-    let diaActividadExtraordinaria = FechaActividad.getDate();
-    let mesActividadExtraordinaria = FechaActividad.getMonth();
-    let anoActividadExtraordinaria = FechaActividad.getFullYear();
-    let hoy = new Date();
-    let horas = FechaActividad.getHours() === 0 ? hoy.getHours() : FechaActividad.getHours();
-    let minutos = FechaActividad.getMinutes() === 0 ? 1 : FechaActividad.getMinutes();
-    let segundos = FechaActividad.getSeconds() === 0 ? 1 : FechaActividad.getSeconds();
-    let fechaRetornar = new Date(anoActividadExtraordinaria, mesActividadExtraordinaria, diaActividadExtraordinaria, horas, minutos, segundos).toISOString();
-    return fechaRetornar;
+    var d = FechaActividad,
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+    // return fechaRetornar;
   }
 
   async modificarMeta(nombreArchivo): Promise<any> {
