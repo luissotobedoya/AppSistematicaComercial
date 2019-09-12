@@ -90,7 +90,8 @@ export class MisActividadesComponent implements OnInit {
 
   ObtenerActividadesUsuarioActual() {
     let fechaActual = this.ObtenerFormatoFecha(new Date());
-    // let fechaActual = "2019-08-27";
+    // let fechaActual = "2019-09-12";
+    // this.listaRespuestas = "RespuestasActividades201909"
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
@@ -448,7 +449,7 @@ export class MisActividadesComponent implements OnInit {
         alert('Ha ocurrido un error al actualizar la actividad');
       }
     );
-  }
+  } 
 
   ActualizarPropiedadesAdjunto(bibliotecaRespuestas: string, ObjDoc: any, id: any, IdRegistroActividad: number): any {
     this.servicio.actualizarPropiedadesAdjuntoActividad(bibliotecaRespuestas,ObjDoc,id,IdRegistroActividad).then(
@@ -459,9 +460,23 @@ export class MisActividadesComponent implements OnInit {
     );
   }
 
+  private AsignarFormatoFecha(FechaActividad: Date) {
+    var d = FechaActividad,
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+    // return fechaRetornar;
+  }
+
   async modificarMeta(nombreArchivo): Promise<any> {
     let respuesta = [];
-    let fechahoy = this.ObtenerFormatoFecha(new Date());
+    // let fechahoy = this.ObtenerFormatoFecha(new Date());
+    let fechahoy = this.AsignarFormatoFecha(new Date()); 
     await this.servicio.ObtenerArchivoAdjunto(this.bibliotecaRespuestas, nombreArchivo, fechahoy).then(
       (res)=>{
         respuesta = res;
