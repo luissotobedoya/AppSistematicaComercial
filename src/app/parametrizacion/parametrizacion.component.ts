@@ -25,7 +25,7 @@ export class ParametrizacionComponent implements OnInit {
           case "administrador de tienda":
             this.router.navigate(['/acceso-denegado']);
             break;
-          case "jefe de zonas":
+          case "jefe de zona":
             this.router.navigate(['/acceso-denegado']);
             break;
           case "administrador sistemática comercial":

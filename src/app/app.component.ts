@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Compiler } from '@angular/core';
 import * as $ from 'jquery';
 import { Usuario } from '../app/dominio/usuario';
 import { SPServicio } from '../app/servicios/sp.servicio';
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   VerRevisarNovedades: boolean;
   VerParametrizacion: boolean;
 
-  constructor(private servicio: SPServicio) {
+  constructor(private servicio: SPServicio, private _compiler: Compiler) {
     this.VerMisActividades = false;
     this.VerActividadesExtras = false;
     this.VerInformes = false;
@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this._compiler.clearCache();
     this.abrirCerrarMenu();
     await this.ObtenerUsuarioActual();
     await this.ObtenerRolUsuario();
@@ -93,7 +94,7 @@ export class AppComponent implements OnInit {
         this.VerDocumentacion = false;
         this.VerInformes = true;
         break;
-      case "jefe de zonas":
+      case "jefe de zona":
         this.VerMisActividades = true;
         this.VerActividadesExtras = true;
         // this.VerInformesTiendas = true;

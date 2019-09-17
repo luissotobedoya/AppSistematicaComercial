@@ -119,7 +119,7 @@ export class InformesComponent implements OnInit {
             this.router.navigate(['/informes']);
             this.Tipousuario="1";
             break;
-          case "jefe de zonas":
+          case "jefe de zona":
             this.router.navigate(['/informes']);             
             this.Tipousuario="2";
             this.ObtenerUsuariosXJefe(this.usuarioActual.id);            
