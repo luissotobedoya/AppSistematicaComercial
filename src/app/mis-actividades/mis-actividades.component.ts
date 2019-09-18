@@ -313,7 +313,7 @@ export class MisActividadesComponent implements OnInit {
         this.ActividadesGenerales[id].respuesta = false;
         // actividadRespuesta.respuesta = "false";
         let respuesta = JSON.stringify(this.ActividadesGenerales);
-        let ObjGuardar = {
+        ObjGuardar = {
           Json: respuesta
         }
       }
@@ -322,7 +322,7 @@ export class MisActividadesComponent implements OnInit {
         this.ActividadesExtras[id].respuesta = false;
         // actividadRespuesta.respuesta = "false";
         let respuesta = JSON.stringify(this.ActividadesExtras);
-        let ObjGuardar = {
+        ObjGuardar = {
           JsonExtraordinario: respuesta
         }
       }      
