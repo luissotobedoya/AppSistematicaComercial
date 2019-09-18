@@ -89,9 +89,9 @@ export class MisActividadesComponent implements OnInit {
   }
 
   ObtenerActividadesUsuarioActual() {
-    let fechaActual = this.ObtenerFormatoFecha(new Date());
-    // let fechaActual = "2019-09-13";
-    // this.listaRespuestas = "RespuestasActividades201909"
+    // let fechaActual = this.ObtenerFormatoFecha(new Date());
+    let fechaActual = "2019-09-13";
+    this.listaRespuestas = "RespuestasActividades201909"
     this.servicio.obtenerActividadesDelDia(this.listaRespuestas, this.usuarioActual.id, this.usuarioActual.rol, fechaActual).subscribe(
       (Response) => {
         this.coleccionRespuestasActividadesUsuario = Respuesta.fromJsonList(Response);
@@ -225,7 +225,7 @@ export class MisActividadesComponent implements OnInit {
     }
   }
 
-  actualizarActividadCheckboxAprobacion(event: any, switcheActividad, actividadRespuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): any {
+  async actualizarActividadCheckboxAprobacion(event: any, switcheActividad, actividadRespuesta, template: TemplateRef<any>, templateConfirmacion: TemplateRef<any>): Promise<any> {
     if (event.target.checked == false) {
       this.mostrarConfirmacionBorrarAdjuntos(switcheActividad, actividadRespuesta, templateConfirmacion);
     } else {
@@ -236,26 +236,30 @@ export class MisActividadesComponent implements OnInit {
         else {
           //actividadRespuesta.respuesta = true;
           //actividadRespuesta.aprobacionActividad = "Sin aprobar";
+          let RutaArchivo = ""; 
+          let ObjGuardar;
+          let ObjAdjunto;
           if (actividadRespuesta.TipoActividad === "General") {
-            let ObjAdjunto;
+            
             let id = this.ActividadesGenerales.findIndex(x => x.id === actividadRespuesta.id)
             this.ActividadesGenerales[id].respuesta = true;
             this.ActividadesGenerales[id].aprobacionActividad = "Sin aprobar";
             ObjAdjunto = this.ActividadesGenerales[id].adjunto;
+            RutaArchivo = await this.AgregarAdjuntoActividad(ObjAdjunto, actividadRespuesta.id);
+
+            this.ActividadesGenerales[id].respuesta = true;
+            if (this.ActividadesGenerales[id]["UrlArchivo"] === undefined) {
+              this.ActividadesGenerales[id]["UrlArchivo"] = RutaArchivo;
+            }
+            else {
+              this.ActividadesGenerales[id].UrlArchivo = RutaArchivo;
+            }
             this.ActividadesGenerales[id].adjunto = true; 
             this.ActividadesGenerales[id].adjuntoOk = true;
             let respuesta = JSON.stringify(this.ActividadesGenerales);
-            let ObjGuardar = {
+            ObjGuardar = {
               Json: respuesta
-            }
-            this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
-              (respuesta) => {
-                this.AgregarAdjuntoActividad(ObjAdjunto, actividadRespuesta.id);
-              }, error => {
-                console.log(error);
-                alert('Ha ocurrido un error al actualizar la actividad');
-              }
-            );
+            }            
           }
           else if(actividadRespuesta.TipoActividad === "Extra"){
             let ObjAdjuntoExtra: File;
@@ -263,21 +267,36 @@ export class MisActividadesComponent implements OnInit {
             this.ActividadesExtras[id].respuesta = true;
             this.ActividadesExtras[id].aprobacionActividad = "Sin aprobar";
             ObjAdjuntoExtra = this.ActividadesExtras[id].adjunto;
+
+            RutaArchivo = await this.AgregarAdjuntoActividad(ObjAdjuntoExtra, actividadRespuesta.id);
+            this.ActividadesExtras[id].respuesta = true;
+            if (this.ActividadesExtras[id]["UrlArchivo"] === undefined) {
+              this.ActividadesExtras[id]["UrlArchivo"] = RutaArchivo;
+            }
+            else{
+              this.ActividadesExtras[id].UrlArchivo = RutaArchivo;
+            }
+
+
             this.ActividadesExtras[id].adjunto = true; 
             this.ActividadesExtras[id].adjuntoOk = true;
             let respuesta = JSON.stringify(this.ActividadesExtras);
-            let ObjGuardar = {
+            ObjGuardar = {
               JsonExtraordinario: respuesta
+            }            
+          } 
+          
+          this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
+            (respuesta) => {
+              // this.AgregarAdjuntoActividad(ObjAdjuntoExtra, actividadRespuesta.id);
+              this.actividadRespuestaActualizar.adjunto = null;
+              this.actividadesGestionadas++;
+              this.loading = false;
+            }, error => {
+              console.log(error);
+              alert('Ha ocurrido un error al actualizar la actividad');
             }
-            this.servicio.actualizarActividad(this.listaRespuestas, this.IdRegistroActividad, ObjGuardar).then(
-              (respuesta) => {
-                this.AgregarAdjuntoActividad(ObjAdjuntoExtra, actividadRespuesta.id);
-              }, error => {
-                console.log(error);
-                alert('Ha ocurrido un error al actualizar la actividad');
-              }
-            );
-          }         
+          );
           
         }
       }
