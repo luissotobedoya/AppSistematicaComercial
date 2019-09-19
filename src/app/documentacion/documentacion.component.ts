@@ -35,7 +35,7 @@ export class DocumentacionComponent implements OnInit {
           case "administrador de tienda":
             console.log("perfilación correcta");
             break;
-          case "jefe de zonas":
+          case "jefe de zona":
             console.log("perfilación correcta");
             break;
           case "administrador sistemática comercial":

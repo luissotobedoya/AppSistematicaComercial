@@ -28,7 +28,7 @@ export class SPServicio {
             headers: {
                 "Accept": "application/json; odata=verbose",
                 'Content-Type': 'application/json;odata=verbose',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCIsImtpZCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTY4Mjk2MjY1LCJuYmYiOjE1NjgyOTYyNjUsImV4cCI6MTU2ODMyNTM2NSwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiIwNDM0YWJmYS02ODQ0LTQ4YTYtOTZhMi1kYzEzY2VmZTVhN2RAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiMzA1YWI3YzgtMzdhYS00Nzc3LWI0YjAtNDNkYTdmYzJhNTQ0Iiwic3ViIjoiMzA1YWI3YzgtMzdhYS00Nzc3LWI0YjAtNDNkYTdmYzJhNTQ0IiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.L3GTLg8FcgXqioTN9p3SBXHNAKvzs2X04QxiENtfKhyiTPM0RXHe_md5g46uK2_Xkyn6H5xokW0V-Bk4unddiTOdVXA07P91v_qK084TSalRufavQ5yKw9tgUlgZ_BVw3XZtUzWB_HK7mxBMsVrYPjEn0dTp0wfqnccFEHEZl-ueOW1QfYfRJt5uawgpzHfPRO0J6qZM5h0MZdYGzOH3DTI3m0mFS0An_HSwNAGLfBMy5TLzI2pxHvLayWD2zaXXHfvrpMZ5RJRI0EA-PgftlRXXUcPdl7GsGM4G6AhPJjcOdFOY53sdm6aZKHxAwrwk88zWS21hPGd92HbjCFgpSA'
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCIsImtpZCI6ImllX3FXQ1hoWHh0MXpJRXN1NGM3YWNRVkduNCJ9.eyJhdWQiOiIwMDAwMDAwMy0wMDAwLTBmZjEtY2UwMC0wMDAwMDAwMDAwMDAvZXN0dWRpb2RlbW9kYS5zaGFyZXBvaW50LmNvbUBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJpc3MiOiIwMDAwMDAwMS0wMDAwLTAwMDAtYzAwMC0wMDAwMDAwMDAwMDBAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwiaWF0IjoxNTY4ODEzNTAyLCJuYmYiOjE1Njg4MTM1MDIsImV4cCI6MTU2ODg0MjYwMiwiaWRlbnRpdHlwcm92aWRlciI6IjAwMDAwMDAxLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMEBjZDQ4ZWNkOS03ZTE1LTRmNGItOTdkOS1lYzgxM2VlNDJiMmMiLCJuYW1laWQiOiIwNDM0YWJmYS02ODQ0LTQ4YTYtOTZhMi1kYzEzY2VmZTVhN2RAY2Q0OGVjZDktN2UxNS00ZjRiLTk3ZDktZWM4MTNlZTQyYjJjIiwib2lkIjoiMzA1YWI3YzgtMzdhYS00Nzc3LWI0YjAtNDNkYTdmYzJhNTQ0Iiwic3ViIjoiMzA1YWI3YzgtMzdhYS00Nzc3LWI0YjAtNDNkYTdmYzJhNTQ0IiwidHJ1c3RlZGZvcmRlbGVnYXRpb24iOiJmYWxzZSJ9.aZB6P73QQfXjMispdB2MZId5Noet7IWXL2kDtDViHaACjK4vXeypNCF3SupKbZyiFkeyT9eRlVmMCyf0U3WAGjfM4i41omOZK_VfF57rpH_V2zvwG-OfTVrnXU-2z23PVsttcC8GARQVvQ_g93WGPDNNKjLzkxwi0khvPdV8q_OsDx2nBvwVIad0FoWqBOVvPHAly-ZRkN8muFkh7EgGF4pFtZb0nahqFU1-q99laF_byJPwbZGnF957_dJmWEYHQuNynDJ5Al-BlYRJfMbdBV-5tbfu9HtKw_Q7uVoRxG2VwLI9Li00uqX7tMPNFGK2_rD9kiGqmQbpMiJmMdjVeA'
             }
         }, environment.urlWeb);
 
@@ -182,12 +182,9 @@ export class SPServicio {
         // }
     }
 
-    agregarAdjuntoActividad(nombreLista: string, idRegistroActividad, nombreArchivo: string, archivo: File, id) {
-        // let elemento = this.ObtenerConfiguracion().web.lists.getByTitle(nombreLista).items.getById(idRegistroActividad);
-        // return elemento.attachmentFiles.add(nombreArchivo, archivo);
-        let elemento = this.ObtenerConfiguracion().web.folders.getByName(nombreLista).files.add(nombreArchivo,archivo);
-        return elemento;
-        
+    async agregarAdjuntoActividad(nombreLista: string, nombreArchivo: string, archivo: File): Promise<any> {
+        let elemento = await this.ObtenerConfiguracion().web.folders.getByName(nombreLista).files.add(nombreArchivo,archivo);
+        return elemento;        
     }
 
     actualizarPropiedadesAdjuntoActividad(nombreLista,idDoc, IdActividad, IdRegistro){
@@ -282,7 +279,7 @@ export class SPServicio {
     } 
 
     async ObtenerArchivoAdjunto(nombreLista: string, NombreDoc, fechahoy): Promise<any>{
-        let respuesta = await this.ObtenerConfiguracionConPost().web.lists.getByTitle(nombreLista).items.select("*", "FileRef","FieldValuesAsText","File").expand("FieldValuesAsText", "File").filter("(Created ge datetime'"+fechahoy+"T00:01:00') and (Created le datetime'"+fechahoy+"T11:59:00') and FileLeafRef eq '"+NombreDoc+"'").top(5000).get();
+        let respuesta = await this.ObtenerConfiguracion().web.lists.getByTitle(nombreLista).items.select("*", "FileRef","FieldValuesAsText","File").expand("FieldValuesAsText", "File").filter("(Created ge datetime'"+fechahoy+"T00:01:00') and (Created le datetime'"+fechahoy+"T11:59:00') and FileLeafRef eq '"+NombreDoc+"'").top(5000).get();
         return respuesta;
     }
 }

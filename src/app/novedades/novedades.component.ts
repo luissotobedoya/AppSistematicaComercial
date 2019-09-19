@@ -46,7 +46,7 @@ export class NovedadesComponent implements OnInit {
           case "administrador de tienda":
             this.router.navigate(['/acceso-denegado']);
             break;
-          case "jefe de zonas":
+          case "jefe de zona":
             console.log("perfilación correcta");
             break;
           case "administrador sistemática comercial":
