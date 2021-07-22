@@ -43,7 +43,7 @@
     "rxjs": "~6.3.3",
     "save": "^2.3.3",
     "sp-pnp-js": "^3.0.10",
-    "xlsx": "^0.14.1",
+    "xlsx": "^0.17.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
